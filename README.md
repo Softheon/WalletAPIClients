@@ -25,7 +25,7 @@ of interaction with the Softheon Wallet API.  To get started using the client li
 the files under your selected languge into your project.
 
 ### C# Client Example
-For an example on how to use C# generated client, please refer to the [AutoRest C# client documentation](https://github.com/Azure/autorest/tree/master/docs/client).
+For an example on how to use a C# generated client, please refer to the [AutoRest C# client documentation](https://github.com/Azure/autorest/tree/master/docs/client).
 
 ### Client Runtimes
 Some languages requrie additional client runtimes in order to use these libraries. Information on required client runtimes can be found in the 
