@@ -19,9 +19,8 @@ input to AutoRest is a spec file that describes the Softheon Wallet API using th
 [Swashbuckle](https://github.com/domaindrivendev/Swashbuckle.AspNetCore) was used for spec file generation.
 
 ## Getting Started
-The SDK for each language includes all request and response models used by the Softheon Wallet API, as well as methods covering all types
-of interaction with the Softheon Wallet API.  To get started using the client libraries, create a project using your IDE of choice and import
-the files under your selected languge into your project.
+The client libraries for each language includes all request and response models used by the Softheon Wallet API, as well as methods covering all types
+of interactions supported by the Softheon Wallet API.  To get started using the client libraries, create an application using your IDE of choice. Then import the files located in the folder for your selected languge into your application.
 
 ### C# Client Example
 For an example on how to use a C# generated client, please refer to the [AutoRest C# client documentation](https://github.com/Azure/autorest/tree/master/docs/client).
