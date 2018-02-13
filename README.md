@@ -205,8 +205,6 @@ try {
   echo $ex;
 }
 ```
----
-
 ## Acknowledgements
 The Softheon Wallet API client libraries are built using the following great open source projects
 * [AutoRest](https://github.com/Azure/autorest)
