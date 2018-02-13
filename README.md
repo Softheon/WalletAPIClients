@@ -1,4 +1,4 @@
-# WalletAPIClients
+# Softehon Wallet API Client Libraries
 A collection of libraries for the Softheon Wallet API.  Client libraries are available in the following languages:
 * [C#](https://github.com/Softheon/WalletAPIClients/tree/master/CSharp)
 * [Go](https://github.com/Softheon/WalletAPIClients/tree/master/Go)
