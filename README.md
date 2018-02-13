@@ -18,7 +18,6 @@ Client libraries are generated using the [AutoRest](https://github.com/Azure/aut
 input to AutoRest is a spec file that describes the Softheon Wallet API using the [OpenAPI Specification](https://github.com/OAI/OpenAPI-Specification).
 [Swashbuckle](https://github.com/domaindrivendev/Swashbuckle.AspNetCore) was used for spec file generation.
 
----
 ## Getting Started
 The SDK for each language includes all request and response models used by the Softheon Wallet API, as well as methods covering all types
 of interaction with the Softheon Wallet API.  To get started using the client libraries, create a project using your IDE of choice and import
