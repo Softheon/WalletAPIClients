@@ -6,45 +6,43 @@
 
 
 export const Address = {
-  required: false,
-  serializedName: 'Address',
+  serializedName: "Address",
   type: {
-    name: 'Composite',
-    className: 'Address',
+    name: "Composite",
+    className: "Address",
     modelProperties: {
       address1: {
         required: true,
-        serializedName: 'address1',
+        serializedName: "address1",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       address2: {
-        required: false,
-        serializedName: 'address2',
+        serializedName: "address2",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       city: {
         required: true,
-        serializedName: 'city',
+        serializedName: "city",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       state: {
         required: true,
-        serializedName: 'state',
+        serializedName: "state",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       zipCode: {
         required: true,
-        serializedName: 'zipCode',
+        serializedName: "zipCode",
         type: {
-          name: 'String'
+          name: "String"
         }
       }
     }
@@ -52,221 +50,100 @@ export const Address = {
 };
 
 export const BankAccountModel = {
-  required: false,
-  serializedName: 'BankAccountModel',
+  serializedName: "BankAccountModel",
   type: {
-    name: 'Composite',
-    className: 'BankAccountModel',
+    name: "Composite",
+    className: "BankAccountModel",
     modelProperties: {
       id: {
-        required: false,
-        serializedName: 'id',
+        serializedName: "id",
         type: {
-          name: 'Number'
+          name: "Number"
         }
       },
       token: {
-        required: false,
-        serializedName: 'token',
+        serializedName: "token",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       accountNumber: {
-        required: false,
-        serializedName: 'accountNumber',
+        serializedName: "accountNumber",
         constraints: {
-          Pattern: '\d{4,17}$'
+          Pattern: /\d{4,17}$/
         },
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       routingNumber: {
         required: true,
-        serializedName: 'routingNumber',
+        serializedName: "routingNumber",
         constraints: {
-          Pattern: '\d{9,9}$'
+          Pattern: /\d{9,9}$/
         },
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       type: {
         required: true,
-        serializedName: 'type',
+        serializedName: "type",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       state: {
         required: true,
-        serializedName: 'state',
+        serializedName: "state",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       nickname: {
-        required: false,
-        serializedName: 'nickname',
+        serializedName: "nickname",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       accountHolderName: {
         required: true,
-        serializedName: 'accountHolderName',
+        serializedName: "accountHolderName",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       accountHolderAddress: {
         required: true,
-        serializedName: 'accountHolderAddress',
+        serializedName: "accountHolderAddress",
         type: {
-          name: 'Composite',
-          className: 'Address'
+          name: "Composite",
+          className: "Address"
         }
       },
       email: {
         required: true,
-        serializedName: 'email',
+        serializedName: "email",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       referenceId: {
-        required: false,
-        serializedName: 'referenceId',
+        serializedName: "referenceId",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       createdTime: {
-        required: false,
-        serializedName: 'createdTime',
+        serializedName: "createdTime",
         type: {
-          name: 'DateTime'
+          name: "DateTime"
         }
       },
       modifiedTime: {
-        required: false,
-        serializedName: 'modifiedTime',
+        serializedName: "modifiedTime",
         type: {
-          name: 'DateTime'
-        }
-      }
-    }
-  }
-};
-
-export const BankAccountRequestModel = {
-  required: false,
-  serializedName: 'BankAccountRequestModel',
-  type: {
-    name: 'Composite',
-    className: 'BankAccountRequestModel',
-    modelProperties: {
-      accountNumber: {
-        required: true,
-        serializedName: 'accountNumber',
-        constraints: {
-          Pattern: '\d{4,17}$'
-        },
-        type: {
-          name: 'String'
-        }
-      },
-      routingNumber: {
-        required: true,
-        serializedName: 'routingNumber',
-        constraints: {
-          Pattern: '\d{9,9}$'
-        },
-        type: {
-          name: 'String'
-        }
-      },
-      accountHolderName: {
-        required: true,
-        serializedName: 'accountHolderName',
-        type: {
-          name: 'String'
-        }
-      },
-      accountHolderAddress: {
-        required: true,
-        serializedName: 'accountHolderAddress',
-        type: {
-          name: 'Composite',
-          className: 'Address'
-        }
-      },
-      type: {
-        required: true,
-        serializedName: 'type',
-        type: {
-          name: 'String'
-        }
-      },
-      referenceId: {
-        required: false,
-        serializedName: 'referenceId',
-        type: {
-          name: 'String'
-        }
-      },
-      nickname: {
-        required: false,
-        serializedName: 'nickname',
-        type: {
-          name: 'String'
-        }
-      },
-      email: {
-        required: true,
-        serializedName: 'email',
-        type: {
-          name: 'String'
-        }
-      },
-      redirectUrl: {
-        required: false,
-        serializedName: 'redirectUrl',
-        type: {
-          name: 'String'
-        }
-      }
-    }
-  }
-};
-
-export const BankAccountResponseModel = {
-  required: false,
-  serializedName: 'BankAccountResponseModel',
-  type: {
-    name: 'Composite',
-    className: 'BankAccountResponseModel',
-    modelProperties: {
-      token: {
-        required: false,
-        serializedName: 'token',
-        type: {
-          name: 'String'
-        }
-      },
-      bankAccountState: {
-        required: false,
-        serializedName: 'bankAccountState',
-        type: {
-          name: 'String'
-        }
-      },
-      redirectUrl: {
-        required: false,
-        serializedName: 'redirectUrl',
-        type: {
-          name: 'String'
+          name: "DateTime"
         }
       }
     }
@@ -274,46 +151,165 @@ export const BankAccountResponseModel = {
 };
 
 export const UpdateBankAccountModel = {
-  required: false,
-  serializedName: 'UpdateBankAccountModel',
+  serializedName: "UpdateBankAccountModel",
   type: {
-    name: 'Composite',
-    className: 'UpdateBankAccountModel',
+    name: "Composite",
+    className: "UpdateBankAccountModel",
     modelProperties: {
       token: {
-        required: false,
-        serializedName: 'token',
+        serializedName: "token",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       nickname: {
-        required: false,
-        serializedName: 'nickname',
+        serializedName: "nickname",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       accountHolderName: {
         required: true,
-        serializedName: 'accountHolderName',
+        serializedName: "accountHolderName",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       accountHolderAddress: {
         required: true,
-        serializedName: 'accountHolderAddress',
+        serializedName: "accountHolderAddress",
         type: {
-          name: 'Composite',
-          className: 'Address'
+          name: "Composite",
+          className: "Address"
         }
       },
       email: {
         required: true,
-        serializedName: 'email',
+        serializedName: "email",
         type: {
-          name: 'String'
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const BankAccountRequestModel = {
+  serializedName: "BankAccountRequestModel",
+  type: {
+    name: "Composite",
+    className: "BankAccountRequestModel",
+    modelProperties: {
+      accountNumber: {
+        required: true,
+        serializedName: "accountNumber",
+        constraints: {
+          Pattern: /\d{4,17}$/
+        },
+        type: {
+          name: "String"
+        }
+      },
+      routingNumber: {
+        required: true,
+        serializedName: "routingNumber",
+        constraints: {
+          Pattern: /\d{9,9}$/
+        },
+        type: {
+          name: "String"
+        }
+      },
+      accountHolderName: {
+        required: true,
+        serializedName: "accountHolderName",
+        type: {
+          name: "String"
+        }
+      },
+      accountHolderAddress: {
+        required: true,
+        serializedName: "accountHolderAddress",
+        type: {
+          name: "Composite",
+          className: "Address"
+        }
+      },
+      type: {
+        required: true,
+        serializedName: "type",
+        type: {
+          name: "String"
+        }
+      },
+      referenceId: {
+        serializedName: "referenceId",
+        type: {
+          name: "String"
+        }
+      },
+      nickname: {
+        serializedName: "nickname",
+        type: {
+          name: "String"
+        }
+      },
+      email: {
+        required: true,
+        serializedName: "email",
+        type: {
+          name: "String"
+        }
+      },
+      redirectUrl: {
+        serializedName: "redirectUrl",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const BankAccountResponseModel = {
+  serializedName: "BankAccountResponseModel",
+  type: {
+    name: "Composite",
+    className: "BankAccountResponseModel",
+    modelProperties: {
+      token: {
+        serializedName: "token",
+        type: {
+          name: "String"
+        }
+      },
+      bankAccountState: {
+        serializedName: "bankAccountState",
+        type: {
+          name: "String"
+        }
+      },
+      redirectUrl: {
+        serializedName: "redirectUrl",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const BinRequestModel = {
+  serializedName: "BinRequestModel",
+  type: {
+    name: "Composite",
+    className: "BinRequestModel",
+    modelProperties: {
+      cardNumber: {
+        required: true,
+        serializedName: "cardNumber",
+        type: {
+          name: "String"
         }
       }
     }
@@ -321,67 +317,58 @@ export const UpdateBankAccountModel = {
 };
 
 export const Bin = {
-  required: false,
-  serializedName: 'Bin',
+  serializedName: "Bin",
   type: {
-    name: 'Composite',
-    className: 'Bin',
+    name: "Composite",
+    className: "Bin",
     modelProperties: {
       bin: {
-        required: false,
-        serializedName: 'bin',
+        serializedName: "bin",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       brand: {
-        required: false,
         readOnly: true,
-        serializedName: 'brand',
+        serializedName: "brand",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       isDebitCard: {
-        required: false,
-        serializedName: 'isDebitCard',
+        serializedName: "isDebitCard",
         type: {
-          name: 'Boolean'
+          name: "Boolean"
         }
       },
       isCheckCard: {
-        required: false,
-        serializedName: 'isCheckCard',
+        serializedName: "isCheckCard",
         type: {
-          name: 'Boolean'
+          name: "Boolean"
         }
       },
       isGiftCard: {
-        required: false,
-        serializedName: 'isGiftCard',
+        serializedName: "isGiftCard",
         type: {
-          name: 'Boolean'
+          name: "Boolean"
         }
       },
       isCorporateCard: {
-        required: false,
-        serializedName: 'isCorporateCard',
+        serializedName: "isCorporateCard",
         type: {
-          name: 'Boolean'
+          name: "Boolean"
         }
       },
       isFleetCard: {
-        required: false,
-        serializedName: 'isFleetCard',
+        serializedName: "isFleetCard",
         type: {
-          name: 'Boolean'
+          name: "Boolean"
         }
       },
       isPrepaidCard: {
-        required: false,
-        serializedName: 'isPrepaidCard',
+        serializedName: "isPrepaidCard",
         type: {
-          name: 'Boolean'
+          name: "Boolean"
         }
       }
     }
@@ -389,95 +376,82 @@ export const Bin = {
 };
 
 export const CheckoutResponseModel = {
-  required: false,
-  serializedName: 'CheckoutResponseModel',
+  serializedName: "CheckoutResponseModel",
   type: {
-    name: 'Composite',
-    className: 'CheckoutResponseModel',
+    name: "Composite",
+    className: "CheckoutResponseModel",
     modelProperties: {
       checkoutId: {
-        required: false,
-        serializedName: 'checkoutId',
+        serializedName: "checkoutId",
         type: {
-          name: 'Number'
+          name: "Number"
         }
       },
       clientId: {
-        required: false,
-        serializedName: 'clientId',
+        serializedName: "clientId",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       redirectUrl: {
-        required: false,
-        serializedName: 'redirectUrl',
+        serializedName: "redirectUrl",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       referenceId: {
-        required: false,
-        serializedName: 'referenceId',
+        serializedName: "referenceId",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       amount: {
-        required: false,
-        serializedName: 'amount',
+        serializedName: "amount",
         type: {
-          name: 'Number'
+          name: "Number"
         }
       },
       nameOnAccount: {
-        required: false,
-        serializedName: 'nameOnAccount',
+        serializedName: "nameOnAccount",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       expirationDate: {
-        required: false,
-        serializedName: 'expirationDate',
+        serializedName: "expirationDate",
         type: {
-          name: 'DateTime'
+          name: "DateTime"
         }
       },
       enableBillingInformation: {
-        required: false,
-        serializedName: 'enableBillingInformation',
+        serializedName: "enableBillingInformation",
         type: {
-          name: 'Boolean'
+          name: "Boolean"
         }
       },
       billingAddress: {
-        required: false,
-        serializedName: 'billingAddress',
+        serializedName: "billingAddress",
         type: {
-          name: 'Composite',
-          className: 'Address'
+          name: "Composite",
+          className: "Address"
         }
       },
       email: {
-        required: false,
-        serializedName: 'email',
+        serializedName: "email",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       requireEmail: {
-        required: false,
-        serializedName: 'requireEmail',
+        serializedName: "requireEmail",
         type: {
-          name: 'Boolean'
+          name: "Boolean"
         }
       },
       enableSaveOption: {
-        required: false,
-        serializedName: 'enableSaveOption',
+        serializedName: "enableSaveOption",
         type: {
-          name: 'Boolean'
+          name: "Boolean"
         }
       }
     }
@@ -485,81 +459,70 @@ export const CheckoutResponseModel = {
 };
 
 export const CheckoutRequestModel = {
-  required: false,
-  serializedName: 'CheckoutRequestModel',
+  serializedName: "CheckoutRequestModel",
   type: {
-    name: 'Composite',
-    className: 'CheckoutRequestModel',
+    name: "Composite",
+    className: "CheckoutRequestModel",
     modelProperties: {
       redirectUrl: {
-        required: false,
-        serializedName: 'redirectUrl',
+        serializedName: "redirectUrl",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       referenceId: {
-        required: false,
-        serializedName: 'referenceId',
+        serializedName: "referenceId",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       amount: {
-        required: false,
-        serializedName: 'amount',
+        serializedName: "amount",
         type: {
-          name: 'Number'
+          name: "Number"
         }
       },
       nameOnAccount: {
-        required: false,
-        serializedName: 'nameOnAccount',
+        serializedName: "nameOnAccount",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       expirationDate: {
-        required: false,
-        serializedName: 'expirationDate',
+        serializedName: "expirationDate",
         type: {
-          name: 'DateTime'
+          name: "DateTime"
         }
       },
       enableBillingInformation: {
-        required: false,
-        serializedName: 'enableBillingInformation',
+        serializedName: "enableBillingInformation",
         type: {
-          name: 'Boolean'
+          name: "Boolean"
         }
       },
       billingAddress: {
-        required: false,
-        serializedName: 'billingAddress',
+        serializedName: "billingAddress",
         type: {
-          name: 'Composite',
-          className: 'Address'
+          name: "Composite",
+          className: "Address"
         }
       },
       email: {
-        required: false,
-        serializedName: 'email',
+        serializedName: "email",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       requireEmail: {
-        required: false,
-        serializedName: 'requireEmail',
+        serializedName: "requireEmail",
         type: {
-          name: 'Boolean'
+          name: "Boolean"
         }
       },
       enableSaveOption: {
-        required: false,
-        serializedName: 'enableSaveOption',
+        serializedName: "enableSaveOption",
         type: {
-          name: 'Boolean'
+          name: "Boolean"
         }
       }
     }
@@ -567,234 +530,88 @@ export const CheckoutRequestModel = {
 };
 
 export const CreditCardModel = {
-  required: false,
-  serializedName: 'CreditCardModel',
+  serializedName: "CreditCardModel",
   type: {
-    name: 'Composite',
-    className: 'CreditCardModel',
+    name: "Composite",
+    className: "CreditCardModel",
     modelProperties: {
       id: {
-        required: false,
-        serializedName: 'id',
+        serializedName: "id",
         type: {
-          name: 'Number'
+          name: "Number"
         }
       },
       token: {
-        required: false,
-        serializedName: 'token',
+        serializedName: "token",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       cardHolderName: {
-        required: false,
-        serializedName: 'cardHolderName',
+        serializedName: "cardHolderName",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       cardNumber: {
-        required: false,
-        serializedName: 'cardNumber',
+        serializedName: "cardNumber",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       expirationMonth: {
-        required: false,
-        serializedName: 'expirationMonth',
+        serializedName: "expirationMonth",
         type: {
-          name: 'Number'
+          name: "Number"
         }
       },
       expirationYear: {
-        required: false,
-        serializedName: 'expirationYear',
+        serializedName: "expirationYear",
         type: {
-          name: 'Number'
+          name: "Number"
         }
       },
       billingAddress: {
-        required: false,
-        serializedName: 'billingAddress',
+        serializedName: "billingAddress",
         type: {
-          name: 'Composite',
-          className: 'Address'
+          name: "Composite",
+          className: "Address"
         }
       },
       email: {
-        required: false,
-        serializedName: 'email',
+        serializedName: "email",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       cardState: {
-        required: false,
-        serializedName: 'cardState',
+        serializedName: "cardState",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       cardType: {
-        required: false,
-        serializedName: 'cardType',
+        serializedName: "cardType",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       referenceId: {
-        required: false,
-        serializedName: 'referenceId',
+        serializedName: "referenceId",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       createdTime: {
-        required: false,
-        serializedName: 'createdTime',
+        serializedName: "createdTime",
         type: {
-          name: 'DateTime'
+          name: "DateTime"
         }
       },
       modifiedTime: {
-        required: false,
-        serializedName: 'modifiedTime',
+        serializedName: "modifiedTime",
         type: {
-          name: 'DateTime'
-        }
-      }
-    }
-  }
-};
-
-export const CreditCardRequestModel = {
-  required: false,
-  serializedName: 'CreditCardRequestModel',
-  type: {
-    name: 'Composite',
-    className: 'CreditCardRequestModel',
-    modelProperties: {
-      cardNumber: {
-        required: true,
-        serializedName: 'cardNumber',
-        type: {
-          name: 'String'
-        }
-      },
-      securityCode: {
-        required: true,
-        serializedName: 'securityCode',
-        constraints: {
-          Pattern: '\d{3,4}'
-        },
-        type: {
-          name: 'String'
-        }
-      },
-      expirationMonth: {
-        required: true,
-        serializedName: 'expirationMonth',
-        constraints: {
-          InclusiveMaximum: 12,
-          InclusiveMinimum: 1
-        },
-        type: {
-          name: 'Number'
-        }
-      },
-      expirationYear: {
-        required: true,
-        serializedName: 'expirationYear',
-        constraints: {
-          InclusiveMaximum: 2038,
-          InclusiveMinimum: 2018
-        },
-        type: {
-          name: 'Number'
-        }
-      },
-      cardHolderName: {
-        required: true,
-        serializedName: 'cardHolderName',
-        type: {
-          name: 'String'
-        }
-      },
-      billingAddress: {
-        required: true,
-        serializedName: 'billingAddress',
-        type: {
-          name: 'Composite',
-          className: 'Address'
-        }
-      },
-      email: {
-        required: true,
-        serializedName: 'email',
-        type: {
-          name: 'String'
-        }
-      },
-      referenceId: {
-        required: false,
-        serializedName: 'referenceId',
-        type: {
-          name: 'String'
-        }
-      },
-      redirectUrl: {
-        required: false,
-        serializedName: 'redirectUrl',
-        type: {
-          name: 'String'
-        }
-      }
-    }
-  }
-};
-
-export const CreditCardResponseModel = {
-  required: false,
-  serializedName: 'CreditCardResponseModel',
-  type: {
-    name: 'Composite',
-    className: 'CreditCardResponseModel',
-    modelProperties: {
-      token: {
-        required: false,
-        serializedName: 'token',
-        type: {
-          name: 'String'
-        }
-      },
-      cardState: {
-        required: false,
-        serializedName: 'cardState',
-        type: {
-          name: 'String'
-        }
-      },
-      code: {
-        required: false,
-        serializedName: 'code',
-        type: {
-          name: 'String'
-        }
-      },
-      message: {
-        required: false,
-        serializedName: 'message',
-        type: {
-          name: 'String'
-        }
-      },
-      redirectUrl: {
-        required: false,
-        serializedName: 'redirectUrl',
-        type: {
-          name: 'String'
+          name: "DateTime"
         }
       }
     }
@@ -802,61 +619,183 @@ export const CreditCardResponseModel = {
 };
 
 export const UpdateCreditCardModel = {
-  required: false,
-  serializedName: 'UpdateCreditCardModel',
+  serializedName: "UpdateCreditCardModel",
   type: {
-    name: 'Composite',
-    className: 'UpdateCreditCardModel',
+    name: "Composite",
+    className: "UpdateCreditCardModel",
     modelProperties: {
       token: {
         required: true,
-        serializedName: 'token',
+        serializedName: "token",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       expirationMonth: {
         required: true,
-        serializedName: 'expirationMonth',
+        serializedName: "expirationMonth",
         constraints: {
           InclusiveMaximum: 12,
           InclusiveMinimum: 1
         },
         type: {
-          name: 'Number'
+          name: "Number"
         }
       },
       expirationYear: {
         required: true,
-        serializedName: 'expirationYear',
+        serializedName: "expirationYear",
         constraints: {
           InclusiveMaximum: 2038,
           InclusiveMinimum: 2018
         },
         type: {
-          name: 'Number'
+          name: "Number"
         }
       },
       cardHolderName: {
         required: true,
-        serializedName: 'cardHolderName',
+        serializedName: "cardHolderName",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       billingAddress: {
         required: true,
-        serializedName: 'billingAddress',
+        serializedName: "billingAddress",
         type: {
-          name: 'Composite',
-          className: 'Address'
+          name: "Composite",
+          className: "Address"
         }
       },
       email: {
         required: true,
-        serializedName: 'email',
+        serializedName: "email",
         type: {
-          name: 'String'
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const CreditCardRequestModel = {
+  serializedName: "CreditCardRequestModel",
+  type: {
+    name: "Composite",
+    className: "CreditCardRequestModel",
+    modelProperties: {
+      cardNumber: {
+        required: true,
+        serializedName: "cardNumber",
+        type: {
+          name: "String"
+        }
+      },
+      securityCode: {
+        required: true,
+        serializedName: "securityCode",
+        constraints: {
+          Pattern: /\d{3,4}/
+        },
+        type: {
+          name: "String"
+        }
+      },
+      expirationMonth: {
+        required: true,
+        serializedName: "expirationMonth",
+        constraints: {
+          InclusiveMaximum: 12,
+          InclusiveMinimum: 1
+        },
+        type: {
+          name: "Number"
+        }
+      },
+      expirationYear: {
+        required: true,
+        serializedName: "expirationYear",
+        constraints: {
+          InclusiveMaximum: 2038,
+          InclusiveMinimum: 2018
+        },
+        type: {
+          name: "Number"
+        }
+      },
+      cardHolderName: {
+        required: true,
+        serializedName: "cardHolderName",
+        type: {
+          name: "String"
+        }
+      },
+      billingAddress: {
+        required: true,
+        serializedName: "billingAddress",
+        type: {
+          name: "Composite",
+          className: "Address"
+        }
+      },
+      email: {
+        required: true,
+        serializedName: "email",
+        type: {
+          name: "String"
+        }
+      },
+      referenceId: {
+        serializedName: "referenceId",
+        type: {
+          name: "String"
+        }
+      },
+      redirectUrl: {
+        serializedName: "redirectUrl",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const CreditCardResponseModel = {
+  serializedName: "CreditCardResponseModel",
+  type: {
+    name: "Composite",
+    className: "CreditCardResponseModel",
+    modelProperties: {
+      token: {
+        serializedName: "token",
+        type: {
+          name: "String"
+        }
+      },
+      cardState: {
+        serializedName: "cardState",
+        type: {
+          name: "String"
+        }
+      },
+      code: {
+        serializedName: "code",
+        type: {
+          name: "String"
+        }
+      },
+      message: {
+        serializedName: "message",
+        type: {
+          name: "String"
+        }
+      },
+      redirectUrl: {
+        serializedName: "redirectUrl",
+        type: {
+          name: "String"
         }
       }
     }
@@ -864,24 +803,23 @@ export const UpdateCreditCardModel = {
 };
 
 export const PaymentMethodModel = {
-  required: false,
-  serializedName: 'PaymentMethodModel',
+  serializedName: "PaymentMethodModel",
   type: {
-    name: 'Composite',
-    className: 'PaymentMethodModel',
+    name: "Composite",
+    className: "PaymentMethodModel",
     modelProperties: {
       paymentToken: {
         required: true,
-        serializedName: 'paymentToken',
+        serializedName: "paymentToken",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       type: {
         required: true,
-        serializedName: 'type',
+        serializedName: "type",
         type: {
-          name: 'String'
+          name: "String"
         }
       }
     }
@@ -889,52 +827,45 @@ export const PaymentMethodModel = {
 };
 
 export const PaymentResultModel = {
-  required: false,
-  serializedName: 'PaymentResultModel',
+  serializedName: "PaymentResultModel",
   type: {
-    name: 'Composite',
-    className: 'PaymentResultModel',
+    name: "Composite",
+    className: "PaymentResultModel",
     modelProperties: {
       status: {
-        required: false,
-        serializedName: 'status',
+        serializedName: "status",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       code: {
-        required: false,
-        serializedName: 'code',
+        serializedName: "code",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       message: {
-        required: false,
-        serializedName: 'message',
+        serializedName: "message",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       providerAccountId: {
-        required: false,
-        serializedName: 'providerAccountId',
+        serializedName: "providerAccountId",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       merchantTransactionId: {
-        required: false,
-        serializedName: 'merchantTransactionId',
+        serializedName: "merchantTransactionId",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       merchantTransactionFee: {
-        required: false,
-        serializedName: 'merchantTransactionFee',
+        serializedName: "merchantTransactionFee",
         type: {
-          name: 'Number'
+          name: "Number"
         }
       }
     }
@@ -942,66 +873,57 @@ export const PaymentResultModel = {
 };
 
 export const RefundResultModel = {
-  required: false,
-  serializedName: 'RefundResultModel',
+  serializedName: "RefundResultModel",
   type: {
-    name: 'Composite',
-    className: 'RefundResultModel',
+    name: "Composite",
+    className: "RefundResultModel",
     modelProperties: {
       status: {
-        required: false,
-        serializedName: 'status',
+        serializedName: "status",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       code: {
-        required: false,
-        serializedName: 'code',
+        serializedName: "code",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       message: {
-        required: false,
-        serializedName: 'message',
+        serializedName: "message",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       merchantTransactionId: {
-        required: false,
-        serializedName: 'merchantTransactionId',
+        serializedName: "merchantTransactionId",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       providerAccountId: {
-        required: false,
-        serializedName: 'providerAccountId',
+        serializedName: "providerAccountId",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       amount: {
-        required: false,
-        serializedName: 'amount',
+        serializedName: "amount",
         type: {
-          name: 'Number'
+          name: "Number"
         }
       },
       reason: {
-        required: false,
-        serializedName: 'reason',
+        serializedName: "reason",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       createdDate: {
-        required: false,
-        serializedName: 'createdDate',
+        serializedName: "createdDate",
         type: {
-          name: 'DateTime'
+          name: "DateTime"
         }
       }
     }
@@ -1009,122 +931,106 @@ export const RefundResultModel = {
 };
 
 export const PaymentModel = {
-  required: false,
-  serializedName: 'PaymentModel',
+  serializedName: "PaymentModel",
   type: {
-    name: 'Composite',
-    className: 'PaymentModel',
+    name: "Composite",
+    className: "PaymentModel",
     modelProperties: {
       id: {
-        required: false,
-        serializedName: 'id',
+        serializedName: "id",
         type: {
-          name: 'Number'
+          name: "Number"
         }
       },
       accountId: {
-        required: false,
-        serializedName: 'accountId',
+        serializedName: "accountId",
         type: {
-          name: 'Number'
+          name: "Number"
         }
       },
       paymentAmount: {
-        required: false,
-        serializedName: 'paymentAmount',
+        serializedName: "paymentAmount",
         type: {
-          name: 'Number'
+          name: "Number"
         }
       },
       description: {
-        required: false,
-        serializedName: 'description',
+        serializedName: "description",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       referenceId: {
-        required: false,
-        serializedName: 'referenceId',
+        serializedName: "referenceId",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       paymentMethod: {
-        required: false,
-        serializedName: 'paymentMethod',
+        serializedName: "paymentMethod",
         type: {
-          name: 'Composite',
-          className: 'PaymentMethodModel'
+          name: "Composite",
+          className: "PaymentMethodModel"
         }
       },
       result: {
-        required: false,
-        serializedName: 'result',
+        serializedName: "result",
         type: {
-          name: 'Composite',
-          className: 'PaymentResultModel'
+          name: "Composite",
+          className: "PaymentResultModel"
         }
       },
       refunds: {
-        required: false,
-        serializedName: 'refunds',
+        serializedName: "refunds",
         type: {
-          name: 'Sequence',
+          name: "Sequence",
           element: {
-              required: false,
-              serializedName: 'RefundResultModelElementType',
-              type: {
-                name: 'Composite',
-                className: 'RefundResultModel'
-              }
+            serializedName: "RefundResultModelElementType",
+            type: {
+              name: "Composite",
+              className: "RefundResultModel"
+            }
           }
         }
       },
       createdDate: {
-        required: false,
-        serializedName: 'createdDate',
+        serializedName: "createdDate",
         type: {
-          name: 'DateTime'
+          name: "DateTime"
         }
       },
       modifiedDate: {
-        required: false,
-        serializedName: 'modifiedDate',
+        serializedName: "modifiedDate",
         type: {
-          name: 'DateTime'
+          name: "DateTime"
         }
       }
     }
   }
 };
 
-export const PaymentFilter = {
-  required: false,
-  serializedName: 'PaymentFilter',
+export const BaseQuery = {
+  serializedName: "BaseQuery",
   type: {
-    name: 'Composite',
-    className: 'PaymentFilter',
+    name: "Composite",
+    className: "BaseQuery",
     modelProperties: {
       referenceId: {
-        required: true,
-        serializedName: 'referenceId',
+        serializedName: "referenceId",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       minDate: {
-        required: false,
-        serializedName: 'minDate',
+        serializedName: "minDate",
         type: {
-          name: 'DateTime'
+          name: "DateTime"
         }
       },
       maxDate: {
-        required: false,
-        serializedName: 'maxDate',
+        serializedName: "maxDate",
         type: {
-          name: 'DateTime'
+          name: "DateTime"
         }
       }
     }
@@ -1132,46 +1038,41 @@ export const PaymentFilter = {
 };
 
 export const PaymentRequestModel = {
-  required: false,
-  serializedName: 'PaymentRequestModel',
+  serializedName: "PaymentRequestModel",
   type: {
-    name: 'Composite',
-    className: 'PaymentRequestModel',
+    name: "Composite",
+    className: "PaymentRequestModel",
     modelProperties: {
       paymentAmount: {
-        required: false,
-        serializedName: 'paymentAmount',
+        serializedName: "paymentAmount",
         type: {
-          name: 'Number'
+          name: "Number"
         }
       },
       description: {
-        required: false,
-        serializedName: 'description',
+        serializedName: "description",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       referenceId: {
-        required: false,
-        serializedName: 'referenceId',
+        serializedName: "referenceId",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       paymentMethod: {
         required: true,
-        serializedName: 'paymentMethod',
+        serializedName: "paymentMethod",
         type: {
-          name: 'Composite',
-          className: 'PaymentMethodModel'
+          name: "Composite",
+          className: "PaymentMethodModel"
         }
       },
       callbackUrl: {
-        required: false,
-        serializedName: 'callbackUrl',
+        serializedName: "callbackUrl",
         type: {
-          name: 'String'
+          name: "String"
         }
       }
     }
@@ -1179,24 +1080,22 @@ export const PaymentRequestModel = {
 };
 
 export const RefundRequestModel = {
-  required: false,
-  serializedName: 'RefundRequestModel',
+  serializedName: "RefundRequestModel",
   type: {
-    name: 'Composite',
-    className: 'RefundRequestModel',
+    name: "Composite",
+    className: "RefundRequestModel",
     modelProperties: {
       amount: {
-        required: false,
-        serializedName: 'amount',
+        serializedName: "amount",
         type: {
-          name: 'Number'
+          name: "Number"
         }
       },
       reason: {
         required: true,
-        serializedName: 'reason',
+        serializedName: "reason",
         type: {
-          name: 'String'
+          name: "String"
         }
       }
     }
@@ -1204,274 +1103,117 @@ export const RefundRequestModel = {
 };
 
 export const SubscriptionModel = {
-  required: false,
-  serializedName: 'SubscriptionModel',
+  serializedName: "SubscriptionModel",
   type: {
-    name: 'Composite',
-    className: 'SubscriptionModel',
+    name: "Composite",
+    className: "SubscriptionModel",
     modelProperties: {
       id: {
-        required: false,
-        serializedName: 'id',
+        serializedName: "id",
         type: {
-          name: 'Number'
+          name: "Number"
         }
       },
       name: {
-        required: false,
-        serializedName: 'name',
+        serializedName: "name",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       description: {
-        required: false,
-        serializedName: 'description',
+        serializedName: "description",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       properties: {
-        required: false,
-        serializedName: 'properties',
+        serializedName: "properties",
         type: {
-          name: 'Dictionary',
+          name: "Dictionary",
           value: {
-              required: false,
-              serializedName: 'stringElementType',
-              type: {
-                name: 'String'
-              }
+            serializedName: "stringElementType",
+            type: {
+              name: "String"
+            }
           }
         }
       },
       runDay: {
-        required: false,
-        serializedName: 'runDay',
+        serializedName: "runDay",
         type: {
-          name: 'Number'
+          name: "Number"
         }
       },
       state: {
-        required: false,
-        serializedName: 'state',
+        serializedName: "state",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       paymentType: {
-        required: false,
-        serializedName: 'paymentType',
+        serializedName: "paymentType",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       paymentToken: {
-        required: false,
-        serializedName: 'paymentToken',
+        serializedName: "paymentToken",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       amountType: {
-        required: false,
-        serializedName: 'amountType',
+        serializedName: "amountType",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       amount: {
-        required: false,
-        serializedName: 'amount',
+        serializedName: "amount",
         type: {
-          name: 'Number'
+          name: "Number"
         }
       },
       amountWebServiceURL: {
-        required: false,
-        serializedName: 'amountWebServiceURL',
+        serializedName: "amountWebServiceURL",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       callbackWebServiceURL: {
-        required: false,
-        serializedName: 'callbackWebServiceURL',
+        serializedName: "callbackWebServiceURL",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       referenceId: {
-        required: false,
-        serializedName: 'referenceId',
+        serializedName: "referenceId",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       lastProcessed: {
-        required: false,
-        serializedName: 'lastProcessed',
+        serializedName: "lastProcessed",
         type: {
-          name: 'DateTime'
+          name: "DateTime"
         }
       },
       endDate: {
-        required: false,
-        serializedName: 'endDate',
+        serializedName: "endDate",
         type: {
-          name: 'DateTime'
+          name: "DateTime"
         }
       },
       createdTime: {
-        required: false,
-        serializedName: 'createdTime',
+        serializedName: "createdTime",
         type: {
-          name: 'DateTime'
+          name: "DateTime"
         }
       },
       modifiedTime: {
-        required: false,
-        serializedName: 'modifiedTime',
+        serializedName: "modifiedTime",
         type: {
-          name: 'DateTime'
-        }
-      }
-    }
-  }
-};
-
-export const SubscriptionRequestModel = {
-  required: false,
-  serializedName: 'SubscriptionRequestModel',
-  type: {
-    name: 'Composite',
-    className: 'SubscriptionRequestModel',
-    modelProperties: {
-      name: {
-        required: true,
-        serializedName: 'name',
-        type: {
-          name: 'String'
-        }
-      },
-      description: {
-        required: false,
-        serializedName: 'description',
-        type: {
-          name: 'String'
-        }
-      },
-      properties: {
-        required: false,
-        serializedName: 'properties',
-        type: {
-          name: 'Dictionary',
-          value: {
-              required: false,
-              serializedName: 'stringElementType',
-              type: {
-                name: 'String'
-              }
-          }
-        }
-      },
-      runDay: {
-        required: true,
-        serializedName: 'runDay',
-        constraints: {
-          InclusiveMaximum: 31,
-          InclusiveMinimum: 1
-        },
-        type: {
-          name: 'Number'
-        }
-      },
-      state: {
-        required: true,
-        serializedName: 'state',
-        type: {
-          name: 'String'
-        }
-      },
-      paymentType: {
-        required: true,
-        serializedName: 'paymentType',
-        type: {
-          name: 'String'
-        }
-      },
-      paymentToken: {
-        required: true,
-        serializedName: 'paymentToken',
-        type: {
-          name: 'String'
-        }
-      },
-      amountType: {
-        required: true,
-        serializedName: 'amountType',
-        type: {
-          name: 'String'
-        }
-      },
-      amount: {
-        required: false,
-        serializedName: 'amount',
-        type: {
-          name: 'Number'
-        }
-      },
-      amountWebServiceURL: {
-        required: false,
-        serializedName: 'amountWebServiceURL',
-        type: {
-          name: 'String'
-        }
-      },
-      callbackWebServiceURL: {
-        required: false,
-        serializedName: 'callbackWebServiceURL',
-        type: {
-          name: 'String'
-        }
-      },
-      endDate: {
-        required: false,
-        serializedName: 'endDate',
-        type: {
-          name: 'DateTime'
-        }
-      },
-      referenceId: {
-        required: false,
-        serializedName: 'referenceId',
-        type: {
-          name: 'String'
-        }
-      }
-    }
-  }
-};
-
-export const SubscriptionResponceModel = {
-  required: false,
-  serializedName: 'SubscriptionResponceModel',
-  type: {
-    name: 'Composite',
-    className: 'SubscriptionResponceModel',
-    modelProperties: {
-      referenceId: {
-        required: false,
-        serializedName: 'referenceId',
-        type: {
-          name: 'String'
-        }
-      },
-      state: {
-        required: false,
-        serializedName: 'state',
-        type: {
-          name: 'String'
+          name: "DateTime"
         }
       }
     }
@@ -1479,119 +1221,236 @@ export const SubscriptionResponceModel = {
 };
 
 export const UpdateSubscriptionModel = {
-  required: false,
-  serializedName: 'UpdateSubscriptionModel',
+  serializedName: "UpdateSubscriptionModel",
   type: {
-    name: 'Composite',
-    className: 'UpdateSubscriptionModel',
+    name: "Composite",
+    className: "UpdateSubscriptionModel",
     modelProperties: {
       id: {
         required: true,
-        serializedName: 'id',
+        serializedName: "id",
         type: {
-          name: 'Number'
+          name: "Number"
         }
       },
       name: {
         required: true,
-        serializedName: 'name',
+        serializedName: "name",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       description: {
-        required: false,
-        serializedName: 'description',
+        serializedName: "description",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       properties: {
-        required: false,
-        serializedName: 'properties',
+        serializedName: "properties",
         type: {
-          name: 'Dictionary',
+          name: "Dictionary",
           value: {
-              required: false,
-              serializedName: 'stringElementType',
-              type: {
-                name: 'String'
-              }
+            serializedName: "stringElementType",
+            type: {
+              name: "String"
+            }
           }
         }
       },
       runDay: {
         required: true,
-        serializedName: 'runDay',
+        serializedName: "runDay",
         constraints: {
           InclusiveMaximum: 31,
           InclusiveMinimum: 1
         },
         type: {
-          name: 'Number'
+          name: "Number"
         }
       },
       state: {
         required: true,
-        serializedName: 'state',
+        serializedName: "state",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       paymentType: {
         required: true,
-        serializedName: 'paymentType',
+        serializedName: "paymentType",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       paymentToken: {
         required: true,
-        serializedName: 'paymentToken',
+        serializedName: "paymentToken",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       amountType: {
         required: true,
-        serializedName: 'amountType',
+        serializedName: "amountType",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       amount: {
-        required: false,
-        serializedName: 'amount',
+        serializedName: "amount",
         type: {
-          name: 'Number'
+          name: "Number"
         }
       },
       amountWebServiceURL: {
-        required: false,
-        serializedName: 'amountWebServiceURL',
+        serializedName: "amountWebServiceURL",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       callbackWebServiceURL: {
-        required: false,
-        serializedName: 'callbackWebServiceURL',
+        serializedName: "callbackWebServiceURL",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       endDate: {
-        required: false,
-        serializedName: 'endDate',
+        serializedName: "endDate",
         type: {
-          name: 'DateTime'
+          name: "DateTime"
         }
       },
       referenceId: {
-        required: false,
-        serializedName: 'referenceId',
+        serializedName: "referenceId",
         type: {
-          name: 'String'
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const SubscriptionRequestModel = {
+  serializedName: "SubscriptionRequestModel",
+  type: {
+    name: "Composite",
+    className: "SubscriptionRequestModel",
+    modelProperties: {
+      name: {
+        required: true,
+        serializedName: "name",
+        type: {
+          name: "String"
+        }
+      },
+      description: {
+        serializedName: "description",
+        type: {
+          name: "String"
+        }
+      },
+      properties: {
+        serializedName: "properties",
+        type: {
+          name: "Dictionary",
+          value: {
+            serializedName: "stringElementType",
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
+      runDay: {
+        required: true,
+        serializedName: "runDay",
+        constraints: {
+          InclusiveMaximum: 31,
+          InclusiveMinimum: 1
+        },
+        type: {
+          name: "Number"
+        }
+      },
+      state: {
+        required: true,
+        serializedName: "state",
+        type: {
+          name: "String"
+        }
+      },
+      paymentType: {
+        required: true,
+        serializedName: "paymentType",
+        type: {
+          name: "String"
+        }
+      },
+      paymentToken: {
+        required: true,
+        serializedName: "paymentToken",
+        type: {
+          name: "String"
+        }
+      },
+      amountType: {
+        required: true,
+        serializedName: "amountType",
+        type: {
+          name: "String"
+        }
+      },
+      amount: {
+        serializedName: "amount",
+        type: {
+          name: "Number"
+        }
+      },
+      amountWebServiceURL: {
+        serializedName: "amountWebServiceURL",
+        type: {
+          name: "String"
+        }
+      },
+      callbackWebServiceURL: {
+        serializedName: "callbackWebServiceURL",
+        type: {
+          name: "String"
+        }
+      },
+      endDate: {
+        serializedName: "endDate",
+        type: {
+          name: "DateTime"
+        }
+      },
+      referenceId: {
+        serializedName: "referenceId",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const SubscriptionResponseModel = {
+  serializedName: "SubscriptionResponseModel",
+  type: {
+    name: "Composite",
+    className: "SubscriptionResponseModel",
+    modelProperties: {
+      referenceId: {
+        serializedName: "referenceId",
+        type: {
+          name: "String"
+        }
+      },
+      state: {
+        serializedName: "state",
+        type: {
+          name: "String"
         }
       }
     }
@@ -1599,53 +1458,47 @@ export const UpdateSubscriptionModel = {
 };
 
 export const WalletModel = {
-  required: false,
-  serializedName: 'WalletModel',
+  serializedName: "WalletModel",
   type: {
-    name: 'Composite',
-    className: 'WalletModel',
+    name: "Composite",
+    className: "WalletModel",
     modelProperties: {
       id: {
         required: true,
-        serializedName: 'id',
+        serializedName: "id",
         type: {
-          name: 'Number'
+          name: "Number"
         }
       },
       defaultToken: {
-        required: false,
-        serializedName: 'defaultToken',
+        serializedName: "defaultToken",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       creditCards: {
-        required: false,
-        serializedName: 'creditCards',
+        serializedName: "creditCards",
         type: {
-          name: 'Sequence',
+          name: "Sequence",
           element: {
-              required: false,
-              serializedName: 'CreditCardModelElementType',
-              type: {
-                name: 'Composite',
-                className: 'CreditCardModel'
-              }
+            serializedName: "CreditCardModelElementType",
+            type: {
+              name: "Composite",
+              className: "CreditCardModel"
+            }
           }
         }
       },
       bankAccounts: {
-        required: false,
-        serializedName: 'bankAccounts',
+        serializedName: "bankAccounts",
         type: {
-          name: 'Sequence',
+          name: "Sequence",
           element: {
-              required: false,
-              serializedName: 'BankAccountModelElementType',
-              type: {
-                name: 'Composite',
-                className: 'BankAccountModel'
-              }
+            serializedName: "BankAccountModelElementType",
+            type: {
+              name: "Composite",
+              className: "BankAccountModel"
+            }
           }
         }
       }
@@ -1654,17 +1507,15 @@ export const WalletModel = {
 };
 
 export const WalletRequestModel = {
-  required: false,
-  serializedName: 'WalletRequestModel',
+  serializedName: "WalletRequestModel",
   type: {
-    name: 'Composite',
-    className: 'WalletRequestModel',
+    name: "Composite",
+    className: "WalletRequestModel",
     modelProperties: {
       referenceId: {
-        required: false,
-        serializedName: 'referenceId',
+        serializedName: "referenceId",
         type: {
-          name: 'String'
+          name: "String"
         }
       }
     }
@@ -1672,24 +1523,21 @@ export const WalletRequestModel = {
 };
 
 export const WalletCreditCardRequestModel = {
-  required: false,
-  serializedName: 'WalletCreditCardRequestModel',
+  serializedName: "WalletCreditCardRequestModel",
   type: {
-    name: 'Composite',
-    className: 'WalletCreditCardRequestModel',
+    name: "Composite",
+    className: "WalletCreditCardRequestModel",
     modelProperties: {
       paymentToken: {
-        required: false,
-        serializedName: 'paymentToken',
+        serializedName: "paymentToken",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       isDefault: {
-        required: false,
-        serializedName: 'isDefault',
+        serializedName: "isDefault",
         type: {
-          name: 'Boolean'
+          name: "Boolean"
         }
       }
     }
@@ -1697,24 +1545,21 @@ export const WalletCreditCardRequestModel = {
 };
 
 export const WalletBankAccountRequestModel = {
-  required: false,
-  serializedName: 'WalletBankAccountRequestModel',
+  serializedName: "WalletBankAccountRequestModel",
   type: {
-    name: 'Composite',
-    className: 'WalletBankAccountRequestModel',
+    name: "Composite",
+    className: "WalletBankAccountRequestModel",
     modelProperties: {
       paymentToken: {
-        required: false,
-        serializedName: 'paymentToken',
+        serializedName: "paymentToken",
         type: {
-          name: 'String'
+          name: "String"
         }
       },
       isDefault: {
-        required: false,
-        serializedName: 'isDefault',
+        serializedName: "isDefault",
         type: {
-          name: 'Boolean'
+          name: "Boolean"
         }
       }
     }
@@ -1722,24 +1567,27 @@ export const WalletBankAccountRequestModel = {
 };
 
 export const SoftheonWalletAPIGetPaymentsByReferenceIdOptionalParams = {
-  required: false,
-  serializedName: 'GetPaymentsByReferenceIdOptions',
+  serializedName: "GetPaymentsByReferenceIdOptions",
   type: {
-    name: 'Composite',
-    className: 'SoftheonWalletAPIGetPaymentsByReferenceIdOptionalParams',
+    name: "Composite",
+    className: "SoftheonWalletAPIGetPaymentsByReferenceIdOptionalParams",
     modelProperties: {
-      minDate: {
-        required: false,
-        serializedName: 'minDate',
+      referenceId: {
+        serializedName: "referenceId",
         type: {
-          name: 'DateTime'
+          name: "String"
+        }
+      },
+      minDate: {
+        serializedName: "minDate",
+        type: {
+          name: "DateTime"
         }
       },
       maxDate: {
-        required: false,
-        serializedName: 'maxDate',
+        serializedName: "maxDate",
         type: {
-          name: 'DateTime'
+          name: "DateTime"
         }
       }
     }

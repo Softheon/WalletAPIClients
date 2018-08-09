@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client.models;
+package walletapiv2.models;
 
 import java.util.Map;
 import org.joda.time.DateTime;
@@ -124,7 +124,7 @@ public class SubscriptionModel {
     private DateTime modifiedTime;
 
     /**
-     * Get the id value.
+     * Get the id of the payment subscription.
      *
      * @return the id value
      */
@@ -133,7 +133,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Set the id value.
+     * Set the id of the payment subscription.
      *
      * @param id the id value to set
      * @return the SubscriptionModel object itself.
@@ -144,7 +144,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Get the name value.
+     * Get the name of payment subscription.
      *
      * @return the name value
      */
@@ -153,7 +153,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Set the name value.
+     * Set the name of payment subscription.
      *
      * @param name the name value to set
      * @return the SubscriptionModel object itself.
@@ -164,7 +164,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Get the description value.
+     * Get the description of payment subscription.
      *
      * @return the description value
      */
@@ -173,7 +173,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Set the description value.
+     * Set the description of payment subscription.
      *
      * @param description the description value to set
      * @return the SubscriptionModel object itself.
@@ -184,7 +184,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Get the properties value.
+     * Get the properties of the payment subscription.
      *
      * @return the properties value
      */
@@ -193,7 +193,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Set the properties value.
+     * Set the properties of the payment subscription.
      *
      * @param properties the properties value to set
      * @return the SubscriptionModel object itself.
@@ -204,7 +204,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Get the runDay value.
+     * Get the process day of the payment subscription.
      *
      * @return the runDay value
      */
@@ -213,7 +213,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Set the runDay value.
+     * Set the process day of the payment subscription.
      *
      * @param runDay the runDay value to set
      * @return the SubscriptionModel object itself.
@@ -224,7 +224,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Get the state value.
+     * Get the state that payment subscription is in. Possible values include: 'Active', 'Inactive', 'Expired'.
      *
      * @return the state value
      */
@@ -233,7 +233,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Set the state value.
+     * Set the state that payment subscription is in. Possible values include: 'Active', 'Inactive', 'Expired'.
      *
      * @param state the state value to set
      * @return the SubscriptionModel object itself.
@@ -244,7 +244,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Get the paymentType value.
+     * Get the payment type of the payment subscription. Possible values include: 'Unknown', 'Credit Card', 'ACH'.
      *
      * @return the paymentType value
      */
@@ -253,7 +253,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Set the paymentType value.
+     * Set the payment type of the payment subscription. Possible values include: 'Unknown', 'Credit Card', 'ACH'.
      *
      * @param paymentType the paymentType value to set
      * @return the SubscriptionModel object itself.
@@ -264,7 +264,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Get the paymentToken value.
+     * Get the payment token of the payment subscription.
      *
      * @return the paymentToken value
      */
@@ -273,7 +273,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Set the paymentToken value.
+     * Set the payment token of the payment subscription.
      *
      * @param paymentToken the paymentToken value to set
      * @return the SubscriptionModel object itself.
@@ -284,7 +284,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Get the amountType value.
+     * Get the amount type of the payment subscription. Possible values include: 'Fixed', 'Dynamic'.
      *
      * @return the amountType value
      */
@@ -293,7 +293,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Set the amountType value.
+     * Set the amount type of the payment subscription. Possible values include: 'Fixed', 'Dynamic'.
      *
      * @param amountType the amountType value to set
      * @return the SubscriptionModel object itself.
@@ -304,7 +304,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Get the amount value.
+     * Get the amount of money to be charged by the payment subscription.
      *
      * @return the amount value
      */
@@ -313,7 +313,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Set the amount value.
+     * Set the amount of money to be charged by the payment subscription.
      *
      * @param amount the amount value to set
      * @return the SubscriptionModel object itself.
@@ -324,7 +324,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Get the amountWebServiceURL value.
+     * Get the url of web api to use to retrieve the amount to be charged by the payment subscription.
      *
      * @return the amountWebServiceURL value
      */
@@ -333,7 +333,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Set the amountWebServiceURL value.
+     * Set the url of web api to use to retrieve the amount to be charged by the payment subscription.
      *
      * @param amountWebServiceURL the amountWebServiceURL value to set
      * @return the SubscriptionModel object itself.
@@ -344,7 +344,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Get the callbackWebServiceURL value.
+     * Get the url of a web api to use to post back notifications each time payment subscription is processed.
      *
      * @return the callbackWebServiceURL value
      */
@@ -353,7 +353,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Set the callbackWebServiceURL value.
+     * Set the url of a web api to use to post back notifications each time payment subscription is processed.
      *
      * @param callbackWebServiceURL the callbackWebServiceURL value to set
      * @return the SubscriptionModel object itself.
@@ -364,7 +364,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Get the referenceId value.
+     * Get the client application provided reference ID for the credit card.
      *
      * @return the referenceId value
      */
@@ -373,7 +373,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Set the referenceId value.
+     * Set the client application provided reference ID for the credit card.
      *
      * @param referenceId the referenceId value to set
      * @return the SubscriptionModel object itself.
@@ -384,7 +384,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Get the lastProcessed value.
+     * Get the timestamp indicating when the subscription was last processed.
      *
      * @return the lastProcessed value
      */
@@ -393,7 +393,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Set the lastProcessed value.
+     * Set the timestamp indicating when the subscription was last processed.
      *
      * @param lastProcessed the lastProcessed value to set
      * @return the SubscriptionModel object itself.
@@ -404,7 +404,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Get the endDate value.
+     * Get the date indicating when the payment subscription should be stopped.
      *
      * @return the endDate value
      */
@@ -413,7 +413,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Set the endDate value.
+     * Set the date indicating when the payment subscription should be stopped.
      *
      * @param endDate the endDate value to set
      * @return the SubscriptionModel object itself.
@@ -424,7 +424,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Get the createdTime value.
+     * Get the timestamp indicating when the credit card was created.
      *
      * @return the createdTime value
      */
@@ -433,7 +433,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Set the createdTime value.
+     * Set the timestamp indicating when the credit card was created.
      *
      * @param createdTime the createdTime value to set
      * @return the SubscriptionModel object itself.
@@ -444,7 +444,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Get the modifiedTime value.
+     * Get the timestamp indicating the last time that the details of the credit card were modified.
      *
      * @return the modifiedTime value
      */
@@ -453,7 +453,7 @@ public class SubscriptionModel {
     }
 
     /**
-     * Set the modifiedTime value.
+     * Set the timestamp indicating the last time that the details of the credit card were modified.
      *
      * @param modifiedTime the modifiedTime value to set
      * @return the SubscriptionModel object itself.

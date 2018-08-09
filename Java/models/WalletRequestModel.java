@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client.models;
+package walletapiv2.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -19,7 +19,7 @@ public class WalletRequestModel {
     private String referenceId;
 
     /**
-     * Get the referenceId value.
+     * Get gets or sets the reference identifier.
      *
      * @return the referenceId value
      */
@@ -28,7 +28,7 @@ public class WalletRequestModel {
     }
 
     /**
-     * Set the referenceId value.
+     * Set gets or sets the reference identifier.
      *
      * @param referenceId the referenceId value to set
      * @return the WalletRequestModel object itself.

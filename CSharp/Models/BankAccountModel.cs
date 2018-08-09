@@ -52,7 +52,7 @@ namespace Softheon.Wallet.Api.Client.Models
         /// account was created.</param>
         /// <param name="modifiedTime">The timestamp indicating the last time
         /// that the details of the bank account were modified.</param>
-        public BankAccountModel(string routingNumber, string type, string state, string accountHolderName, Address accountHolderAddress, string email, int? id = default(int?), string token = default(string), string accountNumber = default(string), string nickname = default(string), string referenceId = default(string), System.DateTime? createdTime = default(System.DateTime?), System.DateTime? modifiedTime = default(System.DateTime?))
+        public BankAccountModel(string routingNumber, string type, string state, string accountHolderName, Address accountHolderAddress, string email, int? id = default(int?), string token = default(string), string accountNumber = default(string), string nickname = default(string), string referenceId = default(string), System.DateTimeOffset? createdTime = default(System.DateTimeOffset?), System.DateTimeOffset? modifiedTime = default(System.DateTimeOffset?))
         {
             Id = id;
             Token = token;
@@ -152,14 +152,14 @@ namespace Softheon.Wallet.Api.Client.Models
         /// created.
         /// </summary>
         [JsonProperty(PropertyName = "createdTime")]
-        public System.DateTime? CreatedTime { get; set; }
+        public System.DateTimeOffset? CreatedTime { get; set; }
 
         /// <summary>
         /// Gets or sets the timestamp indicating the last time that the
         /// details of the bank account were modified.
         /// </summary>
         [JsonProperty(PropertyName = "modifiedTime")]
-        public System.DateTime? ModifiedTime { get; set; }
+        public System.DateTimeOffset? ModifiedTime { get; set; }
 
         /// <summary>
         /// Validate the object.

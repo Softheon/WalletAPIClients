@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client.models;
+package walletapiv2.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -29,7 +29,9 @@ public class RefundRequestModel {
     private String reason;
 
     /**
-     * Get the amount value.
+     * Get the amount to be refunded.  If an amount less than the original payment amount is
+     specified, a partial refund will be processed.  If no amount is specified, a full refund
+     will be processed.
      *
      * @return the amount value
      */
@@ -38,7 +40,9 @@ public class RefundRequestModel {
     }
 
     /**
-     * Set the amount value.
+     * Set the amount to be refunded.  If an amount less than the original payment amount is
+     specified, a partial refund will be processed.  If no amount is specified, a full refund
+     will be processed.
      *
      * @param amount the amount value to set
      * @return the RefundRequestModel object itself.
@@ -49,7 +53,7 @@ public class RefundRequestModel {
     }
 
     /**
-     * Get the reason value.
+     * Get the reason for issuing the refund.
      *
      * @return the reason value
      */
@@ -58,7 +62,7 @@ public class RefundRequestModel {
     }
 
     /**
-     * Set the reason value.
+     * Set the reason for issuing the refund.
      *
      * @param reason the reason value to set
      * @return the RefundRequestModel object itself.

@@ -30,7 +30,7 @@ class SoftheonWalletAPIConfiguration(Configuration):
         if credentials is None:
             raise ValueError("Parameter 'credentials' must not be None.")
         if not base_url:
-            base_url = 'https://hack.softheon.io/api/payments'
+            base_url = 'https://api-model.softheon.com/payments'
 
         super(SoftheonWalletAPIConfiguration, self).__init__(base_url)
 
@@ -58,10 +58,62 @@ class SoftheonWalletAPI(object):
         self._client = ServiceClient(self.config.credentials, self.config)
 
         client_models = {k: v for k, v in models.__dict__.items() if isinstance(v, type)}
-        self.api_version = 'v1'
+        self.api_version = '2'
         self._serialize = Serializer(client_models)
         self._deserialize = Deserializer(client_models)
 
+
+    def get_bank_account_by_token(
+            self, token, custom_headers=None, raw=False, **operation_config):
+        """Gets the bank account associated with the specified token.
+
+        :param token: The token.
+        :type token: str
+        :param dict custom_headers: headers that will be added to the request
+        :param bool raw: returns the direct response alongside the
+         deserialized response
+        :param operation_config: :ref:`Operation configuration
+         overrides<msrest:optionsforoperations>`.
+        :return: BankAccountModel or ClientRawResponse if raw=true
+        :rtype: ~softheon.wallet.api.client.models.BankAccountModel or
+         ~msrest.pipeline.ClientRawResponse
+        :raises:
+         :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
+        """
+        # Construct URL
+        url = self.get_bank_account_by_token.metadata['url']
+        path_format_arguments = {
+            'token': self._serialize.url("token", token, 'str')
+        }
+        url = self._client.format_url(url, **path_format_arguments)
+
+        # Construct parameters
+        query_parameters = {}
+
+        # Construct headers
+        header_parameters = {}
+        header_parameters['Content-Type'] = 'application/json; charset=utf-8'
+        if custom_headers:
+            header_parameters.update(custom_headers)
+
+        # Construct and send request
+        request = self._client.get(url, query_parameters)
+        response = self._client.send(request, header_parameters, stream=False, **operation_config)
+
+        if response.status_code not in [200, 401, 403, 404]:
+            raise HttpOperationError(self._deserialize, response)
+
+        deserialized = None
+
+        if response.status_code == 200:
+            deserialized = self._deserialize('BankAccountModel', response)
+
+        if raw:
+            client_raw_response = ClientRawResponse(deserialized, response)
+            return client_raw_response
+
+        return deserialized
+    get_bank_account_by_token.metadata = {'url': '/v2/bankaccounts/{token}'}
 
     def get_bank_accounts_by_reference_id(
             self, reference_id, custom_headers=None, raw=False, **operation_config):
@@ -82,7 +134,7 @@ class SoftheonWalletAPI(object):
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/bankaccounts'
+        url = self.get_bank_accounts_by_reference_id.metadata['url']
 
         # Construct parameters
         query_parameters = {}
@@ -98,7 +150,7 @@ class SoftheonWalletAPI(object):
         request = self._client.get(url, query_parameters)
         response = self._client.send(request, header_parameters, stream=False, **operation_config)
 
-        if response.status_code not in [200]:
+        if response.status_code not in [200, 401]:
             raise HttpOperationError(self._deserialize, response)
 
         deserialized = None
@@ -111,6 +163,7 @@ class SoftheonWalletAPI(object):
             return client_raw_response
 
         return deserialized
+    get_bank_accounts_by_reference_id.metadata = {'url': '/v2/bankaccounts'}
 
     def update_bank_account(
             self, update_bank_account_model, custom_headers=None, raw=False, **operation_config):
@@ -124,13 +177,13 @@ class SoftheonWalletAPI(object):
          deserialized response
         :param operation_config: :ref:`Operation configuration
          overrides<msrest:optionsforoperations>`.
-        :return: object or ClientRawResponse if raw=true
-        :rtype: object or ~msrest.pipeline.ClientRawResponse
+        :return: None or ClientRawResponse if raw=true
+        :rtype: None or ~msrest.pipeline.ClientRawResponse
         :raises:
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/bankaccounts'
+        url = self.update_bank_account.metadata['url']
 
         # Construct parameters
         query_parameters = {}
@@ -149,19 +202,13 @@ class SoftheonWalletAPI(object):
         response = self._client.send(
             request, header_parameters, body_content, stream=False, **operation_config)
 
-        if response.status_code not in [200, 204, 400]:
+        if response.status_code not in [204, 400, 401]:
             raise HttpOperationError(self._deserialize, response)
 
-        deserialized = None
-
-        if response.status_code == 200:
-            deserialized = self._deserialize('object', response)
-
         if raw:
-            client_raw_response = ClientRawResponse(deserialized, response)
+            client_raw_response = ClientRawResponse(None, response)
             return client_raw_response
-
-        return deserialized
+    update_bank_account.metadata = {'url': '/v2/bankaccounts'}
 
     def create_bank_account(
             self, bank_account_request, custom_headers=None, raw=False, **operation_config):
@@ -182,7 +229,7 @@ class SoftheonWalletAPI(object):
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/bankaccounts'
+        url = self.create_bank_account.metadata['url']
 
         # Construct parameters
         query_parameters = {}
@@ -201,7 +248,7 @@ class SoftheonWalletAPI(object):
         response = self._client.send(
             request, header_parameters, body_content, stream=False, **operation_config)
 
-        if response.status_code not in [200, 400]:
+        if response.status_code not in [200, 400, 401]:
             raise HttpOperationError(self._deserialize, response)
 
         deserialized = None
@@ -214,64 +261,14 @@ class SoftheonWalletAPI(object):
             return client_raw_response
 
         return deserialized
-
-    def get_bank_account_by_token(
-            self, token, custom_headers=None, raw=False, **operation_config):
-        """Gets the bank account associated with the specified token.
-
-        :param token: The token.
-        :type token: str
-        :param dict custom_headers: headers that will be added to the request
-        :param bool raw: returns the direct response alongside the
-         deserialized response
-        :param operation_config: :ref:`Operation configuration
-         overrides<msrest:optionsforoperations>`.
-        :return: BankAccountModel or ClientRawResponse if raw=true
-        :rtype: ~softheon.wallet.api.client.models.BankAccountModel or
-         ~msrest.pipeline.ClientRawResponse
-        :raises:
-         :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
-        """
-        # Construct URL
-        url = '/v1/bankaccounts/{token}'
-        path_format_arguments = {
-            'token': self._serialize.url("token", token, 'str')
-        }
-        url = self._client.format_url(url, **path_format_arguments)
-
-        # Construct parameters
-        query_parameters = {}
-
-        # Construct headers
-        header_parameters = {}
-        header_parameters['Content-Type'] = 'application/json; charset=utf-8'
-        if custom_headers:
-            header_parameters.update(custom_headers)
-
-        # Construct and send request
-        request = self._client.get(url, query_parameters)
-        response = self._client.send(request, header_parameters, stream=False, **operation_config)
-
-        if response.status_code not in [200, 403, 404]:
-            raise HttpOperationError(self._deserialize, response)
-
-        deserialized = None
-
-        if response.status_code == 200:
-            deserialized = self._deserialize('BankAccountModel', response)
-
-        if raw:
-            client_raw_response = ClientRawResponse(deserialized, response)
-            return client_raw_response
-
-        return deserialized
+    create_bank_account.metadata = {'url': '/v2/bankaccounts'}
 
     def get_bin(
-            self, card_number, custom_headers=None, raw=False, **operation_config):
+            self, bin_request, custom_headers=None, raw=False, **operation_config):
         """Gets the bin information for a specified credit card number.
 
-        :param card_number: The card number.
-        :type card_number: str
+        :param bin_request: The bin request.
+        :type bin_request: ~softheon.wallet.api.client.models.BinRequestModel
         :param dict custom_headers: headers that will be added to the request
         :param bool raw: returns the direct response alongside the
          deserialized response
@@ -284,11 +281,10 @@ class SoftheonWalletAPI(object):
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/bins'
+        url = self.get_bin.metadata['url']
 
         # Construct parameters
         query_parameters = {}
-        query_parameters['cardNumber'] = self._serialize.query("card_number", card_number, 'str')
 
         # Construct headers
         header_parameters = {}
@@ -296,11 +292,15 @@ class SoftheonWalletAPI(object):
         if custom_headers:
             header_parameters.update(custom_headers)
 
-        # Construct and send request
-        request = self._client.get(url, query_parameters)
-        response = self._client.send(request, header_parameters, stream=False, **operation_config)
+        # Construct body
+        body_content = self._serialize.body(bin_request, 'BinRequestModel')
 
-        if response.status_code not in [200, 404]:
+        # Construct and send request
+        request = self._client.post(url, query_parameters)
+        response = self._client.send(
+            request, header_parameters, body_content, stream=False, **operation_config)
+
+        if response.status_code not in [200, 401, 404]:
             raise HttpOperationError(self._deserialize, response)
 
         deserialized = None
@@ -313,6 +313,7 @@ class SoftheonWalletAPI(object):
             return client_raw_response
 
         return deserialized
+    get_bin.metadata = {'url': '/v2/bins'}
 
     def get_checkout(
             self, checkout_id, custom_headers=None, raw=False, **operation_config):
@@ -332,7 +333,7 @@ class SoftheonWalletAPI(object):
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/checkouts'
+        url = self.get_checkout.metadata['url']
 
         # Construct parameters
         query_parameters = {}
@@ -348,7 +349,7 @@ class SoftheonWalletAPI(object):
         request = self._client.get(url, query_parameters)
         response = self._client.send(request, header_parameters, stream=False, **operation_config)
 
-        if response.status_code not in [200, 404]:
+        if response.status_code not in [200, 401, 404]:
             raise HttpOperationError(self._deserialize, response)
 
         deserialized = None
@@ -361,6 +362,7 @@ class SoftheonWalletAPI(object):
             return client_raw_response
 
         return deserialized
+    get_checkout.metadata = {'url': '/v2/checkouts'}
 
     def create_checkout(
             self, model, custom_headers=None, raw=False, **operation_config):
@@ -380,7 +382,7 @@ class SoftheonWalletAPI(object):
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/checkouts'
+        url = self.create_checkout.metadata['url']
 
         # Construct parameters
         query_parameters = {}
@@ -399,13 +401,11 @@ class SoftheonWalletAPI(object):
         response = self._client.send(
             request, header_parameters, body_content, stream=False, **operation_config)
 
-        if response.status_code not in [200, 201, 400]:
+        if response.status_code not in [201, 400, 401]:
             raise HttpOperationError(self._deserialize, response)
 
         deserialized = None
 
-        if response.status_code == 200:
-            deserialized = self._deserialize('CheckoutResponseModel', response)
         if response.status_code == 201:
             deserialized = self._deserialize('CheckoutResponseModel', response)
 
@@ -414,6 +414,7 @@ class SoftheonWalletAPI(object):
             return client_raw_response
 
         return deserialized
+    create_checkout.metadata = {'url': '/v2/checkouts'}
 
     def get_credit_cards_by_reference_id(
             self, reference_id, custom_headers=None, raw=False, **operation_config):
@@ -434,7 +435,7 @@ class SoftheonWalletAPI(object):
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/creditcards'
+        url = self.get_credit_cards_by_reference_id.metadata['url']
 
         # Construct parameters
         query_parameters = {}
@@ -450,7 +451,7 @@ class SoftheonWalletAPI(object):
         request = self._client.get(url, query_parameters)
         response = self._client.send(request, header_parameters, stream=False, **operation_config)
 
-        if response.status_code not in [200]:
+        if response.status_code not in [200, 401]:
             raise HttpOperationError(self._deserialize, response)
 
         deserialized = None
@@ -463,6 +464,7 @@ class SoftheonWalletAPI(object):
             return client_raw_response
 
         return deserialized
+    get_credit_cards_by_reference_id.metadata = {'url': '/v2/creditcards'}
 
     def update_credit_card(
             self, update_credit_card_model, custom_headers=None, raw=False, **operation_config):
@@ -476,13 +478,13 @@ class SoftheonWalletAPI(object):
          deserialized response
         :param operation_config: :ref:`Operation configuration
          overrides<msrest:optionsforoperations>`.
-        :return: object or ClientRawResponse if raw=true
-        :rtype: object or ~msrest.pipeline.ClientRawResponse
+        :return: None or ClientRawResponse if raw=true
+        :rtype: None or ~msrest.pipeline.ClientRawResponse
         :raises:
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/creditcards'
+        url = self.update_credit_card.metadata['url']
 
         # Construct parameters
         query_parameters = {}
@@ -501,19 +503,13 @@ class SoftheonWalletAPI(object):
         response = self._client.send(
             request, header_parameters, body_content, stream=False, **operation_config)
 
-        if response.status_code not in [200, 204, 400]:
+        if response.status_code not in [204, 400, 401]:
             raise HttpOperationError(self._deserialize, response)
 
-        deserialized = None
-
-        if response.status_code == 200:
-            deserialized = self._deserialize('object', response)
-
         if raw:
-            client_raw_response = ClientRawResponse(deserialized, response)
+            client_raw_response = ClientRawResponse(None, response)
             return client_raw_response
-
-        return deserialized
+    update_credit_card.metadata = {'url': '/v2/creditcards'}
 
     def create_credit_card(
             self, credit_card_request, custom_headers=None, raw=False, **operation_config):
@@ -534,7 +530,7 @@ class SoftheonWalletAPI(object):
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/creditcards'
+        url = self.create_credit_card.metadata['url']
 
         # Construct parameters
         query_parameters = {}
@@ -553,7 +549,7 @@ class SoftheonWalletAPI(object):
         response = self._client.send(
             request, header_parameters, body_content, stream=False, **operation_config)
 
-        if response.status_code not in [200, 400]:
+        if response.status_code not in [200, 400, 401]:
             raise HttpOperationError(self._deserialize, response)
 
         deserialized = None
@@ -566,6 +562,7 @@ class SoftheonWalletAPI(object):
             return client_raw_response
 
         return deserialized
+    create_credit_card.metadata = {'url': '/v2/creditcards'}
 
     def get_payment(
             self, id, custom_headers=None, raw=False, **operation_config):
@@ -585,7 +582,7 @@ class SoftheonWalletAPI(object):
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/payments/{id}'
+        url = self.get_payment.metadata['url']
         path_format_arguments = {
             'id': self._serialize.url("id", id, 'int')
         }
@@ -604,7 +601,7 @@ class SoftheonWalletAPI(object):
         request = self._client.get(url, query_parameters)
         response = self._client.send(request, header_parameters, stream=False, **operation_config)
 
-        if response.status_code not in [200, 404]:
+        if response.status_code not in [200, 401, 404]:
             raise HttpOperationError(self._deserialize, response)
 
         deserialized = None
@@ -617,19 +614,17 @@ class SoftheonWalletAPI(object):
             return client_raw_response
 
         return deserialized
+    get_payment.metadata = {'url': '/v2/payments/{id}'}
 
     def get_payments_by_reference_id(
-            self, reference_id, min_date=None, max_date=None, custom_headers=None, raw=False, **operation_config):
+            self, reference_id=None, min_date=None, max_date=None, custom_headers=None, raw=False, **operation_config):
         """Gets payments associated with the specified reference identifier.
 
-        :param reference_id: The client application provided reference ID for
-         the payment.
+        :param reference_id: Gets or sets the reference identifier.
         :type reference_id: str
-        :param min_date: The optional lower bound of the range for payment
-         date.
+        :param min_date: Gets or sets the minimum date.
         :type min_date: datetime
-        :param max_date: The optional upper bound of the range for payment
-         date.
+        :param max_date: Gets or sets the maximum date.
         :type max_date: datetime
         :param dict custom_headers: headers that will be added to the request
         :param bool raw: returns the direct response alongside the
@@ -643,11 +638,12 @@ class SoftheonWalletAPI(object):
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/payments'
+        url = self.get_payments_by_reference_id.metadata['url']
 
         # Construct parameters
         query_parameters = {}
-        query_parameters['referenceId'] = self._serialize.query("reference_id", reference_id, 'str')
+        if reference_id is not None:
+            query_parameters['referenceId'] = self._serialize.query("reference_id", reference_id, 'str')
         if min_date is not None:
             query_parameters['minDate'] = self._serialize.query("min_date", min_date, 'iso-8601')
         if max_date is not None:
@@ -663,7 +659,7 @@ class SoftheonWalletAPI(object):
         request = self._client.get(url, query_parameters)
         response = self._client.send(request, header_parameters, stream=False, **operation_config)
 
-        if response.status_code not in [200]:
+        if response.status_code not in [200, 401]:
             raise HttpOperationError(self._deserialize, response)
 
         deserialized = None
@@ -676,6 +672,7 @@ class SoftheonWalletAPI(object):
             return client_raw_response
 
         return deserialized
+    get_payments_by_reference_id.metadata = {'url': '/v2/payments'}
 
     def create_payment(
             self, payment_request, custom_headers=None, raw=False, **operation_config):
@@ -696,7 +693,7 @@ class SoftheonWalletAPI(object):
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/payments'
+        url = self.create_payment.metadata['url']
 
         # Construct parameters
         query_parameters = {}
@@ -715,13 +712,11 @@ class SoftheonWalletAPI(object):
         response = self._client.send(
             request, header_parameters, body_content, stream=False, **operation_config)
 
-        if response.status_code not in [200, 201, 400]:
+        if response.status_code not in [201, 400, 401]:
             raise HttpOperationError(self._deserialize, response)
 
         deserialized = None
 
-        if response.status_code == 200:
-            deserialized = self._deserialize('PaymentModel', response)
         if response.status_code == 201:
             deserialized = self._deserialize('PaymentModel', response)
 
@@ -730,6 +725,7 @@ class SoftheonWalletAPI(object):
             return client_raw_response
 
         return deserialized
+    create_payment.metadata = {'url': '/v2/payments'}
 
     def get_refunds(
             self, id, custom_headers=None, raw=False, **operation_config):
@@ -749,7 +745,7 @@ class SoftheonWalletAPI(object):
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/payments/{id}/refunds'
+        url = self.get_refunds.metadata['url']
         path_format_arguments = {
             'id': self._serialize.url("id", id, 'int')
         }
@@ -768,7 +764,7 @@ class SoftheonWalletAPI(object):
         request = self._client.get(url, query_parameters)
         response = self._client.send(request, header_parameters, stream=False, **operation_config)
 
-        if response.status_code not in [200]:
+        if response.status_code not in [200, 401]:
             raise HttpOperationError(self._deserialize, response)
 
         deserialized = None
@@ -781,6 +777,7 @@ class SoftheonWalletAPI(object):
             return client_raw_response
 
         return deserialized
+    get_refunds.metadata = {'url': '/v2/payments/{id}/refunds'}
 
     def create_refund(
             self, id, refund_request_model, custom_headers=None, raw=False, **operation_config):
@@ -803,7 +800,7 @@ class SoftheonWalletAPI(object):
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/payments/{id}/refunds'
+        url = self.create_refund.metadata['url']
         path_format_arguments = {
             'id': self._serialize.url("id", id, 'int')
         }
@@ -826,7 +823,7 @@ class SoftheonWalletAPI(object):
         response = self._client.send(
             request, header_parameters, body_content, stream=False, **operation_config)
 
-        if response.status_code not in [200, 404]:
+        if response.status_code not in [200, 401, 404]:
             raise HttpOperationError(self._deserialize, response)
 
         deserialized = None
@@ -839,6 +836,59 @@ class SoftheonWalletAPI(object):
             return client_raw_response
 
         return deserialized
+    create_refund.metadata = {'url': '/v2/payments/{id}/refunds'}
+
+    def get_subscription(
+            self, id, custom_headers=None, raw=False, **operation_config):
+        """Gets a single payment subscription with the specified subscription id.
+
+        :param id: The subscription id.
+        :type id: str
+        :param dict custom_headers: headers that will be added to the request
+        :param bool raw: returns the direct response alongside the
+         deserialized response
+        :param operation_config: :ref:`Operation configuration
+         overrides<msrest:optionsforoperations>`.
+        :return: SubscriptionModel or ClientRawResponse if raw=true
+        :rtype: ~softheon.wallet.api.client.models.SubscriptionModel or
+         ~msrest.pipeline.ClientRawResponse
+        :raises:
+         :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
+        """
+        # Construct URL
+        url = self.get_subscription.metadata['url']
+        path_format_arguments = {
+            'id': self._serialize.url("id", id, 'str')
+        }
+        url = self._client.format_url(url, **path_format_arguments)
+
+        # Construct parameters
+        query_parameters = {}
+
+        # Construct headers
+        header_parameters = {}
+        header_parameters['Content-Type'] = 'application/json; charset=utf-8'
+        if custom_headers:
+            header_parameters.update(custom_headers)
+
+        # Construct and send request
+        request = self._client.get(url, query_parameters)
+        response = self._client.send(request, header_parameters, stream=False, **operation_config)
+
+        if response.status_code not in [200, 401, 404]:
+            raise HttpOperationError(self._deserialize, response)
+
+        deserialized = None
+
+        if response.status_code == 200:
+            deserialized = self._deserialize('SubscriptionModel', response)
+
+        if raw:
+            client_raw_response = ClientRawResponse(deserialized, response)
+            return client_raw_response
+
+        return deserialized
+    get_subscription.metadata = {'url': '/v2/subscriptions/{id}'}
 
     def get_subscriptions_by_reference_id(
             self, reference_id, custom_headers=None, raw=False, **operation_config):
@@ -859,7 +909,7 @@ class SoftheonWalletAPI(object):
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/subscriptions'
+        url = self.get_subscriptions_by_reference_id.metadata['url']
 
         # Construct parameters
         query_parameters = {}
@@ -875,7 +925,7 @@ class SoftheonWalletAPI(object):
         request = self._client.get(url, query_parameters)
         response = self._client.send(request, header_parameters, stream=False, **operation_config)
 
-        if response.status_code not in [200]:
+        if response.status_code not in [200, 401]:
             raise HttpOperationError(self._deserialize, response)
 
         deserialized = None
@@ -888,6 +938,7 @@ class SoftheonWalletAPI(object):
             return client_raw_response
 
         return deserialized
+    get_subscriptions_by_reference_id.metadata = {'url': '/v2/subscriptions'}
 
     def update_subscription(
             self, update_subscription_model, custom_headers=None, raw=False, **operation_config):
@@ -901,13 +952,13 @@ class SoftheonWalletAPI(object):
          deserialized response
         :param operation_config: :ref:`Operation configuration
          overrides<msrest:optionsforoperations>`.
-        :return: object or ClientRawResponse if raw=true
-        :rtype: object or ~msrest.pipeline.ClientRawResponse
+        :return: None or ClientRawResponse if raw=true
+        :rtype: None or ~msrest.pipeline.ClientRawResponse
         :raises:
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/subscriptions'
+        url = self.update_subscription.metadata['url']
 
         # Construct parameters
         query_parameters = {}
@@ -926,19 +977,13 @@ class SoftheonWalletAPI(object):
         response = self._client.send(
             request, header_parameters, body_content, stream=False, **operation_config)
 
-        if response.status_code not in [200, 204]:
+        if response.status_code not in [204, 401]:
             raise HttpOperationError(self._deserialize, response)
 
-        deserialized = None
-
-        if response.status_code == 200:
-            deserialized = self._deserialize('object', response)
-
         if raw:
-            client_raw_response = ClientRawResponse(deserialized, response)
+            client_raw_response = ClientRawResponse(None, response)
             return client_raw_response
-
-        return deserialized
+    update_subscription.metadata = {'url': '/v2/subscriptions'}
 
     def create_subscription(
             self, subscription_request, custom_headers=None, raw=False, **operation_config):
@@ -952,14 +997,14 @@ class SoftheonWalletAPI(object):
          deserialized response
         :param operation_config: :ref:`Operation configuration
          overrides<msrest:optionsforoperations>`.
-        :return: SubscriptionResponceModel or ClientRawResponse if raw=true
-        :rtype: ~softheon.wallet.api.client.models.SubscriptionResponceModel
+        :return: SubscriptionResponseModel or ClientRawResponse if raw=true
+        :rtype: ~softheon.wallet.api.client.models.SubscriptionResponseModel
          or ~msrest.pipeline.ClientRawResponse
         :raises:
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/subscriptions'
+        url = self.create_subscription.metadata['url']
 
         # Construct parameters
         query_parameters = {}
@@ -978,70 +1023,20 @@ class SoftheonWalletAPI(object):
         response = self._client.send(
             request, header_parameters, body_content, stream=False, **operation_config)
 
-        if response.status_code not in [200, 400, 409]:
+        if response.status_code not in [200, 400, 401, 409]:
             raise HttpOperationError(self._deserialize, response)
 
         deserialized = None
 
         if response.status_code == 200:
-            deserialized = self._deserialize('SubscriptionResponceModel', response)
+            deserialized = self._deserialize('SubscriptionResponseModel', response)
 
         if raw:
             client_raw_response = ClientRawResponse(deserialized, response)
             return client_raw_response
 
         return deserialized
-
-    def get_subscription(
-            self, id, custom_headers=None, raw=False, **operation_config):
-        """Gets a single payment subscription with the specified subscription id.
-
-        :param id: The subscription id.
-        :type id: str
-        :param dict custom_headers: headers that will be added to the request
-        :param bool raw: returns the direct response alongside the
-         deserialized response
-        :param operation_config: :ref:`Operation configuration
-         overrides<msrest:optionsforoperations>`.
-        :return: SubscriptionModel or ClientRawResponse if raw=true
-        :rtype: ~softheon.wallet.api.client.models.SubscriptionModel or
-         ~msrest.pipeline.ClientRawResponse
-        :raises:
-         :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
-        """
-        # Construct URL
-        url = '/v1/subscriptions/{id}'
-        path_format_arguments = {
-            'id': self._serialize.url("id", id, 'str')
-        }
-        url = self._client.format_url(url, **path_format_arguments)
-
-        # Construct parameters
-        query_parameters = {}
-
-        # Construct headers
-        header_parameters = {}
-        header_parameters['Content-Type'] = 'application/json; charset=utf-8'
-        if custom_headers:
-            header_parameters.update(custom_headers)
-
-        # Construct and send request
-        request = self._client.get(url, query_parameters)
-        response = self._client.send(request, header_parameters, stream=False, **operation_config)
-
-        if response.status_code not in [200, 404]:
-            raise HttpOperationError(self._deserialize, response)
-
-        deserialized = None
-
-        if response.status_code == 200:
-            deserialized = self._deserialize('SubscriptionModel', response)
-
-        if raw:
-            client_raw_response = ClientRawResponse(deserialized, response)
-            return client_raw_response
-
-        return deserialized
+    create_subscription.metadata = {'url': '/v2/subscriptions'}
 
     def get_wallet(
             self, wallet_id, custom_headers=None, raw=False, **operation_config):
@@ -1061,7 +1056,7 @@ class SoftheonWalletAPI(object):
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/wallet/{walletId}'
+        url = self.get_wallet.metadata['url']
         path_format_arguments = {
             'walletId': self._serialize.url("wallet_id", wallet_id, 'int')
         }
@@ -1080,7 +1075,7 @@ class SoftheonWalletAPI(object):
         request = self._client.get(url, query_parameters)
         response = self._client.send(request, header_parameters, stream=False, **operation_config)
 
-        if response.status_code not in [200, 400, 404]:
+        if response.status_code not in [200, 400, 401, 404]:
             raise HttpOperationError(self._deserialize, response)
 
         deserialized = None
@@ -1093,6 +1088,7 @@ class SoftheonWalletAPI(object):
             return client_raw_response
 
         return deserialized
+    get_wallet.metadata = {'url': '/v2/wallet/{walletId}'}
 
     def update_wallet(
             self, wallet_id, default_payment_token, custom_headers=None, raw=False, **operation_config):
@@ -1113,7 +1109,7 @@ class SoftheonWalletAPI(object):
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/wallet/{walletId}'
+        url = self.update_wallet.metadata['url']
         path_format_arguments = {
             'walletId': self._serialize.url("wallet_id", wallet_id, 'int')
         }
@@ -1136,12 +1132,13 @@ class SoftheonWalletAPI(object):
         response = self._client.send(
             request, header_parameters, body_content, stream=False, **operation_config)
 
-        if response.status_code not in [200, 400]:
+        if response.status_code not in [200, 400, 401]:
             raise HttpOperationError(self._deserialize, response)
 
         if raw:
             client_raw_response = ClientRawResponse(None, response)
             return client_raw_response
+    update_wallet.metadata = {'url': '/v2/wallet/{walletId}'}
 
     def get_wallet_by_reference_id(
             self, reference_id, custom_headers=None, raw=False, **operation_config):
@@ -1161,7 +1158,7 @@ class SoftheonWalletAPI(object):
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/wallet'
+        url = self.get_wallet_by_reference_id.metadata['url']
 
         # Construct parameters
         query_parameters = {}
@@ -1177,7 +1174,7 @@ class SoftheonWalletAPI(object):
         request = self._client.get(url, query_parameters)
         response = self._client.send(request, header_parameters, stream=False, **operation_config)
 
-        if response.status_code not in [200, 400]:
+        if response.status_code not in [200, 400, 401]:
             raise HttpOperationError(self._deserialize, response)
 
         deserialized = None
@@ -1190,6 +1187,7 @@ class SoftheonWalletAPI(object):
             return client_raw_response
 
         return deserialized
+    get_wallet_by_reference_id.metadata = {'url': '/v2/wallet'}
 
     def create_wallet(
             self, model, custom_headers=None, raw=False, **operation_config):
@@ -1202,13 +1200,13 @@ class SoftheonWalletAPI(object):
          deserialized response
         :param operation_config: :ref:`Operation configuration
          overrides<msrest:optionsforoperations>`.
-        :return: None or ClientRawResponse if raw=true
-        :rtype: None or ~msrest.pipeline.ClientRawResponse
+        :return: int or ClientRawResponse if raw=true
+        :rtype: int or ~msrest.pipeline.ClientRawResponse
         :raises:
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/wallet'
+        url = self.create_wallet.metadata['url']
 
         # Construct parameters
         query_parameters = {}
@@ -1227,12 +1225,20 @@ class SoftheonWalletAPI(object):
         response = self._client.send(
             request, header_parameters, body_content, stream=False, **operation_config)
 
-        if response.status_code not in [200, 400]:
+        if response.status_code not in [200, 400, 401]:
             raise HttpOperationError(self._deserialize, response)
 
+        deserialized = None
+
+        if response.status_code == 200:
+            deserialized = self._deserialize('int', response)
+
         if raw:
-            client_raw_response = ClientRawResponse(None, response)
+            client_raw_response = ClientRawResponse(deserialized, response)
             return client_raw_response
+
+        return deserialized
+    create_wallet.metadata = {'url': '/v2/wallet'}
 
     def add_wallet_credit_card(
             self, wallet_id, request, custom_headers=None, raw=False, **operation_config):
@@ -1255,7 +1261,7 @@ class SoftheonWalletAPI(object):
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/wallet/{walletId}/CreditCard'
+        url = self.add_wallet_credit_card.metadata['url']
         path_format_arguments = {
             'walletId': self._serialize.url("wallet_id", wallet_id, 'int')
         }
@@ -1278,7 +1284,7 @@ class SoftheonWalletAPI(object):
         response = self._client.send(
             request, header_parameters, body_content, stream=False, **operation_config)
 
-        if response.status_code not in [200, 400]:
+        if response.status_code not in [200, 400, 401]:
             raise HttpOperationError(self._deserialize, response)
 
         deserialized = None
@@ -1291,6 +1297,7 @@ class SoftheonWalletAPI(object):
             return client_raw_response
 
         return deserialized
+    add_wallet_credit_card.metadata = {'url': '/v2/wallet/{walletId}/CreditCard'}
 
     def add_wallet_bank_account(
             self, wallet_id, request, custom_headers=None, raw=False, **operation_config):
@@ -1313,7 +1320,7 @@ class SoftheonWalletAPI(object):
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/wallet/{walletId}/BankAccount'
+        url = self.add_wallet_bank_account.metadata['url']
         path_format_arguments = {
             'walletId': self._serialize.url("wallet_id", wallet_id, 'int')
         }
@@ -1336,7 +1343,7 @@ class SoftheonWalletAPI(object):
         response = self._client.send(
             request, header_parameters, body_content, stream=False, **operation_config)
 
-        if response.status_code not in [200, 400]:
+        if response.status_code not in [200, 400, 401]:
             raise HttpOperationError(self._deserialize, response)
 
         deserialized = None
@@ -1349,52 +1356,7 @@ class SoftheonWalletAPI(object):
             return client_raw_response
 
         return deserialized
-
-    def remove_wallet_credit_card(
-            self, wallet_id, wallet_credit_card_id, custom_headers=None, raw=False, **operation_config):
-        """Deletes the wallet credit card.
-
-        :param wallet_id: The wallet identifier.
-        :type wallet_id: int
-        :param wallet_credit_card_id: The wallet credit card identifier.
-        :type wallet_credit_card_id: int
-        :param dict custom_headers: headers that will be added to the request
-        :param bool raw: returns the direct response alongside the
-         deserialized response
-        :param operation_config: :ref:`Operation configuration
-         overrides<msrest:optionsforoperations>`.
-        :return: None or ClientRawResponse if raw=true
-        :rtype: None or ~msrest.pipeline.ClientRawResponse
-        :raises:
-         :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
-        """
-        # Construct URL
-        url = '/v1/wallet/{walletId}/CreditCard/{walletCreditCardId}'
-        path_format_arguments = {
-            'walletId': self._serialize.url("wallet_id", wallet_id, 'int'),
-            'walletCreditCardId': self._serialize.url("wallet_credit_card_id", wallet_credit_card_id, 'int')
-        }
-        url = self._client.format_url(url, **path_format_arguments)
-
-        # Construct parameters
-        query_parameters = {}
-
-        # Construct headers
-        header_parameters = {}
-        header_parameters['Content-Type'] = 'application/json; charset=utf-8'
-        if custom_headers:
-            header_parameters.update(custom_headers)
-
-        # Construct and send request
-        request = self._client.delete(url, query_parameters)
-        response = self._client.send(request, header_parameters, stream=False, **operation_config)
-
-        if response.status_code not in [200, 400]:
-            raise HttpOperationError(self._deserialize, response)
-
-        if raw:
-            client_raw_response = ClientRawResponse(None, response)
-            return client_raw_response
+    add_wallet_bank_account.metadata = {'url': '/v2/wallet/{walletId}/BankAccount'}
 
     def remove_wallet_bank_account(
             self, wallet_id, wallet_bank_acct_id, custom_headers=None, raw=False, **operation_config):
@@ -1415,7 +1377,7 @@ class SoftheonWalletAPI(object):
          :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
         """
         # Construct URL
-        url = '/v1/wallet/{walletId}/BankAccount/{walletBankAcctId}'
+        url = self.remove_wallet_bank_account.metadata['url']
         path_format_arguments = {
             'walletId': self._serialize.url("wallet_id", wallet_id, 'int'),
             'walletBankAcctId': self._serialize.url("wallet_bank_acct_id", wallet_bank_acct_id, 'int')
@@ -1435,9 +1397,57 @@ class SoftheonWalletAPI(object):
         request = self._client.delete(url, query_parameters)
         response = self._client.send(request, header_parameters, stream=False, **operation_config)
 
-        if response.status_code not in [200, 400]:
+        if response.status_code not in [200, 400, 401]:
             raise HttpOperationError(self._deserialize, response)
 
         if raw:
             client_raw_response = ClientRawResponse(None, response)
             return client_raw_response
+    remove_wallet_bank_account.metadata = {'url': '/v2/wallet/{walletId}/BankAccount/{walletBankAcctId}'}
+
+    def remove_wallet_credit_card(
+            self, wallet_id, wallet_credit_card_id, custom_headers=None, raw=False, **operation_config):
+        """Deletes the wallet credit card.
+
+        :param wallet_id: The wallet identifier.
+        :type wallet_id: int
+        :param wallet_credit_card_id: The wallet credit card identifier.
+        :type wallet_credit_card_id: int
+        :param dict custom_headers: headers that will be added to the request
+        :param bool raw: returns the direct response alongside the
+         deserialized response
+        :param operation_config: :ref:`Operation configuration
+         overrides<msrest:optionsforoperations>`.
+        :return: None or ClientRawResponse if raw=true
+        :rtype: None or ~msrest.pipeline.ClientRawResponse
+        :raises:
+         :class:`HttpOperationError<msrest.exceptions.HttpOperationError>`
+        """
+        # Construct URL
+        url = self.remove_wallet_credit_card.metadata['url']
+        path_format_arguments = {
+            'walletId': self._serialize.url("wallet_id", wallet_id, 'int'),
+            'walletCreditCardId': self._serialize.url("wallet_credit_card_id", wallet_credit_card_id, 'int')
+        }
+        url = self._client.format_url(url, **path_format_arguments)
+
+        # Construct parameters
+        query_parameters = {}
+
+        # Construct headers
+        header_parameters = {}
+        header_parameters['Content-Type'] = 'application/json; charset=utf-8'
+        if custom_headers:
+            header_parameters.update(custom_headers)
+
+        # Construct and send request
+        request = self._client.delete(url, query_parameters)
+        response = self._client.send(request, header_parameters, stream=False, **operation_config)
+
+        if response.status_code not in [200, 400, 401]:
+            raise HttpOperationError(self._deserialize, response)
+
+        if raw:
+            client_raw_response = ClientRawResponse(None, response)
+            return client_raw_response
+    remove_wallet_credit_card.metadata = {'url': '/v2/wallet/{walletId}/CreditCard/{walletCreditCardId}'}

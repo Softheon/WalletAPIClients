@@ -41,6 +41,20 @@ namespace Softheon.Wallet.Api.Client
 
 
         /// <summary>
+        /// Gets the bank account associated with the specified token.
+        /// </summary>
+        /// <param name='token'>
+        /// The token.
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<BankAccountModel>> GetBankAccountByTokenWithHttpMessagesAsync(string token, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
         /// Gets all bank accounts associated with the specified reference
         /// identifier.
         /// </summary>
@@ -67,7 +81,7 @@ namespace Softheon.Wallet.Api.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<object>> UpdateBankAccountWithHttpMessagesAsync(UpdateBankAccountModel updateBankAccountModel, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> UpdateBankAccountWithHttpMessagesAsync(UpdateBankAccountModel updateBankAccountModel, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Posts a new bank account.
@@ -84,24 +98,10 @@ namespace Softheon.Wallet.Api.Client
         Task<HttpOperationResponse<BankAccountResponseModel>> CreateBankAccountWithHttpMessagesAsync(BankAccountRequestModel bankAccountRequest, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Gets the bank account associated with the specified token.
-        /// </summary>
-        /// <param name='token'>
-        /// The token.
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<BankAccountModel>> GetBankAccountByTokenWithHttpMessagesAsync(string token, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
         /// Gets the bin information for a specified credit card number.
         /// </summary>
-        /// <param name='cardNumber'>
-        /// The card number.
+        /// <param name='binRequest'>
+        /// The bin request.
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -109,7 +109,7 @@ namespace Softheon.Wallet.Api.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<Bin>> GetBinWithHttpMessagesAsync(string cardNumber, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<Bin>> GetBinWithHttpMessagesAsync(BinRequestModel binRequest, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Gets the checkout.
@@ -166,7 +166,7 @@ namespace Softheon.Wallet.Api.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<object>> UpdateCreditCardWithHttpMessagesAsync(UpdateCreditCardModel updateCreditCardModel, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> UpdateCreditCardWithHttpMessagesAsync(UpdateCreditCardModel updateCreditCardModel, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Posts a new credit card.
@@ -200,13 +200,13 @@ namespace Softheon.Wallet.Api.Client
         /// Gets payments associated with the specified reference identifier.
         /// </summary>
         /// <param name='referenceId'>
-        /// The client application provided reference ID for the payment.
+        /// Gets or sets the reference identifier.
         /// </param>
         /// <param name='minDate'>
-        /// The optional lower bound of the range for payment date.
+        /// Gets or sets the minimum date.
         /// </param>
         /// <param name='maxDate'>
-        /// The optional upper bound of the range for payment date.
+        /// Gets or sets the maximum date.
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -214,7 +214,7 @@ namespace Softheon.Wallet.Api.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<IList<PaymentModel>>> GetPaymentsByReferenceIdWithHttpMessagesAsync(string referenceId, System.DateTime? minDate = default(System.DateTime?), System.DateTime? maxDate = default(System.DateTime?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<IList<PaymentModel>>> GetPaymentsByReferenceIdWithHttpMessagesAsync(string referenceId = default(string), System.DateTimeOffset? minDate = default(System.DateTimeOffset?), System.DateTimeOffset? maxDate = default(System.DateTimeOffset?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Posts a new payment.
@@ -262,6 +262,21 @@ namespace Softheon.Wallet.Api.Client
         Task<HttpOperationResponse<RefundResultModel>> CreateRefundWithHttpMessagesAsync(int id, RefundRequestModel refundRequestModel, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
+        /// Gets a single payment subscription with the specified subscription
+        /// id.
+        /// </summary>
+        /// <param name='id'>
+        /// The subscription id.
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<SubscriptionModel>> GetSubscriptionWithHttpMessagesAsync(string id, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
         /// Gets all payment subscriptions associated with the specified
         /// reference id.
         /// </summary>
@@ -288,7 +303,7 @@ namespace Softheon.Wallet.Api.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<object>> UpdateSubscriptionWithHttpMessagesAsync(UpdateSubscriptionModel updateSubscriptionModel, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> UpdateSubscriptionWithHttpMessagesAsync(UpdateSubscriptionModel updateSubscriptionModel, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Posts a new payment subscription.
@@ -302,22 +317,7 @@ namespace Softheon.Wallet.Api.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<SubscriptionResponceModel>> CreateSubscriptionWithHttpMessagesAsync(SubscriptionRequestModel subscriptionRequest, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// Gets a single payment subscription with the specified subscription
-        /// id.
-        /// </summary>
-        /// <param name='id'>
-        /// The subscription id.
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<SubscriptionModel>> GetSubscriptionWithHttpMessagesAsync(string id, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<SubscriptionResponseModel>> CreateSubscriptionWithHttpMessagesAsync(SubscriptionRequestModel subscriptionRequest, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Gets the wallet by wallet ID
@@ -376,7 +376,7 @@ namespace Softheon.Wallet.Api.Client
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse> CreateWalletWithHttpMessagesAsync(WalletRequestModel model, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<int?>> CreateWalletWithHttpMessagesAsync(WalletRequestModel model, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Adds a new credit card to the wallet
@@ -413,23 +413,6 @@ namespace Softheon.Wallet.Api.Client
         Task<HttpOperationResponse<WalletModel>> AddWalletBankAccountWithHttpMessagesAsync(int walletId, WalletBankAccountRequestModel request, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Deletes the wallet credit card.
-        /// </summary>
-        /// <param name='walletId'>
-        /// The wallet identifier.
-        /// </param>
-        /// <param name='walletCreditCardId'>
-        /// The wallet credit card identifier.
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse> RemoveWalletCreditCardWithHttpMessagesAsync(int walletId, int walletCreditCardId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
         /// Deletes the wallet bank account.
         /// </summary>
         /// <param name='walletId'>
@@ -445,6 +428,23 @@ namespace Softheon.Wallet.Api.Client
         /// The cancellation token.
         /// </param>
         Task<HttpOperationResponse> RemoveWalletBankAccountWithHttpMessagesAsync(int walletId, int walletBankAcctId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Deletes the wallet credit card.
+        /// </summary>
+        /// <param name='walletId'>
+        /// The wallet identifier.
+        /// </param>
+        /// <param name='walletCreditCardId'>
+        /// The wallet credit card identifier.
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse> RemoveWalletCreditCardWithHttpMessagesAsync(int walletId, int walletCreditCardId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
     }
 }

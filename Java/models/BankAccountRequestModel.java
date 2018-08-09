@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client.models;
+package walletapiv2.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -72,7 +72,7 @@ public class BankAccountRequestModel {
     private String redirectUrl;
 
     /**
-     * Get the accountNumber value.
+     * Get the bank account number.
      *
      * @return the accountNumber value
      */
@@ -81,7 +81,7 @@ public class BankAccountRequestModel {
     }
 
     /**
-     * Set the accountNumber value.
+     * Set the bank account number.
      *
      * @param accountNumber the accountNumber value to set
      * @return the BankAccountRequestModel object itself.
@@ -92,7 +92,7 @@ public class BankAccountRequestModel {
     }
 
     /**
-     * Get the routingNumber value.
+     * Get the routing number of the bank where the bank account was opened.
      *
      * @return the routingNumber value
      */
@@ -101,7 +101,7 @@ public class BankAccountRequestModel {
     }
 
     /**
-     * Set the routingNumber value.
+     * Set the routing number of the bank where the bank account was opened.
      *
      * @param routingNumber the routingNumber value to set
      * @return the BankAccountRequestModel object itself.
@@ -112,7 +112,7 @@ public class BankAccountRequestModel {
     }
 
     /**
-     * Get the accountHolderName value.
+     * Get the name of the individual or entity that is autorized to make transactions for the bank account.
      *
      * @return the accountHolderName value
      */
@@ -121,7 +121,7 @@ public class BankAccountRequestModel {
     }
 
     /**
-     * Set the accountHolderName value.
+     * Set the name of the individual or entity that is autorized to make transactions for the bank account.
      *
      * @param accountHolderName the accountHolderName value to set
      * @return the BankAccountRequestModel object itself.
@@ -132,7 +132,7 @@ public class BankAccountRequestModel {
     }
 
     /**
-     * Get the accountHolderAddress value.
+     * Get the mailing address for the account holder.
      *
      * @return the accountHolderAddress value
      */
@@ -141,7 +141,7 @@ public class BankAccountRequestModel {
     }
 
     /**
-     * Set the accountHolderAddress value.
+     * Set the mailing address for the account holder.
      *
      * @param accountHolderAddress the accountHolderAddress value to set
      * @return the BankAccountRequestModel object itself.
@@ -152,7 +152,7 @@ public class BankAccountRequestModel {
     }
 
     /**
-     * Get the type value.
+     * Get the bank account type. Possible values include: 'Unknown', 'Checking', 'Savings'.
      *
      * @return the type value
      */
@@ -161,7 +161,7 @@ public class BankAccountRequestModel {
     }
 
     /**
-     * Set the type value.
+     * Set the bank account type. Possible values include: 'Unknown', 'Checking', 'Savings'.
      *
      * @param type the type value to set
      * @return the BankAccountRequestModel object itself.
@@ -172,7 +172,7 @@ public class BankAccountRequestModel {
     }
 
     /**
-     * Get the referenceId value.
+     * Get the client application provided reference ID for the bank account.
      *
      * @return the referenceId value
      */
@@ -181,7 +181,7 @@ public class BankAccountRequestModel {
     }
 
     /**
-     * Set the referenceId value.
+     * Set the client application provided reference ID for the bank account.
      *
      * @param referenceId the referenceId value to set
      * @return the BankAccountRequestModel object itself.
@@ -192,7 +192,7 @@ public class BankAccountRequestModel {
     }
 
     /**
-     * Get the nickname value.
+     * Get the aribtrary nickname of the account, used as a way to identify the account.
      *
      * @return the nickname value
      */
@@ -201,7 +201,7 @@ public class BankAccountRequestModel {
     }
 
     /**
-     * Set the nickname value.
+     * Set the aribtrary nickname of the account, used as a way to identify the account.
      *
      * @param nickname the nickname value to set
      * @return the BankAccountRequestModel object itself.
@@ -212,7 +212,7 @@ public class BankAccountRequestModel {
     }
 
     /**
-     * Get the email value.
+     * Get the email address for the account holder.
      *
      * @return the email value
      */
@@ -221,7 +221,7 @@ public class BankAccountRequestModel {
     }
 
     /**
-     * Set the email value.
+     * Set the email address for the account holder.
      *
      * @param email the email value to set
      * @return the BankAccountRequestModel object itself.
@@ -232,7 +232,7 @@ public class BankAccountRequestModel {
     }
 
     /**
-     * Get the redirectUrl value.
+     * Get the url that the client will be redirected to after the bank account has been created.
      *
      * @return the redirectUrl value
      */
@@ -241,7 +241,7 @@ public class BankAccountRequestModel {
     }
 
     /**
-     * Set the redirectUrl value.
+     * Set the url that the client will be redirected to after the bank account has been created.
      *
      * @param redirectUrl the redirectUrl value to set
      * @return the BankAccountRequestModel object itself.

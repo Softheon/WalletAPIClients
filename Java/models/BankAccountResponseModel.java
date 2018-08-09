@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client.models;
+package walletapiv2.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -35,7 +35,7 @@ public class BankAccountResponseModel {
     private String redirectUrl;
 
     /**
-     * Get the token value.
+     * Get the payment token for the bank account.
      *
      * @return the token value
      */
@@ -44,7 +44,7 @@ public class BankAccountResponseModel {
     }
 
     /**
-     * Set the token value.
+     * Set the payment token for the bank account.
      *
      * @param token the token value to set
      * @return the BankAccountResponseModel object itself.
@@ -55,7 +55,7 @@ public class BankAccountResponseModel {
     }
 
     /**
-     * Get the bankAccountState value.
+     * Get the state that the bank acocunt is in. Possible values include: 'Unknown', 'New', 'Pending', 'Authorized', 'Disabled'.
      *
      * @return the bankAccountState value
      */
@@ -64,7 +64,7 @@ public class BankAccountResponseModel {
     }
 
     /**
-     * Set the bankAccountState value.
+     * Set the state that the bank acocunt is in. Possible values include: 'Unknown', 'New', 'Pending', 'Authorized', 'Disabled'.
      *
      * @param bankAccountState the bankAccountState value to set
      * @return the BankAccountResponseModel object itself.
@@ -75,7 +75,7 @@ public class BankAccountResponseModel {
     }
 
     /**
-     * Get the redirectUrl value.
+     * Get the url that the client will be redirected to after the bank account has been created.
      *
      * @return the redirectUrl value
      */
@@ -84,7 +84,7 @@ public class BankAccountResponseModel {
     }
 
     /**
-     * Set the redirectUrl value.
+     * Set the url that the client will be redirected to after the bank account has been created.
      *
      * @param redirectUrl the redirectUrl value to set
      * @return the BankAccountResponseModel object itself.

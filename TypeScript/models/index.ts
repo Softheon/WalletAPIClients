@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-import { RequestOptionsBase } from "ms-rest-js";
+import * as msRest from "ms-rest-js";
 
 
 /**
@@ -113,6 +113,39 @@ export interface BankAccountModel {
 
 /**
  * @interface
+ * An interface representing UpdateBankAccountModel.
+ * The request model sent by the client for updating bank accounts in the
+ * payment platform.
+ *
+ */
+export interface UpdateBankAccountModel {
+  /**
+   * @member {string} [token] The payment token for the bank account.
+   */
+  token?: string;
+  /**
+   * @member {string} [nickname] The aribtrary nickname of the account, used as
+   * a way to identify the account.
+   */
+  nickname?: string;
+  /**
+   * @member {string} accountHolderName The name of the individual or entity
+   * that is autorized to make transactions for the bank account.
+   */
+  accountHolderName: string;
+  /**
+   * @member {Address} accountHolderAddress The mailing address for the account
+   * holder.
+   */
+  accountHolderAddress: Address;
+  /**
+   * @member {string} email The email address for the account holder.
+   */
+  email: string;
+}
+
+/**
+ * @interface
  * An interface representing BankAccountRequestModel.
  * The request model sent by the client for adding new bank accounts to the
  * payment platform.
@@ -192,35 +225,16 @@ export interface BankAccountResponseModel {
 
 /**
  * @interface
- * An interface representing UpdateBankAccountModel.
- * The request model sent by the client for updating bank accounts in the
- * payment platform.
+ * An interface representing BinRequestModel.
+ * The request model sent by the client for retrieving credit card bin
+ * information.
  *
  */
-export interface UpdateBankAccountModel {
+export interface BinRequestModel {
   /**
-   * @member {string} [token] The payment token for the bank account.
+   * @member {string} cardNumber The number on the credit card.
    */
-  token?: string;
-  /**
-   * @member {string} [nickname] The aribtrary nickname of the account, used as
-   * a way to identify the account.
-   */
-  nickname?: string;
-  /**
-   * @member {string} accountHolderName The name of the individual or entity
-   * that is autorized to make transactions for the bank account.
-   */
-  accountHolderName: string;
-  /**
-   * @member {Address} accountHolderAddress The mailing address for the account
-   * holder.
-   */
-  accountHolderAddress: Address;
-  /**
-   * @member {string} email The email address for the account holder.
-   */
-  email: string;
+  cardNumber: string;
 }
 
 /**
@@ -456,6 +470,42 @@ export interface CreditCardModel {
 
 /**
  * @interface
+ * An interface representing UpdateCreditCardModel.
+ * The request model sent by the client for updating credit cards in the
+ * payment platform.
+ *
+ */
+export interface UpdateCreditCardModel {
+  /**
+   * @member {string} token The payment token for the credit card.
+   */
+  token: string;
+  /**
+   * @member {number} expirationMonth The expiration month of the credit card.
+   */
+  expirationMonth: number;
+  /**
+   * @member {number} expirationYear The expiration year of the credit card.
+   */
+  expirationYear: number;
+  /**
+   * @member {string} cardHolderName The name of the cardholder, as it appears
+   * on the front of the credit card.
+   */
+  cardHolderName: string;
+  /**
+   * @member {Address} billingAddress The billing address for the credit card
+   * holder..
+   */
+  billingAddress: Address;
+  /**
+   * @member {string} email A valid email address for the card holder.
+   */
+  email: string;
+}
+
+/**
+ * @interface
  * An interface representing CreditCardRequestModel.
  * The request model sent by the client for adding new credit cards to the
  * payment platform.
@@ -535,42 +585,6 @@ export interface CreditCardResponseModel {
    * to after the credit card has been created.
    */
   redirectUrl?: string;
-}
-
-/**
- * @interface
- * An interface representing UpdateCreditCardModel.
- * The request model sent by the client for updating credit cards in the
- * payment platform.
- *
- */
-export interface UpdateCreditCardModel {
-  /**
-   * @member {string} token The payment token for the credit card.
-   */
-  token: string;
-  /**
-   * @member {number} expirationMonth The expiration month of the credit card.
-   */
-  expirationMonth: number;
-  /**
-   * @member {number} expirationYear The expiration year of the credit card.
-   */
-  expirationYear: number;
-  /**
-   * @member {string} cardHolderName The name of the cardholder, as it appears
-   * on the front of the credit card.
-   */
-  cardHolderName: string;
-  /**
-   * @member {Address} billingAddress The billing address for the credit card
-   * holder..
-   */
-  billingAddress: Address;
-  /**
-   * @member {string} email A valid email address for the card holder.
-   */
-  email: string;
 }
 
 /**
@@ -740,24 +754,21 @@ export interface PaymentModel {
 
 /**
  * @interface
- * An interface representing PaymentFilter.
- * Defines a payment filter when requesting a collection of payments
+ * An interface representing BaseQuery.
+ * A base collection of query parameters
  *
  */
-export interface PaymentFilter {
+export interface BaseQuery {
   /**
-   * @member {string} referenceId The client application provided reference ID
-   * for the payment.
+   * @member {string} [referenceId] Gets or sets the reference identifier.
    */
-  referenceId: string;
+  referenceId?: string;
   /**
-   * @member {Date} [minDate] The optional lower bound of the range for payment
-   * date.
+   * @member {Date} [minDate] Gets or sets the minimum date.
    */
   minDate?: Date;
   /**
-   * @member {Date} [maxDate] The optional upper bound of the range for payment
-   * date.
+   * @member {Date} [maxDate] Gets or sets the maximum date.
    */
   maxDate?: Date;
 }
@@ -911,12 +922,16 @@ export interface SubscriptionModel {
 
 /**
  * @interface
- * An interface representing SubscriptionRequestModel.
- * The request model sent by the client for adding new subscription to the
+ * An interface representing UpdateSubscriptionModel.
+ * The request model sent by the client for updating subscription in the
  * payment platform.
  *
  */
-export interface SubscriptionRequestModel {
+export interface UpdateSubscriptionModel {
+  /**
+   * @member {number} id The id of the payment subscription.
+   */
+  id: number;
   /**
    * @member {string} name The name of payment subscription.
    */
@@ -983,35 +998,12 @@ export interface SubscriptionRequestModel {
 
 /**
  * @interface
- * An interface representing SubscriptionResponceModel.
- * The response model that is returned to the client when a new payment
- * subscription is added to the platform.
- *
- */
-export interface SubscriptionResponceModel {
-  /**
-   * @member {string} [referenceId] Gets or sets the reference id.
-   */
-  referenceId?: string;
-  /**
-   * @member {State3} [state] Gets or sets the subscription state. Possible
-   * values include: 'Active', 'Inactive', 'Expired'
-   */
-  state?: State3;
-}
-
-/**
- * @interface
- * An interface representing UpdateSubscriptionModel.
- * The request model sent by the client for updating subscription in the
+ * An interface representing SubscriptionRequestModel.
+ * The request model sent by the client for adding new subscription to the
  * payment platform.
  *
  */
-export interface UpdateSubscriptionModel {
-  /**
-   * @member {number} id The id of the payment subscription.
-   */
-  id: number;
+export interface SubscriptionRequestModel {
   /**
    * @member {string} name The name of payment subscription.
    */
@@ -1030,10 +1022,10 @@ export interface UpdateSubscriptionModel {
    */
   runDay: number;
   /**
-   * @member {State4} state The state that payment subscription is in. Possible
+   * @member {State3} state The state that payment subscription is in. Possible
    * values include: 'Active', 'Inactive', 'Expired'
    */
-  state: State4;
+  state: State3;
   /**
    * @member {PaymentType2} paymentType The payment type of the payment
    * subscription. Possible values include: 'Unknown', 'Credit Card', 'ACH'
@@ -1074,6 +1066,25 @@ export interface UpdateSubscriptionModel {
    * ID for the credit card.
    */
   referenceId?: string;
+}
+
+/**
+ * @interface
+ * An interface representing SubscriptionResponseModel.
+ * The response model that is returned to the client when a new payment
+ * subscription is added to the platform.
+ *
+ */
+export interface SubscriptionResponseModel {
+  /**
+   * @member {string} [referenceId] Gets or sets the reference id.
+   */
+  referenceId?: string;
+  /**
+   * @member {State4} [state] Gets or sets the subscription state. Possible
+   * values include: 'Active', 'Inactive', 'Expired'
+   */
+  state?: State4;
 }
 
 /**
@@ -1158,15 +1169,17 @@ export interface WalletBankAccountRequestModel {
  *
  * @extends RequestOptionsBase
  */
-export interface SoftheonWalletAPIGetPaymentsByReferenceIdOptionalParams extends RequestOptionsBase {
+export interface SoftheonWalletAPIGetPaymentsByReferenceIdOptionalParams extends msRest.RequestOptionsBase {
   /**
-   * @member {Date} [minDate] The optional lower bound of the range for payment
-   * date.
+   * @member {string} [referenceId] Gets or sets the reference identifier.
+   */
+  referenceId?: string;
+  /**
+   * @member {Date} [minDate] Gets or sets the minimum date.
    */
   minDate?: Date;
   /**
-   * @member {Date} [maxDate] The optional upper bound of the range for payment
-   * date.
+   * @member {Date} [maxDate] Gets or sets the maximum date.
    */
   maxDate?: Date;
 }
@@ -1500,22 +1513,6 @@ export enum State3 {
 }
 
 /**
- * Defines values for State4.
- * Possible values include: 'Active', 'Inactive', 'Expired'
- * There could be more values for this enum apart from the ones defined here.If
- * you want to set a value that is not from the known values then you can do
- * the following:
- * let param: State4 = <State4>"someUnknownValueThatWillStillBeValid";
- * @readonly
- * @enum {string}
- */
-export enum State4 {
-  Active = 'Active',
-  Inactive = 'Inactive',
-  Expired = 'Expired',
-}
-
-/**
  * Defines values for PaymentType2.
  * Possible values include: 'Unknown', 'Credit Card', 'ACH'
  * There could be more values for this enum apart from the ones defined here.If
@@ -1546,4 +1543,20 @@ export enum PaymentType2 {
 export enum AmountType2 {
   Fixed = 'Fixed',
   Dynamic = 'Dynamic',
+}
+
+/**
+ * Defines values for State4.
+ * Possible values include: 'Active', 'Inactive', 'Expired'
+ * There could be more values for this enum apart from the ones defined here.If
+ * you want to set a value that is not from the known values then you can do
+ * the following:
+ * let param: State4 = <State4>"someUnknownValueThatWillStillBeValid";
+ * @readonly
+ * @enum {string}
+ */
+export enum State4 {
+  Active = 'Active',
+  Inactive = 'Inactive',
+  Expired = 'Expired',
 }

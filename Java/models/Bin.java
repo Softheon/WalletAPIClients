@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client.models;
+package walletapiv2.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -62,7 +62,7 @@ public class Bin {
     private Boolean isPrepaidCard;
 
     /**
-     * Get the bin value.
+     * Get gets the bin.
      *
      * @return the bin value
      */
@@ -71,7 +71,7 @@ public class Bin {
     }
 
     /**
-     * Set the bin value.
+     * Set gets the bin.
      *
      * @param bin the bin value to set
      * @return the Bin object itself.
@@ -82,7 +82,7 @@ public class Bin {
     }
 
     /**
-     * Get the brand value.
+     * Get gets or sets the brand. Possible values include: 'Unknown', 'Visa', 'MasterCard', 'Amex', 'Discover'.
      *
      * @return the brand value
      */
@@ -91,7 +91,7 @@ public class Bin {
     }
 
     /**
-     * Get the isDebitCard value.
+     * Get gets or sets a value indicating whether this instance is debit.
      *
      * @return the isDebitCard value
      */
@@ -100,7 +100,7 @@ public class Bin {
     }
 
     /**
-     * Set the isDebitCard value.
+     * Set gets or sets a value indicating whether this instance is debit.
      *
      * @param isDebitCard the isDebitCard value to set
      * @return the Bin object itself.
@@ -111,7 +111,7 @@ public class Bin {
     }
 
     /**
-     * Get the isCheckCard value.
+     * Get gets or sets a value indicating whether this instance is check card.
      *
      * @return the isCheckCard value
      */
@@ -120,7 +120,7 @@ public class Bin {
     }
 
     /**
-     * Set the isCheckCard value.
+     * Set gets or sets a value indicating whether this instance is check card.
      *
      * @param isCheckCard the isCheckCard value to set
      * @return the Bin object itself.
@@ -131,7 +131,7 @@ public class Bin {
     }
 
     /**
-     * Get the isGiftCard value.
+     * Get gets or sets a value indicating whether this instance is gift card.
      *
      * @return the isGiftCard value
      */
@@ -140,7 +140,7 @@ public class Bin {
     }
 
     /**
-     * Set the isGiftCard value.
+     * Set gets or sets a value indicating whether this instance is gift card.
      *
      * @param isGiftCard the isGiftCard value to set
      * @return the Bin object itself.
@@ -151,7 +151,7 @@ public class Bin {
     }
 
     /**
-     * Get the isCorporateCard value.
+     * Get gets or sets a value indicating whether this instance is corporate card.
      *
      * @return the isCorporateCard value
      */
@@ -160,7 +160,7 @@ public class Bin {
     }
 
     /**
-     * Set the isCorporateCard value.
+     * Set gets or sets a value indicating whether this instance is corporate card.
      *
      * @param isCorporateCard the isCorporateCard value to set
      * @return the Bin object itself.
@@ -171,7 +171,7 @@ public class Bin {
     }
 
     /**
-     * Get the isFleetCard value.
+     * Get gets or sets a value indicating whether this instance is fleet card.
      *
      * @return the isFleetCard value
      */
@@ -180,7 +180,7 @@ public class Bin {
     }
 
     /**
-     * Set the isFleetCard value.
+     * Set gets or sets a value indicating whether this instance is fleet card.
      *
      * @param isFleetCard the isFleetCard value to set
      * @return the Bin object itself.
@@ -191,7 +191,7 @@ public class Bin {
     }
 
     /**
-     * Get the isPrepaidCard value.
+     * Get gets or sets a value indicating whether this instance is prepaid card.
      *
      * @return the isPrepaidCard value
      */
@@ -200,7 +200,7 @@ public class Bin {
     }
 
     /**
-     * Set the isPrepaidCard value.
+     * Set gets or sets a value indicating whether this instance is prepaid card.
      *
      * @param isPrepaidCard the isPrepaidCard value to set
      * @return the Bin object itself.

@@ -5,4 +5,4 @@
 /**
  * This package contains the implementation classes for SoftheonWalletAPI.
  */
-package softheon.wallet.api.client.implementation;
+package walletapiv2.implementation;

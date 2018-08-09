@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client.models;
+package walletapiv2.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -46,7 +46,7 @@ public class CreditCardResponseModel {
     private String redirectUrl;
 
     /**
-     * Get the token value.
+     * Get the payment token for the credit card.
      *
      * @return the token value
      */
@@ -55,7 +55,7 @@ public class CreditCardResponseModel {
     }
 
     /**
-     * Set the token value.
+     * Set the payment token for the credit card.
      *
      * @param token the token value to set
      * @return the CreditCardResponseModel object itself.
@@ -66,7 +66,7 @@ public class CreditCardResponseModel {
     }
 
     /**
-     * Get the cardState value.
+     * Get the state that the credit card is in. Possible values include: 'Unknown', 'New', 'Authorized', 'Expired', 'Deleted', 'Invalid'.
      *
      * @return the cardState value
      */
@@ -75,7 +75,7 @@ public class CreditCardResponseModel {
     }
 
     /**
-     * Set the cardState value.
+     * Set the state that the credit card is in. Possible values include: 'Unknown', 'New', 'Authorized', 'Expired', 'Deleted', 'Invalid'.
      *
      * @param cardState the cardState value to set
      * @return the CreditCardResponseModel object itself.
@@ -86,7 +86,7 @@ public class CreditCardResponseModel {
     }
 
     /**
-     * Get the code value.
+     * Get the pre-authorization result code.
      *
      * @return the code value
      */
@@ -95,7 +95,7 @@ public class CreditCardResponseModel {
     }
 
     /**
-     * Set the code value.
+     * Set the pre-authorization result code.
      *
      * @param code the code value to set
      * @return the CreditCardResponseModel object itself.
@@ -106,7 +106,7 @@ public class CreditCardResponseModel {
     }
 
     /**
-     * Get the message value.
+     * Get the pre-authorization result message.
      *
      * @return the message value
      */
@@ -115,7 +115,7 @@ public class CreditCardResponseModel {
     }
 
     /**
-     * Set the message value.
+     * Set the pre-authorization result message.
      *
      * @param message the message value to set
      * @return the CreditCardResponseModel object itself.
@@ -126,7 +126,7 @@ public class CreditCardResponseModel {
     }
 
     /**
-     * Get the redirectUrl value.
+     * Get the URL that the client will be redirected to after the credit card has been created.
      *
      * @return the redirectUrl value
      */
@@ -135,7 +135,7 @@ public class CreditCardResponseModel {
     }
 
     /**
-     * Set the redirectUrl value.
+     * Set the URL that the client will be redirected to after the credit card has been created.
      *
      * @param redirectUrl the redirectUrl value to set
      * @return the CreditCardResponseModel object itself.

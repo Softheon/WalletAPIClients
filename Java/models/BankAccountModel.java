@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client.models;
+package walletapiv2.models;
 
 import org.joda.time.DateTime;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -98,7 +98,7 @@ public class BankAccountModel {
     private DateTime modifiedTime;
 
     /**
-     * Get the id value.
+     * Get gets or sets the identifier.
      *
      * @return the id value
      */
@@ -107,7 +107,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Set the id value.
+     * Set gets or sets the identifier.
      *
      * @param id the id value to set
      * @return the BankAccountModel object itself.
@@ -118,7 +118,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Get the token value.
+     * Get the payment token for the bank account.
      *
      * @return the token value
      */
@@ -127,7 +127,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Set the token value.
+     * Set the payment token for the bank account.
      *
      * @param token the token value to set
      * @return the BankAccountModel object itself.
@@ -138,7 +138,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Get the accountNumber value.
+     * Get the bank account number.
      *
      * @return the accountNumber value
      */
@@ -147,7 +147,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Set the accountNumber value.
+     * Set the bank account number.
      *
      * @param accountNumber the accountNumber value to set
      * @return the BankAccountModel object itself.
@@ -158,7 +158,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Get the routingNumber value.
+     * Get the routing number of the bank where the bank account was opened.
      *
      * @return the routingNumber value
      */
@@ -167,7 +167,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Set the routingNumber value.
+     * Set the routing number of the bank where the bank account was opened.
      *
      * @param routingNumber the routingNumber value to set
      * @return the BankAccountModel object itself.
@@ -178,7 +178,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Get the type value.
+     * Get the bank account type. Possible values include: 'Unknown', 'Checking', 'Savings'.
      *
      * @return the type value
      */
@@ -187,7 +187,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Set the type value.
+     * Set the bank account type. Possible values include: 'Unknown', 'Checking', 'Savings'.
      *
      * @param type the type value to set
      * @return the BankAccountModel object itself.
@@ -198,7 +198,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Get the state value.
+     * Get the state that the bank acocunt is in. Possible values include: 'Unknown', 'New', 'Pending', 'Authorized', 'Disabled'.
      *
      * @return the state value
      */
@@ -207,7 +207,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Set the state value.
+     * Set the state that the bank acocunt is in. Possible values include: 'Unknown', 'New', 'Pending', 'Authorized', 'Disabled'.
      *
      * @param state the state value to set
      * @return the BankAccountModel object itself.
@@ -218,7 +218,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Get the nickname value.
+     * Get the aribtrary nickname of the account, used as a way to identify the account.
      *
      * @return the nickname value
      */
@@ -227,7 +227,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Set the nickname value.
+     * Set the aribtrary nickname of the account, used as a way to identify the account.
      *
      * @param nickname the nickname value to set
      * @return the BankAccountModel object itself.
@@ -238,7 +238,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Get the accountHolderName value.
+     * Get the name of the individual or entity that is autorized to make transactions for the bank account.
      *
      * @return the accountHolderName value
      */
@@ -247,7 +247,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Set the accountHolderName value.
+     * Set the name of the individual or entity that is autorized to make transactions for the bank account.
      *
      * @param accountHolderName the accountHolderName value to set
      * @return the BankAccountModel object itself.
@@ -258,7 +258,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Get the accountHolderAddress value.
+     * Get the mailing address for the account holder.
      *
      * @return the accountHolderAddress value
      */
@@ -267,7 +267,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Set the accountHolderAddress value.
+     * Set the mailing address for the account holder.
      *
      * @param accountHolderAddress the accountHolderAddress value to set
      * @return the BankAccountModel object itself.
@@ -278,7 +278,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Get the email value.
+     * Get the email address for the account holder.
      *
      * @return the email value
      */
@@ -287,7 +287,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Set the email value.
+     * Set the email address for the account holder.
      *
      * @param email the email value to set
      * @return the BankAccountModel object itself.
@@ -298,7 +298,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Get the referenceId value.
+     * Get the client application provided reference ID for the bank account.
      *
      * @return the referenceId value
      */
@@ -307,7 +307,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Set the referenceId value.
+     * Set the client application provided reference ID for the bank account.
      *
      * @param referenceId the referenceId value to set
      * @return the BankAccountModel object itself.
@@ -318,7 +318,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Get the createdTime value.
+     * Get the timestamp indicating when the bank account was created.
      *
      * @return the createdTime value
      */
@@ -327,7 +327,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Set the createdTime value.
+     * Set the timestamp indicating when the bank account was created.
      *
      * @param createdTime the createdTime value to set
      * @return the BankAccountModel object itself.
@@ -338,7 +338,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Get the modifiedTime value.
+     * Get the timestamp indicating the last time that the details of the bank account were modified.
      *
      * @return the modifiedTime value
      */
@@ -347,7 +347,7 @@ public class BankAccountModel {
     }
 
     /**
-     * Set the modifiedTime value.
+     * Set the timestamp indicating the last time that the details of the bank account were modified.
      *
      * @param modifiedTime the modifiedTime value to set
      * @return the BankAccountModel object itself.

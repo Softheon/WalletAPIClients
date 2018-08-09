@@ -7,22 +7,16 @@
 import * as msRest from "ms-rest-js";
 import * as Models from "./models";
 import * as Mappers from "./models/mappers";
+import { SoftheonWalletAPIContext } from "./softheonWalletAPIContext";
 const WebResource = msRest.WebResource;
 
-const packageName = "Softheon.Wallet.Api.Client";
-const packageVersion = "";
-
-class SoftheonWalletAPI extends msRest.ServiceClient {
-  credentials: msRest.ServiceClientCredentials;
-  baseUri: string;
-  serializer: msRest.Serializer;
+class SoftheonWalletAPI extends SoftheonWalletAPIContext {
+  serializer = new msRest.Serializer(Mappers);
 
   /**
    * @class
    * Initializes a new instance of the SoftheonWalletAPI class.
    * @constructor
-   *
-   * @param {msRest.ServiceClientCredentials} credentials - Subscription credentials which uniquely identify client subscription.
    *
    * @param {string} [baseUri] - The base URI of the service.
    *
@@ -36,29 +30,90 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    * @param {boolean} [options.noRetryPolicy] - If set to true, turn off default retry policy
    *
    */
-  constructor(credentials: msRest.ServiceClientCredentials, baseUri?: string, options?: msRest.ServiceClientOptions) {
-    if (credentials === null || credentials === undefined) {
-      throw new Error('\'credentials\' cannot be null.');
-    }
-
-    if (!options) options = {};
-
-    super(credentials, options);
-
-    this.baseUri = baseUri as string;
-    if (!this.baseUri) {
-      this.baseUri = 'https://hack.softheon.io/api/payments';
-    }
-    this.credentials = credentials;
-
-    this.addUserAgentInfo(`${packageName}/${packageVersion}`);
-    this.serializer = new msRest.Serializer(Mappers);
+  constructor(baseUri?: string, options?: msRest.ServiceClientOptions) {
+    super(baseUri, options);
   }
   // methods on the client.
 
   /**
-   * @summary Gets all bank accounts associated with the specified reference
-   * identifier.
+   * @summary Gets the bank account associated with the specified token.
+   *
+   * @param {string} token The token.
+   *
+   * @param {RequestOptionsBase} [options] Optional Parameters.
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse} The deserialized result object.
+   *
+   * @reject {Error|ServiceError} The error object.
+   */
+  async getBankAccountByTokenWithHttpOperationResponse(token: string, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<Models.BankAccountModel>> {
+
+    // Create HTTP transport objects
+    const httpRequest = new WebResource();
+    let operationRes: msRest.HttpOperationResponse;
+    try {
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          token
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "GET",
+          baseUrl: this.baseUri,
+          path: "payments/v2/bankaccounts/{token}",
+          urlParameters: [
+            {
+              parameterPath: "token",
+              mapper: {
+                required: true,
+                serializedName: "token",
+                type: {
+                  name: "String"
+                }
+              }
+            }
+          ],
+          responses: {
+            200: {
+              bodyMapper: Mappers.BankAccountModel
+            },
+            401: {},
+            403: {},
+            404: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
+      // Deserialize Response
+      let statusCode = operationRes.status;
+      if (statusCode === 200) {
+        let parsedResponse = operationRes.parsedBody as { [key: string]: any };
+        try {
+          if (parsedResponse != undefined) {
+            const resultMapper = Mappers.BankAccountModel;
+            operationRes.parsedBody = this.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.parsedBody');
+          }
+        } catch (error) {
+          let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
+          deserializationError.request = msRest.stripRequest(httpRequest);
+          deserializationError.response = msRest.stripResponse(operationRes);
+          return Promise.reject(deserializationError);
+        }
+      }
+    } catch (err) {
+      return Promise.reject(err);
+    }
+    return Promise.resolve(operationRes);
+  }
+  // methods on the client.
+
+  /**
+   * @summary Gets all bank accounts associated with the specified reference identifier.
    *
    * @param {string} referenceId The reference identifier.
    *
@@ -66,104 +121,92 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
+   * @resolve {HttpOperationResponse} The deserialized result object.
    *
-   * @reject {Error|ServiceError} - The error object.
+   * @reject {Error|ServiceError} The error object.
    */
-  async getBankAccountsByReferenceIdWithHttpOperationResponse(referenceId: string, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (referenceId === null || referenceId === undefined || typeof referenceId.valueOf() !== 'string') {
-        throw new Error('referenceId cannot be null or undefined and it must be of type string.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/bankaccounts';
-    let queryParamsArray: Array<any> = [];
-    queryParamsArray.push('referenceId=' + encodeURIComponent(referenceId));
-    if (queryParamsArray.length > 0) {
-      requestUrl += '?' + queryParamsArray.join('&');
-    }
+  async getBankAccountsByReferenceIdWithHttpOperationResponse(referenceId: string, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<Models.BankAccountModel[]>> {
 
     // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'GET';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Send Request
+    const httpRequest = new WebResource();
     let operationRes: msRest.HttpOperationResponse;
     try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
-      // Deserialize Response
-      if (statusCode === 200) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = {
-              required: false,
-              serializedName: 'parsedResponse',
-              type: {
-                name: 'Sequence',
-                element: {
-                    required: false,
-                    serializedName: 'BankAccountModelElementType',
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          referenceId
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "GET",
+          baseUrl: this.baseUri,
+          path: "payments/v2/bankaccounts",
+          queryParameters: [
+            {
+              parameterPath: "referenceId",
+              mapper: {
+                required: true,
+                serializedName: "referenceId",
+                type: {
+                  name: "String"
+                }
+              }
+            }
+          ],
+          responses: {
+            200: {
+              bodyMapper: {
+                serializedName: "parsedResponse",
+                type: {
+                  name: "Sequence",
+                  element: {
+                    serializedName: "BankAccountModelElementType",
                     type: {
-                      name: 'Composite',
-                      className: 'BankAccountModel'
+                      name: "Composite",
+                      className: "BankAccountModel"
                     }
+                  }
+                }
+              }
+            },
+            401: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
+      // Deserialize Response
+      let statusCode = operationRes.status;
+      if (statusCode === 200) {
+        let parsedResponse = operationRes.parsedBody as { [key: string]: any };
+        try {
+          if (parsedResponse != undefined) {
+            const resultMapper = {
+              serializedName: "parsedResponse",
+              type: {
+                name: "Sequence",
+                element: {
+                  serializedName: "BankAccountModelElementType",
+                  type: {
+                    name: "Composite",
+                    className: "BankAccountModel"
+                  }
                 }
               }
             };
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
+            operationRes.parsedBody = this.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.parsedBody');
           }
         } catch (error) {
           let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
           deserializationError.request = msRest.stripRequest(httpRequest);
-          deserializationError.response = msRest.stripResponse(response);
+          deserializationError.response = msRest.stripResponse(operationRes);
           return Promise.reject(deserializationError);
         }
       }
-
-    } catch(err) {
+    } catch (err) {
       return Promise.reject(err);
     }
-
     return Promise.resolve(operationRes);
   }
   // methods on the client.
@@ -171,113 +214,53 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
   /**
    * @summary Updates a bank account.
    *
-   * @param {UpdateBankAccountModel} updateBankAccountModel The update bank
-   * account model.
+   * @param {UpdateBankAccountModel} updateBankAccountModel The update bank account model.
    *
    * @param {RequestOptionsBase} [options] Optional Parameters.
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
+   * @resolve {HttpOperationResponse} The deserialized result object.
    *
-   * @reject {Error|ServiceError} - The error object.
+   * @reject {Error|ServiceError} The error object.
    */
-  async updateBankAccountWithHttpOperationResponse(updateBankAccountModel: Models.UpdateBankAccountModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (updateBankAccountModel === null || updateBankAccountModel === undefined) {
-        throw new Error('updateBankAccountModel cannot be null or undefined.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/bankaccounts';
+  async updateBankAccountWithHttpOperationResponse(updateBankAccountModel: Models.UpdateBankAccountModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<void>> {
 
     // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'PUT';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Serialize Request
-    let requestContent = null;
-    let requestModel = null;
-    try {
-      if (updateBankAccountModel !== null && updateBankAccountModel !== undefined) {
-        let requestModelMapper = Mappers.UpdateBankAccountModel;
-        requestModel = client.serializer.serialize(requestModelMapper, updateBankAccountModel, 'updateBankAccountModel');
-        requestContent = JSON.stringify(requestModel);
-      }
-    } catch (error) {
-      let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
-          `payload - ${JSON.stringify(updateBankAccountModel, null, 2)}.`);
-      return Promise.reject(serializationError);
-    }
-    httpRequest.body = requestContent;
-    // Send Request
+    const httpRequest = new WebResource();
     let operationRes: msRest.HttpOperationResponse;
     try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200 && statusCode !== 204 && statusCode !== 400) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
-      // Deserialize Response
-      if (statusCode === 200) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = {
-              required: false,
-              serializedName: 'parsedResponse',
-              type: {
-                name: 'Object'
-              }
-            };
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
-          }
-        } catch (error) {
-          let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
-          deserializationError.request = msRest.stripRequest(httpRequest);
-          deserializationError.response = msRest.stripResponse(response);
-          return Promise.reject(deserializationError);
-        }
-      }
-
-    } catch(err) {
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          updateBankAccountModel
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "PUT",
+          baseUrl: this.baseUri,
+          path: "payments/v2/bankaccounts",
+          requestBody: {
+            parameterPath: "updateBankAccountModel",
+            mapper: {
+              ...Mappers.UpdateBankAccountModel,
+              required: true
+            }
+          },
+          contentType: "application/json; charset=utf-8",
+          responses: {
+            204: {},
+            400: {},
+            401: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
+    } catch (err) {
       return Promise.reject(err);
     }
-
     return Promise.resolve(operationRes);
   }
   // methods on the client.
@@ -291,193 +274,65 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
+   * @resolve {HttpOperationResponse} The deserialized result object.
    *
-   * @reject {Error|ServiceError} - The error object.
+   * @reject {Error|ServiceError} The error object.
    */
-  async createBankAccountWithHttpOperationResponse(bankAccountRequest: Models.BankAccountRequestModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (bankAccountRequest === null || bankAccountRequest === undefined) {
-        throw new Error('bankAccountRequest cannot be null or undefined.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/bankaccounts';
+  async createBankAccountWithHttpOperationResponse(bankAccountRequest: Models.BankAccountRequestModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<Models.BankAccountResponseModel>> {
 
     // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'POST';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Serialize Request
-    let requestContent = null;
-    let requestModel = null;
-    try {
-      if (bankAccountRequest !== null && bankAccountRequest !== undefined) {
-        let requestModelMapper = Mappers.BankAccountRequestModel;
-        requestModel = client.serializer.serialize(requestModelMapper, bankAccountRequest, 'bankAccountRequest');
-        requestContent = JSON.stringify(requestModel);
-      }
-    } catch (error) {
-      let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
-          `payload - ${JSON.stringify(bankAccountRequest, null, 2)}.`);
-      return Promise.reject(serializationError);
-    }
-    httpRequest.body = requestContent;
-    // Send Request
+    const httpRequest = new WebResource();
     let operationRes: msRest.HttpOperationResponse;
     try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200 && statusCode !== 400) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          bankAccountRequest
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "POST",
+          baseUrl: this.baseUri,
+          path: "payments/v2/bankaccounts",
+          requestBody: {
+            parameterPath: "bankAccountRequest",
+            mapper: {
+              ...Mappers.BankAccountRequestModel,
+              required: true
+            }
+          },
+          contentType: "application/json; charset=utf-8",
+          responses: {
+            200: {
+              bodyMapper: Mappers.BankAccountResponseModel
+            },
+            400: {},
+            401: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
       // Deserialize Response
+      let statusCode = operationRes.status;
       if (statusCode === 200) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
+        let parsedResponse = operationRes.parsedBody as { [key: string]: any };
         try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = Mappers.BankAccountResponseModel;
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
+          if (parsedResponse != undefined) {
+            const resultMapper = Mappers.BankAccountResponseModel;
+            operationRes.parsedBody = this.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.parsedBody');
           }
         } catch (error) {
           let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
           deserializationError.request = msRest.stripRequest(httpRequest);
-          deserializationError.response = msRest.stripResponse(response);
+          deserializationError.response = msRest.stripResponse(operationRes);
           return Promise.reject(deserializationError);
         }
       }
-
-    } catch(err) {
+    } catch (err) {
       return Promise.reject(err);
     }
-
-    return Promise.resolve(operationRes);
-  }
-  // methods on the client.
-
-  /**
-   * @summary Gets the bank account associated with the specified token.
-   *
-   * @param {string} token The token.
-   *
-   * @param {RequestOptionsBase} [options] Optional Parameters.
-   *
-   * @returns {Promise} A promise is returned
-   *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
-   *
-   * @reject {Error|ServiceError} - The error object.
-   */
-  async getBankAccountByTokenWithHttpOperationResponse(token: string, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (token === null || token === undefined || typeof token.valueOf() !== 'string') {
-        throw new Error('token cannot be null or undefined and it must be of type string.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/bankaccounts/{token}';
-    requestUrl = requestUrl.replace('{token}', encodeURIComponent(token));
-
-    // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'GET';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Send Request
-    let operationRes: msRest.HttpOperationResponse;
-    try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200 && statusCode !== 403 && statusCode !== 404) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
-      // Deserialize Response
-      if (statusCode === 200) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = Mappers.BankAccountModel;
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
-          }
-        } catch (error) {
-          let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
-          deserializationError.request = msRest.stripRequest(httpRequest);
-          deserializationError.response = msRest.stripResponse(response);
-          return Promise.reject(deserializationError);
-        }
-      }
-
-    } catch(err) {
-      return Promise.reject(err);
-    }
-
     return Promise.resolve(operationRes);
   }
   // methods on the client.
@@ -485,96 +340,71 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
   /**
    * @summary Gets the bin information for a specified credit card number.
    *
-   * @param {string} cardNumber The card number.
+   * @param {BinRequestModel} binRequest The bin request.
    *
    * @param {RequestOptionsBase} [options] Optional Parameters.
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
+   * @resolve {HttpOperationResponse} The deserialized result object.
    *
-   * @reject {Error|ServiceError} - The error object.
+   * @reject {Error|ServiceError} The error object.
    */
-  async getBinWithHttpOperationResponse(cardNumber: string, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (cardNumber === null || cardNumber === undefined || typeof cardNumber.valueOf() !== 'string') {
-        throw new Error('cardNumber cannot be null or undefined and it must be of type string.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/bins';
-    let queryParamsArray: Array<any> = [];
-    queryParamsArray.push('cardNumber=' + encodeURIComponent(cardNumber));
-    if (queryParamsArray.length > 0) {
-      requestUrl += '?' + queryParamsArray.join('&');
-    }
+  async getBinWithHttpOperationResponse(binRequest: Models.BinRequestModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<Models.Bin>> {
 
     // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'GET';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Send Request
+    const httpRequest = new WebResource();
     let operationRes: msRest.HttpOperationResponse;
     try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200 && statusCode !== 404) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          binRequest
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "POST",
+          baseUrl: this.baseUri,
+          path: "payments/v2/bins",
+          requestBody: {
+            parameterPath: "binRequest",
+            mapper: {
+              ...Mappers.BinRequestModel,
+              required: true
+            }
+          },
+          contentType: "application/json; charset=utf-8",
+          responses: {
+            200: {
+              bodyMapper: Mappers.Bin
+            },
+            401: {},
+            404: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
       // Deserialize Response
+      let statusCode = operationRes.status;
       if (statusCode === 200) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
+        let parsedResponse = operationRes.parsedBody as { [key: string]: any };
         try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = Mappers.Bin;
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
+          if (parsedResponse != undefined) {
+            const resultMapper = Mappers.Bin;
+            operationRes.parsedBody = this.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.parsedBody');
           }
         } catch (error) {
           let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
           deserializationError.request = msRest.stripRequest(httpRequest);
-          deserializationError.response = msRest.stripResponse(response);
+          deserializationError.response = msRest.stripResponse(operationRes);
           return Promise.reject(deserializationError);
         }
       }
-
-    } catch(err) {
+    } catch (err) {
       return Promise.reject(err);
     }
-
     return Promise.resolve(operationRes);
   }
   // methods on the client.
@@ -588,90 +418,69 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
+   * @resolve {HttpOperationResponse} The deserialized result object.
    *
-   * @reject {Error|ServiceError} - The error object.
+   * @reject {Error|ServiceError} The error object.
    */
-  async getCheckoutWithHttpOperationResponse(checkoutId: number, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (checkoutId === null || checkoutId === undefined || typeof checkoutId !== 'number') {
-        throw new Error('checkoutId cannot be null or undefined and it must be of type number.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/checkouts';
-    let queryParamsArray: Array<any> = [];
-    queryParamsArray.push('checkoutId=' + encodeURIComponent(checkoutId.toString()));
-    if (queryParamsArray.length > 0) {
-      requestUrl += '?' + queryParamsArray.join('&');
-    }
+  async getCheckoutWithHttpOperationResponse(checkoutId: number, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<Models.CheckoutResponseModel>> {
 
     // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'GET';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Send Request
+    const httpRequest = new WebResource();
     let operationRes: msRest.HttpOperationResponse;
     try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200 && statusCode !== 404) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          checkoutId
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "GET",
+          baseUrl: this.baseUri,
+          path: "payments/v2/checkouts",
+          queryParameters: [
+            {
+              parameterPath: "checkoutId",
+              mapper: {
+                required: true,
+                serializedName: "checkoutId",
+                type: {
+                  name: "Number"
+                }
+              }
+            }
+          ],
+          responses: {
+            200: {
+              bodyMapper: Mappers.CheckoutResponseModel
+            },
+            401: {},
+            404: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
       // Deserialize Response
+      let statusCode = operationRes.status;
       if (statusCode === 200) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
+        let parsedResponse = operationRes.parsedBody as { [key: string]: any };
         try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = Mappers.CheckoutResponseModel;
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
+          if (parsedResponse != undefined) {
+            const resultMapper = Mappers.CheckoutResponseModel;
+            operationRes.parsedBody = this.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.parsedBody');
           }
         } catch (error) {
           let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
           deserializationError.request = msRest.stripRequest(httpRequest);
-          deserializationError.response = msRest.stripResponse(response);
+          deserializationError.response = msRest.stripResponse(operationRes);
           return Promise.reject(deserializationError);
         }
       }
-
-    } catch(err) {
+    } catch (err) {
       return Promise.reject(err);
     }
-
     return Promise.resolve(operationRes);
   }
   // methods on the client.
@@ -685,122 +494,71 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
+   * @resolve {HttpOperationResponse} The deserialized result object.
    *
-   * @reject {Error|ServiceError} - The error object.
+   * @reject {Error|ServiceError} The error object.
    */
-  async createCheckoutWithHttpOperationResponse(model: Models.CheckoutRequestModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (model === null || model === undefined) {
-        throw new Error('model cannot be null or undefined.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/checkouts';
+  async createCheckoutWithHttpOperationResponse(model: Models.CheckoutRequestModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<Models.CheckoutResponseModel>> {
 
     // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'POST';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Serialize Request
-    let requestContent = null;
-    let requestModel = null;
-    try {
-      if (model !== null && model !== undefined) {
-        let requestModelMapper = Mappers.CheckoutRequestModel;
-        requestModel = client.serializer.serialize(requestModelMapper, model, 'model');
-        requestContent = JSON.stringify(requestModel);
-      }
-    } catch (error) {
-      let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
-          `payload - ${JSON.stringify(model, null, 2)}.`);
-      return Promise.reject(serializationError);
-    }
-    httpRequest.body = requestContent;
-    // Send Request
+    const httpRequest = new WebResource();
     let operationRes: msRest.HttpOperationResponse;
     try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200 && statusCode !== 201 && statusCode !== 400) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          model
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "POST",
+          baseUrl: this.baseUri,
+          path: "payments/v2/checkouts",
+          requestBody: {
+            parameterPath: "model",
+            mapper: {
+              ...Mappers.CheckoutRequestModel,
+              required: true
+            }
+          },
+          contentType: "application/json; charset=utf-8",
+          responses: {
+            201: {
+              bodyMapper: Mappers.CheckoutResponseModel
+            },
+            400: {},
+            401: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
       // Deserialize Response
-      if (statusCode === 200) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
+      let statusCode = operationRes.status;
+      if (statusCode === 201) {
+        let parsedResponse = operationRes.parsedBody as { [key: string]: any };
         try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = Mappers.CheckoutResponseModel;
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
+          if (parsedResponse != undefined) {
+            const resultMapper = Mappers.CheckoutResponseModel;
+            operationRes.parsedBody = this.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.parsedBody');
           }
         } catch (error) {
           let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
           deserializationError.request = msRest.stripRequest(httpRequest);
-          deserializationError.response = msRest.stripResponse(response);
+          deserializationError.response = msRest.stripResponse(operationRes);
           return Promise.reject(deserializationError);
         }
       }
-      // Deserialize Response
-      if (statusCode === 201) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = Mappers.CheckoutResponseModel;
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
-          }
-        } catch (error) {
-          let deserializationError1 = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
-          deserializationError1.request = msRest.stripRequest(httpRequest);
-          deserializationError1.response = msRest.stripResponse(response);
-          return Promise.reject(deserializationError1);
-        }
-      }
-
-    } catch(err) {
+    } catch (err) {
       return Promise.reject(err);
     }
-
     return Promise.resolve(operationRes);
   }
   // methods on the client.
 
   /**
-   * @summary Gets all credit cards associated with the specified reference
-   * identifier.
+   * @summary Gets all credit cards associated with the specified reference identifier.
    *
    * @param {string} referenceId The reference identifier.
    *
@@ -808,104 +566,92 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
+   * @resolve {HttpOperationResponse} The deserialized result object.
    *
-   * @reject {Error|ServiceError} - The error object.
+   * @reject {Error|ServiceError} The error object.
    */
-  async getCreditCardsByReferenceIdWithHttpOperationResponse(referenceId: string, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (referenceId === null || referenceId === undefined || typeof referenceId.valueOf() !== 'string') {
-        throw new Error('referenceId cannot be null or undefined and it must be of type string.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/creditcards';
-    let queryParamsArray: Array<any> = [];
-    queryParamsArray.push('referenceId=' + encodeURIComponent(referenceId));
-    if (queryParamsArray.length > 0) {
-      requestUrl += '?' + queryParamsArray.join('&');
-    }
+  async getCreditCardsByReferenceIdWithHttpOperationResponse(referenceId: string, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<Models.CreditCardModel[]>> {
 
     // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'GET';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Send Request
+    const httpRequest = new WebResource();
     let operationRes: msRest.HttpOperationResponse;
     try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
-      // Deserialize Response
-      if (statusCode === 200) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = {
-              required: false,
-              serializedName: 'parsedResponse',
-              type: {
-                name: 'Sequence',
-                element: {
-                    required: false,
-                    serializedName: 'CreditCardModelElementType',
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          referenceId
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "GET",
+          baseUrl: this.baseUri,
+          path: "payments/v2/creditcards",
+          queryParameters: [
+            {
+              parameterPath: "referenceId",
+              mapper: {
+                required: true,
+                serializedName: "referenceId",
+                type: {
+                  name: "String"
+                }
+              }
+            }
+          ],
+          responses: {
+            200: {
+              bodyMapper: {
+                serializedName: "parsedResponse",
+                type: {
+                  name: "Sequence",
+                  element: {
+                    serializedName: "CreditCardModelElementType",
                     type: {
-                      name: 'Composite',
-                      className: 'CreditCardModel'
+                      name: "Composite",
+                      className: "CreditCardModel"
                     }
+                  }
+                }
+              }
+            },
+            401: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
+      // Deserialize Response
+      let statusCode = operationRes.status;
+      if (statusCode === 200) {
+        let parsedResponse = operationRes.parsedBody as { [key: string]: any };
+        try {
+          if (parsedResponse != undefined) {
+            const resultMapper = {
+              serializedName: "parsedResponse",
+              type: {
+                name: "Sequence",
+                element: {
+                  serializedName: "CreditCardModelElementType",
+                  type: {
+                    name: "Composite",
+                    className: "CreditCardModel"
+                  }
                 }
               }
             };
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
+            operationRes.parsedBody = this.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.parsedBody');
           }
         } catch (error) {
           let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
           deserializationError.request = msRest.stripRequest(httpRequest);
-          deserializationError.response = msRest.stripResponse(response);
+          deserializationError.response = msRest.stripResponse(operationRes);
           return Promise.reject(deserializationError);
         }
       }
-
-    } catch(err) {
+    } catch (err) {
       return Promise.reject(err);
     }
-
     return Promise.resolve(operationRes);
   }
   // methods on the client.
@@ -913,113 +659,53 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
   /**
    * @summary Updates a credit card.
    *
-   * @param {UpdateCreditCardModel} updateCreditCardModel The update credit card
-   * model.
+   * @param {UpdateCreditCardModel} updateCreditCardModel The update credit card model.
    *
    * @param {RequestOptionsBase} [options] Optional Parameters.
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
+   * @resolve {HttpOperationResponse} The deserialized result object.
    *
-   * @reject {Error|ServiceError} - The error object.
+   * @reject {Error|ServiceError} The error object.
    */
-  async updateCreditCardWithHttpOperationResponse(updateCreditCardModel: Models.UpdateCreditCardModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (updateCreditCardModel === null || updateCreditCardModel === undefined) {
-        throw new Error('updateCreditCardModel cannot be null or undefined.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/creditcards';
+  async updateCreditCardWithHttpOperationResponse(updateCreditCardModel: Models.UpdateCreditCardModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<void>> {
 
     // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'PUT';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Serialize Request
-    let requestContent = null;
-    let requestModel = null;
-    try {
-      if (updateCreditCardModel !== null && updateCreditCardModel !== undefined) {
-        let requestModelMapper = Mappers.UpdateCreditCardModel;
-        requestModel = client.serializer.serialize(requestModelMapper, updateCreditCardModel, 'updateCreditCardModel');
-        requestContent = JSON.stringify(requestModel);
-      }
-    } catch (error) {
-      let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
-          `payload - ${JSON.stringify(updateCreditCardModel, null, 2)}.`);
-      return Promise.reject(serializationError);
-    }
-    httpRequest.body = requestContent;
-    // Send Request
+    const httpRequest = new WebResource();
     let operationRes: msRest.HttpOperationResponse;
     try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200 && statusCode !== 204 && statusCode !== 400) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
-      // Deserialize Response
-      if (statusCode === 200) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = {
-              required: false,
-              serializedName: 'parsedResponse',
-              type: {
-                name: 'Object'
-              }
-            };
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
-          }
-        } catch (error) {
-          let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
-          deserializationError.request = msRest.stripRequest(httpRequest);
-          deserializationError.response = msRest.stripResponse(response);
-          return Promise.reject(deserializationError);
-        }
-      }
-
-    } catch(err) {
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          updateCreditCardModel
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "PUT",
+          baseUrl: this.baseUri,
+          path: "payments/v2/creditcards",
+          requestBody: {
+            parameterPath: "updateCreditCardModel",
+            mapper: {
+              ...Mappers.UpdateCreditCardModel,
+              required: true
+            }
+          },
+          contentType: "application/json; charset=utf-8",
+          responses: {
+            204: {},
+            400: {},
+            401: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
+    } catch (err) {
       return Promise.reject(err);
     }
-
     return Promise.resolve(operationRes);
   }
   // methods on the client.
@@ -1033,100 +719,65 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
+   * @resolve {HttpOperationResponse} The deserialized result object.
    *
-   * @reject {Error|ServiceError} - The error object.
+   * @reject {Error|ServiceError} The error object.
    */
-  async createCreditCardWithHttpOperationResponse(creditCardRequest: Models.CreditCardRequestModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (creditCardRequest === null || creditCardRequest === undefined) {
-        throw new Error('creditCardRequest cannot be null or undefined.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/creditcards';
+  async createCreditCardWithHttpOperationResponse(creditCardRequest: Models.CreditCardRequestModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<Models.CreditCardResponseModel>> {
 
     // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'POST';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Serialize Request
-    let requestContent = null;
-    let requestModel = null;
-    try {
-      if (creditCardRequest !== null && creditCardRequest !== undefined) {
-        let requestModelMapper = Mappers.CreditCardRequestModel;
-        requestModel = client.serializer.serialize(requestModelMapper, creditCardRequest, 'creditCardRequest');
-        requestContent = JSON.stringify(requestModel);
-      }
-    } catch (error) {
-      let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
-          `payload - ${JSON.stringify(creditCardRequest, null, 2)}.`);
-      return Promise.reject(serializationError);
-    }
-    httpRequest.body = requestContent;
-    // Send Request
+    const httpRequest = new WebResource();
     let operationRes: msRest.HttpOperationResponse;
     try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200 && statusCode !== 400) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          creditCardRequest
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "POST",
+          baseUrl: this.baseUri,
+          path: "payments/v2/creditcards",
+          requestBody: {
+            parameterPath: "creditCardRequest",
+            mapper: {
+              ...Mappers.CreditCardRequestModel,
+              required: true
+            }
+          },
+          contentType: "application/json; charset=utf-8",
+          responses: {
+            200: {
+              bodyMapper: Mappers.CreditCardResponseModel
+            },
+            400: {},
+            401: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
       // Deserialize Response
+      let statusCode = operationRes.status;
       if (statusCode === 200) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
+        let parsedResponse = operationRes.parsedBody as { [key: string]: any };
         try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = Mappers.CreditCardResponseModel;
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
+          if (parsedResponse != undefined) {
+            const resultMapper = Mappers.CreditCardResponseModel;
+            operationRes.parsedBody = this.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.parsedBody');
           }
         } catch (error) {
           let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
           deserializationError.request = msRest.stripRequest(httpRequest);
-          deserializationError.response = msRest.stripResponse(response);
+          deserializationError.response = msRest.stripResponse(operationRes);
           return Promise.reject(deserializationError);
         }
       }
-
-    } catch(err) {
+    } catch (err) {
       return Promise.reject(err);
     }
-
     return Promise.resolve(operationRes);
   }
   // methods on the client.
@@ -1140,86 +791,69 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
+   * @resolve {HttpOperationResponse} The deserialized result object.
    *
-   * @reject {Error|ServiceError} - The error object.
+   * @reject {Error|ServiceError} The error object.
    */
-  async getPaymentWithHttpOperationResponse(id: number, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (id === null || id === undefined || typeof id !== 'number') {
-        throw new Error('id cannot be null or undefined and it must be of type number.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/payments/{id}';
-    requestUrl = requestUrl.replace('{id}', encodeURIComponent(id.toString()));
+  async getPaymentWithHttpOperationResponse(id: number, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<Models.PaymentModel>> {
 
     // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'GET';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Send Request
+    const httpRequest = new WebResource();
     let operationRes: msRest.HttpOperationResponse;
     try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200 && statusCode !== 404) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          id
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "GET",
+          baseUrl: this.baseUri,
+          path: "payments/v2/payments/{id}",
+          urlParameters: [
+            {
+              parameterPath: "id",
+              mapper: {
+                required: true,
+                serializedName: "id",
+                type: {
+                  name: "Number"
+                }
+              }
+            }
+          ],
+          responses: {
+            200: {
+              bodyMapper: Mappers.PaymentModel
+            },
+            401: {},
+            404: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
       // Deserialize Response
+      let statusCode = operationRes.status;
       if (statusCode === 200) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
+        let parsedResponse = operationRes.parsedBody as { [key: string]: any };
         try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = Mappers.PaymentModel;
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
+          if (parsedResponse != undefined) {
+            const resultMapper = Mappers.PaymentModel;
+            operationRes.parsedBody = this.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.parsedBody');
           }
         } catch (error) {
           let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
           deserializationError.request = msRest.stripRequest(httpRequest);
-          deserializationError.response = msRest.stripResponse(response);
+          deserializationError.response = msRest.stripResponse(operationRes);
           return Promise.reject(deserializationError);
         }
       }
-
-    } catch(err) {
+    } catch (err) {
       return Promise.reject(err);
     }
-
     return Promise.resolve(operationRes);
   }
   // methods on the client.
@@ -1227,128 +861,118 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
   /**
    * @summary Gets payments associated with the specified reference identifier.
    *
-   * @param {string} referenceId The client application provided reference ID for
-   * the payment.
-   *
-   * @param {SoftheonWalletAPIGetPaymentsByReferenceIdOptionalParams} [options]
-   * Optional Parameters.
+   * @param {SoftheonWalletAPIGetPaymentsByReferenceIdOptionalParams} [options] Optional Parameters.
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
+   * @resolve {HttpOperationResponse} The deserialized result object.
    *
-   * @reject {Error|ServiceError} - The error object.
+   * @reject {Error|ServiceError} The error object.
    */
-  async getPaymentsByReferenceIdWithHttpOperationResponse(referenceId: string, options?: Models.SoftheonWalletAPIGetPaymentsByReferenceIdOptionalParams): Promise<msRest.HttpOperationResponse> {
-    let client = this;
+  async getPaymentsByReferenceIdWithHttpOperationResponse(options?: Models.SoftheonWalletAPIGetPaymentsByReferenceIdOptionalParams): Promise<msRest.HttpOperationResponse<Models.PaymentModel[]>> {
+    let referenceId = (options && options.referenceId !== undefined) ? options.referenceId : undefined;
     let minDate = (options && options.minDate !== undefined) ? options.minDate : undefined;
     let maxDate = (options && options.maxDate !== undefined) ? options.maxDate : undefined;
-    // Validate
-    try {
-      if (referenceId === null || referenceId === undefined || typeof referenceId.valueOf() !== 'string') {
-        throw new Error('referenceId cannot be null or undefined and it must be of type string.');
-      }
-      if (minDate && !(minDate instanceof Date ||
-          (typeof (minDate as string).valueOf() === 'string' && !isNaN(Date.parse(minDate as string))))) {
-            throw new Error('minDate must be of type date.');
-          }
-      if (maxDate && !(maxDate instanceof Date ||
-          (typeof (maxDate as string).valueOf() === 'string' && !isNaN(Date.parse(maxDate as string))))) {
-            throw new Error('maxDate must be of type date.');
-          }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/payments';
-    let queryParamsArray: Array<any> = [];
-    queryParamsArray.push('referenceId=' + encodeURIComponent(referenceId));
-    if (minDate !== null && minDate !== undefined) {
-      queryParamsArray.push('minDate=' + encodeURIComponent(msRest.serializeObject(minDate)));
-    }
-    if (maxDate !== null && maxDate !== undefined) {
-      queryParamsArray.push('maxDate=' + encodeURIComponent(msRest.serializeObject(maxDate)));
-    }
-    if (queryParamsArray.length > 0) {
-      requestUrl += '?' + queryParamsArray.join('&');
-    }
 
     // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'GET';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Send Request
+    const httpRequest = new WebResource();
     let operationRes: msRest.HttpOperationResponse;
     try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
-      // Deserialize Response
-      if (statusCode === 200) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = {
-              required: false,
-              serializedName: 'parsedResponse',
-              type: {
-                name: 'Sequence',
-                element: {
-                    required: false,
-                    serializedName: 'PaymentModelElementType',
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          referenceId,
+          minDate,
+          maxDate
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "GET",
+          baseUrl: this.baseUri,
+          path: "payments/v2/payments",
+          queryParameters: [
+            {
+              parameterPath: "referenceId",
+              mapper: {
+                serializedName: "referenceId",
+                type: {
+                  name: "String"
+                }
+              }
+            },
+            {
+              parameterPath: "minDate",
+              mapper: {
+                serializedName: "minDate",
+                type: {
+                  name: "DateTime"
+                }
+              }
+            },
+            {
+              parameterPath: "maxDate",
+              mapper: {
+                serializedName: "maxDate",
+                type: {
+                  name: "DateTime"
+                }
+              }
+            }
+          ],
+          responses: {
+            200: {
+              bodyMapper: {
+                serializedName: "parsedResponse",
+                type: {
+                  name: "Sequence",
+                  element: {
+                    serializedName: "PaymentModelElementType",
                     type: {
-                      name: 'Composite',
-                      className: 'PaymentModel'
+                      name: "Composite",
+                      className: "PaymentModel"
                     }
+                  }
+                }
+              }
+            },
+            401: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
+      // Deserialize Response
+      let statusCode = operationRes.status;
+      if (statusCode === 200) {
+        let parsedResponse = operationRes.parsedBody as { [key: string]: any };
+        try {
+          if (parsedResponse != undefined) {
+            const resultMapper = {
+              serializedName: "parsedResponse",
+              type: {
+                name: "Sequence",
+                element: {
+                  serializedName: "PaymentModelElementType",
+                  type: {
+                    name: "Composite",
+                    className: "PaymentModel"
+                  }
                 }
               }
             };
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
+            operationRes.parsedBody = this.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.parsedBody');
           }
         } catch (error) {
           let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
           deserializationError.request = msRest.stripRequest(httpRequest);
-          deserializationError.response = msRest.stripResponse(response);
+          deserializationError.response = msRest.stripResponse(operationRes);
           return Promise.reject(deserializationError);
         }
       }
-
-    } catch(err) {
+    } catch (err) {
       return Promise.reject(err);
     }
-
     return Promise.resolve(operationRes);
   }
   // methods on the client.
@@ -1362,115 +986,65 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
+   * @resolve {HttpOperationResponse} The deserialized result object.
    *
-   * @reject {Error|ServiceError} - The error object.
+   * @reject {Error|ServiceError} The error object.
    */
-  async createPaymentWithHttpOperationResponse(paymentRequest: Models.PaymentRequestModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (paymentRequest === null || paymentRequest === undefined) {
-        throw new Error('paymentRequest cannot be null or undefined.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/payments';
+  async createPaymentWithHttpOperationResponse(paymentRequest: Models.PaymentRequestModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<Models.PaymentModel>> {
 
     // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'POST';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Serialize Request
-    let requestContent = null;
-    let requestModel = null;
-    try {
-      if (paymentRequest !== null && paymentRequest !== undefined) {
-        let requestModelMapper = Mappers.PaymentRequestModel;
-        requestModel = client.serializer.serialize(requestModelMapper, paymentRequest, 'paymentRequest');
-        requestContent = JSON.stringify(requestModel);
-      }
-    } catch (error) {
-      let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
-          `payload - ${JSON.stringify(paymentRequest, null, 2)}.`);
-      return Promise.reject(serializationError);
-    }
-    httpRequest.body = requestContent;
-    // Send Request
+    const httpRequest = new WebResource();
     let operationRes: msRest.HttpOperationResponse;
     try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200 && statusCode !== 201 && statusCode !== 400) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          paymentRequest
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "POST",
+          baseUrl: this.baseUri,
+          path: "payments/v2/payments",
+          requestBody: {
+            parameterPath: "paymentRequest",
+            mapper: {
+              ...Mappers.PaymentRequestModel,
+              required: true
+            }
+          },
+          contentType: "application/json; charset=utf-8",
+          responses: {
+            201: {
+              bodyMapper: Mappers.PaymentModel
+            },
+            400: {},
+            401: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
       // Deserialize Response
-      if (statusCode === 200) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
+      let statusCode = operationRes.status;
+      if (statusCode === 201) {
+        let parsedResponse = operationRes.parsedBody as { [key: string]: any };
         try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = Mappers.PaymentModel;
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
+          if (parsedResponse != undefined) {
+            const resultMapper = Mappers.PaymentModel;
+            operationRes.parsedBody = this.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.parsedBody');
           }
         } catch (error) {
           let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
           deserializationError.request = msRest.stripRequest(httpRequest);
-          deserializationError.response = msRest.stripResponse(response);
+          deserializationError.response = msRest.stripResponse(operationRes);
           return Promise.reject(deserializationError);
         }
       }
-      // Deserialize Response
-      if (statusCode === 201) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = Mappers.PaymentModel;
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
-          }
-        } catch (error) {
-          let deserializationError1 = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
-          deserializationError1.request = msRest.stripRequest(httpRequest);
-          deserializationError1.response = msRest.stripResponse(response);
-          return Promise.reject(deserializationError1);
-        }
-      }
-
-    } catch(err) {
+    } catch (err) {
       return Promise.reject(err);
     }
-
     return Promise.resolve(operationRes);
   }
   // methods on the client.
@@ -1484,100 +1058,92 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
+   * @resolve {HttpOperationResponse} The deserialized result object.
    *
-   * @reject {Error|ServiceError} - The error object.
+   * @reject {Error|ServiceError} The error object.
    */
-  async getRefundsWithHttpOperationResponse(id: number, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (id === null || id === undefined || typeof id !== 'number') {
-        throw new Error('id cannot be null or undefined and it must be of type number.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/payments/{id}/refunds';
-    requestUrl = requestUrl.replace('{id}', encodeURIComponent(id.toString()));
+  async getRefundsWithHttpOperationResponse(id: number, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<Models.RefundResultModel[]>> {
 
     // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'GET';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Send Request
+    const httpRequest = new WebResource();
     let operationRes: msRest.HttpOperationResponse;
     try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
-      // Deserialize Response
-      if (statusCode === 200) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = {
-              required: false,
-              serializedName: 'parsedResponse',
-              type: {
-                name: 'Sequence',
-                element: {
-                    required: false,
-                    serializedName: 'RefundResultModelElementType',
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          id
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "GET",
+          baseUrl: this.baseUri,
+          path: "payments/v2/payments/{id}/refunds",
+          urlParameters: [
+            {
+              parameterPath: "id",
+              mapper: {
+                required: true,
+                serializedName: "id",
+                type: {
+                  name: "Number"
+                }
+              }
+            }
+          ],
+          responses: {
+            200: {
+              bodyMapper: {
+                serializedName: "parsedResponse",
+                type: {
+                  name: "Sequence",
+                  element: {
+                    serializedName: "RefundResultModelElementType",
                     type: {
-                      name: 'Composite',
-                      className: 'RefundResultModel'
+                      name: "Composite",
+                      className: "RefundResultModel"
                     }
+                  }
+                }
+              }
+            },
+            401: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
+      // Deserialize Response
+      let statusCode = operationRes.status;
+      if (statusCode === 200) {
+        let parsedResponse = operationRes.parsedBody as { [key: string]: any };
+        try {
+          if (parsedResponse != undefined) {
+            const resultMapper = {
+              serializedName: "parsedResponse",
+              type: {
+                name: "Sequence",
+                element: {
+                  serializedName: "RefundResultModelElementType",
+                  type: {
+                    name: "Composite",
+                    className: "RefundResultModel"
+                  }
                 }
               }
             };
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
+            operationRes.parsedBody = this.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.parsedBody');
           }
         } catch (error) {
           let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
           deserializationError.request = msRest.stripRequest(httpRequest);
-          deserializationError.response = msRest.stripResponse(response);
+          deserializationError.response = msRest.stripResponse(operationRes);
           return Promise.reject(deserializationError);
         }
       }
-
-    } catch(err) {
+    } catch (err) {
       return Promise.reject(err);
     }
-
     return Promise.resolve(operationRes);
   }
   // methods on the client.
@@ -1593,445 +1159,84 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
+   * @resolve {HttpOperationResponse} The deserialized result object.
    *
-   * @reject {Error|ServiceError} - The error object.
+   * @reject {Error|ServiceError} The error object.
    */
-  async createRefundWithHttpOperationResponse(id: number, refundRequestModel: Models.RefundRequestModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (id === null || id === undefined || typeof id !== 'number') {
-        throw new Error('id cannot be null or undefined and it must be of type number.');
-      }
-      if (refundRequestModel === null || refundRequestModel === undefined) {
-        throw new Error('refundRequestModel cannot be null or undefined.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/payments/{id}/refunds';
-    requestUrl = requestUrl.replace('{id}', encodeURIComponent(id.toString()));
+  async createRefundWithHttpOperationResponse(id: number, refundRequestModel: Models.RefundRequestModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<Models.RefundResultModel>> {
 
     // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'POST';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Serialize Request
-    let requestContent = null;
-    let requestModel = null;
-    try {
-      if (refundRequestModel !== null && refundRequestModel !== undefined) {
-        let requestModelMapper = Mappers.RefundRequestModel;
-        requestModel = client.serializer.serialize(requestModelMapper, refundRequestModel, 'refundRequestModel');
-        requestContent = JSON.stringify(requestModel);
-      }
-    } catch (error) {
-      let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
-          `payload - ${JSON.stringify(refundRequestModel, null, 2)}.`);
-      return Promise.reject(serializationError);
-    }
-    httpRequest.body = requestContent;
-    // Send Request
+    const httpRequest = new WebResource();
     let operationRes: msRest.HttpOperationResponse;
     try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200 && statusCode !== 404) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
-      // Deserialize Response
-      if (statusCode === 200) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = Mappers.RefundResultModel;
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
-          }
-        } catch (error) {
-          let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
-          deserializationError.request = msRest.stripRequest(httpRequest);
-          deserializationError.response = msRest.stripResponse(response);
-          return Promise.reject(deserializationError);
-        }
-      }
-
-    } catch(err) {
-      return Promise.reject(err);
-    }
-
-    return Promise.resolve(operationRes);
-  }
-  // methods on the client.
-
-  /**
-   * @summary Gets all payment subscriptions associated with the specified
-   * reference id.
-   *
-   * @param {string} referenceId The reference identifier.
-   *
-   * @param {RequestOptionsBase} [options] Optional Parameters.
-   *
-   * @returns {Promise} A promise is returned
-   *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
-   *
-   * @reject {Error|ServiceError} - The error object.
-   */
-  async getSubscriptionsByReferenceIdWithHttpOperationResponse(referenceId: string, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (referenceId === null || referenceId === undefined || typeof referenceId.valueOf() !== 'string') {
-        throw new Error('referenceId cannot be null or undefined and it must be of type string.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/subscriptions';
-    let queryParamsArray: Array<any> = [];
-    queryParamsArray.push('referenceId=' + encodeURIComponent(referenceId));
-    if (queryParamsArray.length > 0) {
-      requestUrl += '?' + queryParamsArray.join('&');
-    }
-
-    // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'GET';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Send Request
-    let operationRes: msRest.HttpOperationResponse;
-    try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
-      // Deserialize Response
-      if (statusCode === 200) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = {
-              required: false,
-              serializedName: 'parsedResponse',
-              type: {
-                name: 'Sequence',
-                element: {
-                    required: false,
-                    serializedName: 'SubscriptionModelElementType',
-                    type: {
-                      name: 'Composite',
-                      className: 'SubscriptionModel'
-                    }
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          id,
+          refundRequestModel
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "POST",
+          baseUrl: this.baseUri,
+          path: "payments/v2/payments/{id}/refunds",
+          urlParameters: [
+            {
+              parameterPath: "id",
+              mapper: {
+                required: true,
+                serializedName: "id",
+                type: {
+                  name: "Number"
                 }
               }
-            };
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
-          }
-        } catch (error) {
-          let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
-          deserializationError.request = msRest.stripRequest(httpRequest);
-          deserializationError.response = msRest.stripResponse(response);
-          return Promise.reject(deserializationError);
-        }
-      }
-
-    } catch(err) {
-      return Promise.reject(err);
-    }
-
-    return Promise.resolve(operationRes);
-  }
-  // methods on the client.
-
-  /**
-   * @summary Updates a payment subscription.
-   *
-   * @param {UpdateSubscriptionModel} updateSubscriptionModel The update
-   * subscription model.
-   *
-   * @param {RequestOptionsBase} [options] Optional Parameters.
-   *
-   * @returns {Promise} A promise is returned
-   *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
-   *
-   * @reject {Error|ServiceError} - The error object.
-   */
-  async updateSubscriptionWithHttpOperationResponse(updateSubscriptionModel: Models.UpdateSubscriptionModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (updateSubscriptionModel === null || updateSubscriptionModel === undefined) {
-        throw new Error('updateSubscriptionModel cannot be null or undefined.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/subscriptions';
-
-    // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'PUT';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Serialize Request
-    let requestContent = null;
-    let requestModel = null;
-    try {
-      if (updateSubscriptionModel !== null && updateSubscriptionModel !== undefined) {
-        let requestModelMapper = Mappers.UpdateSubscriptionModel;
-        requestModel = client.serializer.serialize(requestModelMapper, updateSubscriptionModel, 'updateSubscriptionModel');
-        requestContent = JSON.stringify(requestModel);
-      }
-    } catch (error) {
-      let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
-          `payload - ${JSON.stringify(updateSubscriptionModel, null, 2)}.`);
-      return Promise.reject(serializationError);
-    }
-    httpRequest.body = requestContent;
-    // Send Request
-    let operationRes: msRest.HttpOperationResponse;
-    try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200 && statusCode !== 204) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
+            }
+          ],
+          requestBody: {
+            parameterPath: "refundRequestModel",
+            mapper: {
+              ...Mappers.RefundRequestModel,
+              required: true
+            }
+          },
+          contentType: "application/json; charset=utf-8",
+          responses: {
+            200: {
+              bodyMapper: Mappers.RefundResultModel
+            },
+            401: {},
+            404: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
       // Deserialize Response
+      let statusCode = operationRes.status;
       if (statusCode === 200) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
+        let parsedResponse = operationRes.parsedBody as { [key: string]: any };
         try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = {
-              required: false,
-              serializedName: 'parsedResponse',
-              type: {
-                name: 'Object'
-              }
-            };
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
+          if (parsedResponse != undefined) {
+            const resultMapper = Mappers.RefundResultModel;
+            operationRes.parsedBody = this.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.parsedBody');
           }
         } catch (error) {
           let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
           deserializationError.request = msRest.stripRequest(httpRequest);
-          deserializationError.response = msRest.stripResponse(response);
+          deserializationError.response = msRest.stripResponse(operationRes);
           return Promise.reject(deserializationError);
         }
       }
-
-    } catch(err) {
+    } catch (err) {
       return Promise.reject(err);
     }
-
     return Promise.resolve(operationRes);
   }
   // methods on the client.
 
   /**
-   * @summary Posts a new payment subscription.
-   *
-   * @param {SubscriptionRequestModel} subscriptionRequest The subscription
-   * request.
-   *
-   * @param {RequestOptionsBase} [options] Optional Parameters.
-   *
-   * @returns {Promise} A promise is returned
-   *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
-   *
-   * @reject {Error|ServiceError} - The error object.
-   */
-  async createSubscriptionWithHttpOperationResponse(subscriptionRequest: Models.SubscriptionRequestModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (subscriptionRequest === null || subscriptionRequest === undefined) {
-        throw new Error('subscriptionRequest cannot be null or undefined.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/subscriptions';
-
-    // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'POST';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Serialize Request
-    let requestContent = null;
-    let requestModel = null;
-    try {
-      if (subscriptionRequest !== null && subscriptionRequest !== undefined) {
-        let requestModelMapper = Mappers.SubscriptionRequestModel;
-        requestModel = client.serializer.serialize(requestModelMapper, subscriptionRequest, 'subscriptionRequest');
-        requestContent = JSON.stringify(requestModel);
-      }
-    } catch (error) {
-      let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
-          `payload - ${JSON.stringify(subscriptionRequest, null, 2)}.`);
-      return Promise.reject(serializationError);
-    }
-    httpRequest.body = requestContent;
-    // Send Request
-    let operationRes: msRest.HttpOperationResponse;
-    try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200 && statusCode !== 400 && statusCode !== 409) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
-      // Deserialize Response
-      if (statusCode === 200) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = Mappers.SubscriptionResponceModel;
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
-          }
-        } catch (error) {
-          let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
-          deserializationError.request = msRest.stripRequest(httpRequest);
-          deserializationError.response = msRest.stripResponse(response);
-          return Promise.reject(deserializationError);
-        }
-      }
-
-    } catch(err) {
-      return Promise.reject(err);
-    }
-
-    return Promise.resolve(operationRes);
-  }
-  // methods on the client.
-
-  /**
-   * @summary Gets a single payment subscription with the specified subscription
-   * id.
+   * @summary Gets a single payment subscription with the specified subscription id.
    *
    * @param {string} id The subscription id.
    *
@@ -2039,86 +1244,294 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
+   * @resolve {HttpOperationResponse} The deserialized result object.
    *
-   * @reject {Error|ServiceError} - The error object.
+   * @reject {Error|ServiceError} The error object.
    */
-  async getSubscriptionWithHttpOperationResponse(id: string, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (id === null || id === undefined || typeof id.valueOf() !== 'string') {
-        throw new Error('id cannot be null or undefined and it must be of type string.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/subscriptions/{id}';
-    requestUrl = requestUrl.replace('{id}', encodeURIComponent(id));
+  async getSubscriptionWithHttpOperationResponse(id: string, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<Models.SubscriptionModel>> {
 
     // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'GET';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Send Request
+    const httpRequest = new WebResource();
     let operationRes: msRest.HttpOperationResponse;
     try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200 && statusCode !== 404) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          id
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "GET",
+          baseUrl: this.baseUri,
+          path: "payments/v2/subscriptions/{id}",
+          urlParameters: [
+            {
+              parameterPath: "id",
+              mapper: {
+                required: true,
+                serializedName: "id",
+                type: {
+                  name: "String"
+                }
+              }
+            }
+          ],
+          responses: {
+            200: {
+              bodyMapper: Mappers.SubscriptionModel
+            },
+            401: {},
+            404: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
       // Deserialize Response
+      let statusCode = operationRes.status;
       if (statusCode === 200) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
+        let parsedResponse = operationRes.parsedBody as { [key: string]: any };
         try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = Mappers.SubscriptionModel;
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
+          if (parsedResponse != undefined) {
+            const resultMapper = Mappers.SubscriptionModel;
+            operationRes.parsedBody = this.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.parsedBody');
           }
         } catch (error) {
           let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
           deserializationError.request = msRest.stripRequest(httpRequest);
-          deserializationError.response = msRest.stripResponse(response);
+          deserializationError.response = msRest.stripResponse(operationRes);
           return Promise.reject(deserializationError);
         }
       }
-
-    } catch(err) {
+    } catch (err) {
       return Promise.reject(err);
     }
+    return Promise.resolve(operationRes);
+  }
+  // methods on the client.
 
+  /**
+   * @summary Gets all payment subscriptions associated with the specified reference id.
+   *
+   * @param {string} referenceId The reference identifier.
+   *
+   * @param {RequestOptionsBase} [options] Optional Parameters.
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse} The deserialized result object.
+   *
+   * @reject {Error|ServiceError} The error object.
+   */
+  async getSubscriptionsByReferenceIdWithHttpOperationResponse(referenceId: string, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<Models.SubscriptionModel[]>> {
+
+    // Create HTTP transport objects
+    const httpRequest = new WebResource();
+    let operationRes: msRest.HttpOperationResponse;
+    try {
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          referenceId
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "GET",
+          baseUrl: this.baseUri,
+          path: "payments/v2/subscriptions",
+          queryParameters: [
+            {
+              parameterPath: "referenceId",
+              mapper: {
+                required: true,
+                serializedName: "referenceId",
+                type: {
+                  name: "String"
+                }
+              }
+            }
+          ],
+          responses: {
+            200: {
+              bodyMapper: {
+                serializedName: "parsedResponse",
+                type: {
+                  name: "Sequence",
+                  element: {
+                    serializedName: "SubscriptionModelElementType",
+                    type: {
+                      name: "Composite",
+                      className: "SubscriptionModel"
+                    }
+                  }
+                }
+              }
+            },
+            401: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
+      // Deserialize Response
+      let statusCode = operationRes.status;
+      if (statusCode === 200) {
+        let parsedResponse = operationRes.parsedBody as { [key: string]: any };
+        try {
+          if (parsedResponse != undefined) {
+            const resultMapper = {
+              serializedName: "parsedResponse",
+              type: {
+                name: "Sequence",
+                element: {
+                  serializedName: "SubscriptionModelElementType",
+                  type: {
+                    name: "Composite",
+                    className: "SubscriptionModel"
+                  }
+                }
+              }
+            };
+            operationRes.parsedBody = this.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.parsedBody');
+          }
+        } catch (error) {
+          let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
+          deserializationError.request = msRest.stripRequest(httpRequest);
+          deserializationError.response = msRest.stripResponse(operationRes);
+          return Promise.reject(deserializationError);
+        }
+      }
+    } catch (err) {
+      return Promise.reject(err);
+    }
+    return Promise.resolve(operationRes);
+  }
+  // methods on the client.
+
+  /**
+   * @summary Updates a payment subscription.
+   *
+   * @param {UpdateSubscriptionModel} updateSubscriptionModel The update subscription model.
+   *
+   * @param {RequestOptionsBase} [options] Optional Parameters.
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse} The deserialized result object.
+   *
+   * @reject {Error|ServiceError} The error object.
+   */
+  async updateSubscriptionWithHttpOperationResponse(updateSubscriptionModel: Models.UpdateSubscriptionModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<void>> {
+
+    // Create HTTP transport objects
+    const httpRequest = new WebResource();
+    let operationRes: msRest.HttpOperationResponse;
+    try {
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          updateSubscriptionModel
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "PUT",
+          baseUrl: this.baseUri,
+          path: "payments/v2/subscriptions",
+          requestBody: {
+            parameterPath: "updateSubscriptionModel",
+            mapper: {
+              ...Mappers.UpdateSubscriptionModel,
+              required: true
+            }
+          },
+          contentType: "application/json; charset=utf-8",
+          responses: {
+            204: {},
+            401: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
+    } catch (err) {
+      return Promise.reject(err);
+    }
+    return Promise.resolve(operationRes);
+  }
+  // methods on the client.
+
+  /**
+   * @summary Posts a new payment subscription.
+   *
+   * @param {SubscriptionRequestModel} subscriptionRequest The subscription request.
+   *
+   * @param {RequestOptionsBase} [options] Optional Parameters.
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse} The deserialized result object.
+   *
+   * @reject {Error|ServiceError} The error object.
+   */
+  async createSubscriptionWithHttpOperationResponse(subscriptionRequest: Models.SubscriptionRequestModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<Models.SubscriptionResponseModel>> {
+
+    // Create HTTP transport objects
+    const httpRequest = new WebResource();
+    let operationRes: msRest.HttpOperationResponse;
+    try {
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          subscriptionRequest
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "POST",
+          baseUrl: this.baseUri,
+          path: "payments/v2/subscriptions",
+          requestBody: {
+            parameterPath: "subscriptionRequest",
+            mapper: {
+              ...Mappers.SubscriptionRequestModel,
+              required: true
+            }
+          },
+          contentType: "application/json; charset=utf-8",
+          responses: {
+            200: {
+              bodyMapper: Mappers.SubscriptionResponseModel
+            },
+            400: {},
+            401: {},
+            409: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
+      // Deserialize Response
+      let statusCode = operationRes.status;
+      if (statusCode === 200) {
+        let parsedResponse = operationRes.parsedBody as { [key: string]: any };
+        try {
+          if (parsedResponse != undefined) {
+            const resultMapper = Mappers.SubscriptionResponseModel;
+            operationRes.parsedBody = this.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.parsedBody');
+          }
+        } catch (error) {
+          let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
+          deserializationError.request = msRest.stripRequest(httpRequest);
+          deserializationError.response = msRest.stripResponse(operationRes);
+          return Promise.reject(deserializationError);
+        }
+      }
+    } catch (err) {
+      return Promise.reject(err);
+    }
     return Promise.resolve(operationRes);
   }
   // methods on the client.
@@ -2132,86 +1545,70 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
+   * @resolve {HttpOperationResponse} The deserialized result object.
    *
-   * @reject {Error|ServiceError} - The error object.
+   * @reject {Error|ServiceError} The error object.
    */
-  async getWalletWithHttpOperationResponse(walletId: number, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (walletId === null || walletId === undefined || typeof walletId !== 'number') {
-        throw new Error('walletId cannot be null or undefined and it must be of type number.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/wallet/{walletId}';
-    requestUrl = requestUrl.replace('{walletId}', encodeURIComponent(walletId.toString()));
+  async getWalletWithHttpOperationResponse(walletId: number, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<Models.WalletModel>> {
 
     // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'GET';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Send Request
+    const httpRequest = new WebResource();
     let operationRes: msRest.HttpOperationResponse;
     try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200 && statusCode !== 400 && statusCode !== 404) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          walletId
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "GET",
+          baseUrl: this.baseUri,
+          path: "payments/v2/wallet/{walletId}",
+          urlParameters: [
+            {
+              parameterPath: "walletId",
+              mapper: {
+                required: true,
+                serializedName: "walletId",
+                type: {
+                  name: "Number"
+                }
+              }
+            }
+          ],
+          responses: {
+            200: {
+              bodyMapper: Mappers.WalletModel
+            },
+            400: {},
+            401: {},
+            404: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
       // Deserialize Response
+      let statusCode = operationRes.status;
       if (statusCode === 200) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
+        let parsedResponse = operationRes.parsedBody as { [key: string]: any };
         try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = Mappers.WalletModel;
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
+          if (parsedResponse != undefined) {
+            const resultMapper = Mappers.WalletModel;
+            operationRes.parsedBody = this.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.parsedBody');
           }
         } catch (error) {
           let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
           deserializationError.request = msRest.stripRequest(httpRequest);
-          deserializationError.response = msRest.stripResponse(response);
+          deserializationError.response = msRest.stripResponse(operationRes);
           return Promise.reject(deserializationError);
         }
       }
-
-    } catch(err) {
+    } catch (err) {
       return Promise.reject(err);
     }
-
     return Promise.resolve(operationRes);
   }
   // methods on the client.
@@ -2227,95 +1624,63 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
+   * @resolve {HttpOperationResponse} The deserialized result object.
    *
-   * @reject {Error|ServiceError} - The error object.
+   * @reject {Error|ServiceError} The error object.
    */
-  async updateWalletWithHttpOperationResponse(walletId: number, defaultPaymentToken: string, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (walletId === null || walletId === undefined || typeof walletId !== 'number') {
-        throw new Error('walletId cannot be null or undefined and it must be of type number.');
-      }
-      if (defaultPaymentToken === null || defaultPaymentToken === undefined || typeof defaultPaymentToken.valueOf() !== 'string') {
-        throw new Error('defaultPaymentToken cannot be null or undefined and it must be of type string.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/wallet/{walletId}';
-    requestUrl = requestUrl.replace('{walletId}', encodeURIComponent(walletId.toString()));
+  async updateWalletWithHttpOperationResponse(walletId: number, defaultPaymentToken: string, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<void>> {
 
     // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'PUT';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Serialize Request
-    let requestContent = null;
-    let requestModel = null;
-    try {
-      if (defaultPaymentToken !== null && defaultPaymentToken !== undefined) {
-        let requestModelMapper = {
-          required: true,
-          serializedName: 'defaultPaymentToken',
-          type: {
-            name: 'String'
-          }
-        };
-        requestModel = client.serializer.serialize(requestModelMapper, defaultPaymentToken, 'defaultPaymentToken');
-        requestContent = JSON.stringify(requestModel);
-      }
-    } catch (error) {
-      let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
-          `payload - ${JSON.stringify(defaultPaymentToken, null, 2)}.`);
-      return Promise.reject(serializationError);
-    }
-    httpRequest.body = requestContent;
-    // Send Request
+    const httpRequest = new WebResource();
     let operationRes: msRest.HttpOperationResponse;
     try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200 && statusCode !== 400) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
-
-    } catch(err) {
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          walletId,
+          defaultPaymentToken
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "PUT",
+          baseUrl: this.baseUri,
+          path: "payments/v2/wallet/{walletId}",
+          urlParameters: [
+            {
+              parameterPath: "walletId",
+              mapper: {
+                required: true,
+                serializedName: "walletId",
+                type: {
+                  name: "Number"
+                }
+              }
+            }
+          ],
+          requestBody: {
+            parameterPath: "defaultPaymentToken",
+            mapper: {
+              required: true,
+              serializedName: "defaultPaymentToken",
+              type: {
+                name: "String"
+              }
+            }
+          },
+          contentType: "application/json; charset=utf-8",
+          responses: {
+            200: {},
+            400: {},
+            401: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
+    } catch (err) {
       return Promise.reject(err);
     }
-
     return Promise.resolve(operationRes);
   }
   // methods on the client.
@@ -2329,90 +1694,69 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
+   * @resolve {HttpOperationResponse} The deserialized result object.
    *
-   * @reject {Error|ServiceError} - The error object.
+   * @reject {Error|ServiceError} The error object.
    */
-  async getWalletByReferenceIdWithHttpOperationResponse(referenceId: string, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (referenceId === null || referenceId === undefined || typeof referenceId.valueOf() !== 'string') {
-        throw new Error('referenceId cannot be null or undefined and it must be of type string.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/wallet';
-    let queryParamsArray: Array<any> = [];
-    queryParamsArray.push('referenceId=' + encodeURIComponent(referenceId));
-    if (queryParamsArray.length > 0) {
-      requestUrl += '?' + queryParamsArray.join('&');
-    }
+  async getWalletByReferenceIdWithHttpOperationResponse(referenceId: string, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<Models.WalletModel>> {
 
     // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'GET';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Send Request
+    const httpRequest = new WebResource();
     let operationRes: msRest.HttpOperationResponse;
     try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200 && statusCode !== 400) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          referenceId
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "GET",
+          baseUrl: this.baseUri,
+          path: "payments/v2/wallet",
+          queryParameters: [
+            {
+              parameterPath: "referenceId",
+              mapper: {
+                required: true,
+                serializedName: "referenceId",
+                type: {
+                  name: "String"
+                }
+              }
+            }
+          ],
+          responses: {
+            200: {
+              bodyMapper: Mappers.WalletModel
+            },
+            400: {},
+            401: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
       // Deserialize Response
+      let statusCode = operationRes.status;
       if (statusCode === 200) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
+        let parsedResponse = operationRes.parsedBody as { [key: string]: any };
         try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = Mappers.WalletModel;
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
+          if (parsedResponse != undefined) {
+            const resultMapper = Mappers.WalletModel;
+            operationRes.parsedBody = this.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.parsedBody');
           }
         } catch (error) {
           let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
           deserializationError.request = msRest.stripRequest(httpRequest);
-          deserializationError.response = msRest.stripResponse(response);
+          deserializationError.response = msRest.stripResponse(operationRes);
           return Promise.reject(deserializationError);
         }
       }
-
-    } catch(err) {
+    } catch (err) {
       return Promise.reject(err);
     }
-
     return Promise.resolve(operationRes);
   }
   // methods on the client.
@@ -2426,85 +1770,75 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
+   * @resolve {HttpOperationResponse} The deserialized result object.
    *
-   * @reject {Error|ServiceError} - The error object.
+   * @reject {Error|ServiceError} The error object.
    */
-  async createWalletWithHttpOperationResponse(model: Models.WalletRequestModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (model === null || model === undefined) {
-        throw new Error('model cannot be null or undefined.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/wallet';
+  async createWalletWithHttpOperationResponse(model: Models.WalletRequestModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<number>> {
 
     // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'POST';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Serialize Request
-    let requestContent = null;
-    let requestModel = null;
-    try {
-      if (model !== null && model !== undefined) {
-        let requestModelMapper = Mappers.WalletRequestModel;
-        requestModel = client.serializer.serialize(requestModelMapper, model, 'model');
-        requestContent = JSON.stringify(requestModel);
-      }
-    } catch (error) {
-      let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
-          `payload - ${JSON.stringify(model, null, 2)}.`);
-      return Promise.reject(serializationError);
-    }
-    httpRequest.body = requestContent;
-    // Send Request
+    const httpRequest = new WebResource();
     let operationRes: msRest.HttpOperationResponse;
     try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200 && statusCode !== 400) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          model
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "POST",
+          baseUrl: this.baseUri,
+          path: "payments/v2/wallet",
+          requestBody: {
+            parameterPath: "model",
+            mapper: {
+              ...Mappers.WalletRequestModel,
+              required: true
+            }
+          },
+          contentType: "application/json; charset=utf-8",
+          responses: {
+            200: {
+              bodyMapper: {
+                serializedName: "parsedResponse",
+                type: {
+                  name: "Number"
+                }
+              }
+            },
+            400: {},
+            401: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
+      // Deserialize Response
+      let statusCode = operationRes.status;
+      if (statusCode === 200) {
+        let parsedResponse = operationRes.parsedBody as { [key: string]: any };
         try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
+          if (parsedResponse != undefined) {
+            const resultMapper = {
+              serializedName: "parsedResponse",
+              type: {
+                name: "Number"
+              }
+            };
+            operationRes.parsedBody = this.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.parsedBody');
           }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
+        } catch (error) {
+          let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
+          deserializationError.request = msRest.stripRequest(httpRequest);
+          deserializationError.response = msRest.stripResponse(operationRes);
+          return Promise.reject(deserializationError);
         }
-        return Promise.reject(error);
       }
-
-    } catch(err) {
+    } catch (err) {
       return Promise.reject(err);
     }
-
     return Promise.resolve(operationRes);
   }
   // methods on the client.
@@ -2520,104 +1854,78 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
+   * @resolve {HttpOperationResponse} The deserialized result object.
    *
-   * @reject {Error|ServiceError} - The error object.
+   * @reject {Error|ServiceError} The error object.
    */
-  async addWalletCreditCardWithHttpOperationResponse(walletId: number, request: Models.WalletCreditCardRequestModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (walletId === null || walletId === undefined || typeof walletId !== 'number') {
-        throw new Error('walletId cannot be null or undefined and it must be of type number.');
-      }
-      if (request === null || request === undefined) {
-        throw new Error('request cannot be null or undefined.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/wallet/{walletId}/CreditCard';
-    requestUrl = requestUrl.replace('{walletId}', encodeURIComponent(walletId.toString()));
+  async addWalletCreditCardWithHttpOperationResponse(walletId: number, request: Models.WalletCreditCardRequestModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<Models.WalletModel>> {
 
     // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'POST';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Serialize Request
-    let requestContent = null;
-    let requestModel = null;
-    try {
-      if (request !== null && request !== undefined) {
-        let requestModelMapper = Mappers.WalletCreditCardRequestModel;
-        requestModel = client.serializer.serialize(requestModelMapper, request, 'request');
-        requestContent = JSON.stringify(requestModel);
-      }
-    } catch (error) {
-      let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
-          `payload - ${JSON.stringify(request, null, 2)}.`);
-      return Promise.reject(serializationError);
-    }
-    httpRequest.body = requestContent;
-    // Send Request
+    const httpRequest = new WebResource();
     let operationRes: msRest.HttpOperationResponse;
     try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200 && statusCode !== 400) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          walletId,
+          request
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "POST",
+          baseUrl: this.baseUri,
+          path: "payments/v2/wallet/{walletId}/CreditCard",
+          urlParameters: [
+            {
+              parameterPath: "walletId",
+              mapper: {
+                required: true,
+                serializedName: "walletId",
+                type: {
+                  name: "Number"
+                }
+              }
+            }
+          ],
+          requestBody: {
+            parameterPath: "request",
+            mapper: {
+              ...Mappers.WalletCreditCardRequestModel,
+              required: true
+            }
+          },
+          contentType: "application/json; charset=utf-8",
+          responses: {
+            200: {
+              bodyMapper: Mappers.WalletModel
+            },
+            400: {},
+            401: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
       // Deserialize Response
+      let statusCode = operationRes.status;
       if (statusCode === 200) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
+        let parsedResponse = operationRes.parsedBody as { [key: string]: any };
         try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = Mappers.WalletModel;
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
+          if (parsedResponse != undefined) {
+            const resultMapper = Mappers.WalletModel;
+            operationRes.parsedBody = this.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.parsedBody');
           }
         } catch (error) {
           let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
           deserializationError.request = msRest.stripRequest(httpRequest);
-          deserializationError.response = msRest.stripResponse(response);
+          deserializationError.response = msRest.stripResponse(operationRes);
           return Promise.reject(deserializationError);
         }
       }
-
-    } catch(err) {
+    } catch (err) {
       return Promise.reject(err);
     }
-
     return Promise.resolve(operationRes);
   }
   // methods on the client.
@@ -2633,188 +1941,78 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
+   * @resolve {HttpOperationResponse} The deserialized result object.
    *
-   * @reject {Error|ServiceError} - The error object.
+   * @reject {Error|ServiceError} The error object.
    */
-  async addWalletBankAccountWithHttpOperationResponse(walletId: number, request: Models.WalletBankAccountRequestModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (walletId === null || walletId === undefined || typeof walletId !== 'number') {
-        throw new Error('walletId cannot be null or undefined and it must be of type number.');
-      }
-      if (request === null || request === undefined) {
-        throw new Error('request cannot be null or undefined.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/wallet/{walletId}/BankAccount';
-    requestUrl = requestUrl.replace('{walletId}', encodeURIComponent(walletId.toString()));
+  async addWalletBankAccountWithHttpOperationResponse(walletId: number, request: Models.WalletBankAccountRequestModel, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<Models.WalletModel>> {
 
     // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'POST';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Serialize Request
-    let requestContent = null;
-    let requestModel = null;
-    try {
-      if (request !== null && request !== undefined) {
-        let requestModelMapper = Mappers.WalletBankAccountRequestModel;
-        requestModel = client.serializer.serialize(requestModelMapper, request, 'request');
-        requestContent = JSON.stringify(requestModel);
-      }
-    } catch (error) {
-      let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
-          `payload - ${JSON.stringify(request, null, 2)}.`);
-      return Promise.reject(serializationError);
-    }
-    httpRequest.body = requestContent;
-    // Send Request
+    const httpRequest = new WebResource();
     let operationRes: msRest.HttpOperationResponse;
     try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200 && statusCode !== 400) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          walletId,
+          request
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "POST",
+          baseUrl: this.baseUri,
+          path: "payments/v2/wallet/{walletId}/BankAccount",
+          urlParameters: [
+            {
+              parameterPath: "walletId",
+              mapper: {
+                required: true,
+                serializedName: "walletId",
+                type: {
+                  name: "Number"
+                }
+              }
+            }
+          ],
+          requestBody: {
+            parameterPath: "request",
+            mapper: {
+              ...Mappers.WalletBankAccountRequestModel,
+              required: true
+            }
+          },
+          contentType: "application/json; charset=utf-8",
+          responses: {
+            200: {
+              bodyMapper: Mappers.WalletModel
+            },
+            400: {},
+            401: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
       // Deserialize Response
+      let statusCode = operationRes.status;
       if (statusCode === 200) {
-        let parsedResponse = operationRes.bodyAsJson as { [key: string]: any };
+        let parsedResponse = operationRes.parsedBody as { [key: string]: any };
         try {
-          if (parsedResponse !== null && parsedResponse !== undefined) {
-            let resultMapper = Mappers.WalletModel;
-            operationRes.bodyAsJson = client.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.bodyAsJson');
+          if (parsedResponse != undefined) {
+            const resultMapper = Mappers.WalletModel;
+            operationRes.parsedBody = this.serializer.deserialize(resultMapper, parsedResponse, 'operationRes.parsedBody');
           }
         } catch (error) {
           let deserializationError = new msRest.RestError(`Error ${error} occurred in deserializing the responseBody - ${operationRes.bodyAsText}`);
           deserializationError.request = msRest.stripRequest(httpRequest);
-          deserializationError.response = msRest.stripResponse(response);
+          deserializationError.response = msRest.stripResponse(operationRes);
           return Promise.reject(deserializationError);
         }
       }
-
-    } catch(err) {
+    } catch (err) {
       return Promise.reject(err);
     }
-
-    return Promise.resolve(operationRes);
-  }
-  // methods on the client.
-
-  /**
-   * @summary Deletes the wallet credit card.
-   *
-   * @param {number} walletId The wallet identifier.
-   *
-   * @param {number} walletCreditCardId The wallet credit card identifier.
-   *
-   * @param {RequestOptionsBase} [options] Optional Parameters.
-   *
-   * @returns {Promise} A promise is returned
-   *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
-   *
-   * @reject {Error|ServiceError} - The error object.
-   */
-  async removeWalletCreditCardWithHttpOperationResponse(walletId: number, walletCreditCardId: number, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (walletId === null || walletId === undefined || typeof walletId !== 'number') {
-        throw new Error('walletId cannot be null or undefined and it must be of type number.');
-      }
-      if (walletCreditCardId === null || walletCreditCardId === undefined || typeof walletCreditCardId !== 'number') {
-        throw new Error('walletCreditCardId cannot be null or undefined and it must be of type number.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/wallet/{walletId}/CreditCard/{walletCreditCardId}';
-    requestUrl = requestUrl.replace('{walletId}', encodeURIComponent(walletId.toString()));
-    requestUrl = requestUrl.replace('{walletCreditCardId}', encodeURIComponent(walletCreditCardId.toString()));
-
-    // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'DELETE';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Send Request
-    let operationRes: msRest.HttpOperationResponse;
-    try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200 && statusCode !== 400) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
-
-    } catch(err) {
-      return Promise.reject(err);
-    }
-
     return Promise.resolve(operationRes);
   }
   // methods on the client.
@@ -2830,218 +2028,134 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse} - The deserialized result object.
+   * @resolve {HttpOperationResponse} The deserialized result object.
    *
-   * @reject {Error|ServiceError} - The error object.
+   * @reject {Error|ServiceError} The error object.
    */
-  async removeWalletBankAccountWithHttpOperationResponse(walletId: number, walletBankAcctId: number, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse> {
-    let client = this;
-    // Validate
-    try {
-      if (walletId === null || walletId === undefined || typeof walletId !== 'number') {
-        throw new Error('walletId cannot be null or undefined and it must be of type number.');
-      }
-      if (walletBankAcctId === null || walletBankAcctId === undefined || typeof walletBankAcctId !== 'number') {
-        throw new Error('walletBankAcctId cannot be null or undefined and it must be of type number.');
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    // Construct URL
-    let baseUrl = this.baseUri;
-    let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/wallet/{walletId}/BankAccount/{walletBankAcctId}';
-    requestUrl = requestUrl.replace('{walletId}', encodeURIComponent(walletId.toString()));
-    requestUrl = requestUrl.replace('{walletBankAcctId}', encodeURIComponent(walletBankAcctId.toString()));
+  async removeWalletBankAccountWithHttpOperationResponse(walletId: number, walletBankAcctId: number, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<void>> {
 
     // Create HTTP transport objects
-    let httpRequest = new WebResource();
-    httpRequest.method = 'DELETE';
-    httpRequest.url = requestUrl;
-    httpRequest.headers = {};
-    // Set Headers
-    httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-    if(options && options.customHeaders) {
-      for(let headerName in options.customHeaders) {
-        if (options.customHeaders.hasOwnProperty(headerName)) {
-          httpRequest.headers[headerName] = options.customHeaders[headerName];
-        }
-      }
-    }
-    // Send Request
+    const httpRequest = new WebResource();
     let operationRes: msRest.HttpOperationResponse;
     try {
-      operationRes = await client.pipeline(httpRequest);
-      let response = operationRes.response;
-      let statusCode = response.status;
-      if (statusCode !== 200 && statusCode !== 400) {
-        let error = new msRest.RestError(operationRes.bodyAsText as string);
-        error.statusCode = response.status;
-        error.request = msRest.stripRequest(httpRequest);
-        error.response = msRest.stripResponse(response);
-        let parsedErrorResponse = operationRes.bodyAsJson as { [key: string]: any };
-        try {
-          if (parsedErrorResponse) {
-            let internalError = null;
-            if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-            error.code = internalError ? internalError.code : parsedErrorResponse.code;
-            error.message = internalError ? internalError.message : parsedErrorResponse.message;
-          }
-        } catch (defaultError) {
-          error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                           `- "${operationRes.bodyAsText}" for the default response.`;
-          return Promise.reject(error);
-        }
-        return Promise.reject(error);
-      }
-
-    } catch(err) {
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          walletId,
+          walletBankAcctId
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "DELETE",
+          baseUrl: this.baseUri,
+          path: "payments/v2/wallet/{walletId}/BankAccount/{walletBankAcctId}",
+          urlParameters: [
+            {
+              parameterPath: "walletId",
+              mapper: {
+                required: true,
+                serializedName: "walletId",
+                type: {
+                  name: "Number"
+                }
+              }
+            },
+            {
+              parameterPath: "walletBankAcctId",
+              mapper: {
+                required: true,
+                serializedName: "walletBankAcctId",
+                type: {
+                  name: "Number"
+                }
+              }
+            }
+          ],
+          responses: {
+            200: {},
+            400: {},
+            401: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
+    } catch (err) {
       return Promise.reject(err);
     }
-
     return Promise.resolve(operationRes);
   }
+  // methods on the client.
 
   /**
-   * @summary Gets all bank accounts associated with the specified reference
-   * identifier.
+   * @summary Deletes the wallet credit card.
    *
-   * @param {string} referenceId The reference identifier.
+   * @param {number} walletId The wallet identifier.
+   *
+   * @param {number} walletCreditCardId The wallet credit card identifier.
    *
    * @param {RequestOptionsBase} [options] Optional Parameters.
    *
-   * @param {ServiceCallback} callback - The callback.
+   * @returns {Promise} A promise is returned
    *
-   * @returns {ServiceCallback} callback(err, result, request, response)
+   * @resolve {HttpOperationResponse} The deserialized result object.
    *
-   *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
-   *                      {Models.BankAccountModel[]} [result]   - The deserialized result object if an error did not occur.
-   *
-   *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
+   * @reject {Error|ServiceError} The error object.
    */
-  getBankAccountsByReferenceId(referenceId: string): Promise<Models.BankAccountModel[]>;
-  getBankAccountsByReferenceId(referenceId: string, options: msRest.RequestOptionsBase): Promise<Models.BankAccountModel[]>;
-  getBankAccountsByReferenceId(referenceId: string, callback: msRest.ServiceCallback<Models.BankAccountModel[]>): void;
-  getBankAccountsByReferenceId(referenceId: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<Models.BankAccountModel[]>): void;
-  getBankAccountsByReferenceId(referenceId: string, options?: msRest.RequestOptionsBase, callback?: msRest.ServiceCallback<Models.BankAccountModel[]>): any {
-    if (!callback && typeof options === 'function') {
-      callback = options;
-      options = undefined;
-    }
-    let cb = callback as msRest.ServiceCallback<Models.BankAccountModel[]>;
-    if (!callback) {
-      return this.getBankAccountsByReferenceIdWithHttpOperationResponse(referenceId, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as Models.BankAccountModel[]);
-      }).catch((err: Error) => {
-        return Promise.reject(err);
-      });
-    } else {
-      msRest.promiseToCallback(this.getBankAccountsByReferenceIdWithHttpOperationResponse(referenceId, options))((err: Error, data: msRest.HttpOperationResponse) => {
-        if (err) {
-          return cb(err);
-        }
-        let result = data.bodyAsJson as Models.BankAccountModel[];
-        return cb(err, result, data.request, data.response);
-      });
-    }
-  }
+  async removeWalletCreditCardWithHttpOperationResponse(walletId: number, walletCreditCardId: number, options?: msRest.RequestOptionsBase): Promise<msRest.HttpOperationResponse<void>> {
 
-  /**
-   * @summary Updates a bank account.
-   *
-   * @param {UpdateBankAccountModel} updateBankAccountModel The update bank
-   * account model.
-   *
-   * @param {RequestOptionsBase} [options] Optional Parameters.
-   *
-   * @param {ServiceCallback} callback - The callback.
-   *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
-   *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
-   *                      {any} [result]   - The deserialized result object if an error did not occur.
-   *
-   *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
-   */
-  updateBankAccount(updateBankAccountModel: Models.UpdateBankAccountModel): Promise<any>;
-  updateBankAccount(updateBankAccountModel: Models.UpdateBankAccountModel, options: msRest.RequestOptionsBase): Promise<any>;
-  updateBankAccount(updateBankAccountModel: Models.UpdateBankAccountModel, callback: msRest.ServiceCallback<any>): void;
-  updateBankAccount(updateBankAccountModel: Models.UpdateBankAccountModel, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
-  updateBankAccount(updateBankAccountModel: Models.UpdateBankAccountModel, options?: msRest.RequestOptionsBase, callback?: msRest.ServiceCallback<any>): any {
-    if (!callback && typeof options === 'function') {
-      callback = options;
-      options = undefined;
+    // Create HTTP transport objects
+    const httpRequest = new WebResource();
+    let operationRes: msRest.HttpOperationResponse;
+    try {
+      const operationArguments: msRest.OperationArguments = msRest.createOperationArguments(
+        {
+          walletId,
+          walletCreditCardId
+        },
+        options);
+      operationRes = await this.sendOperationRequest(
+        httpRequest,
+        operationArguments,
+        {
+          httpMethod: "DELETE",
+          baseUrl: this.baseUri,
+          path: "payments/v2/wallet/{walletId}/CreditCard/{walletCreditCardId}",
+          urlParameters: [
+            {
+              parameterPath: "walletId",
+              mapper: {
+                required: true,
+                serializedName: "walletId",
+                type: {
+                  name: "Number"
+                }
+              }
+            },
+            {
+              parameterPath: "walletCreditCardId",
+              mapper: {
+                required: true,
+                serializedName: "walletCreditCardId",
+                type: {
+                  name: "Number"
+                }
+              }
+            }
+          ],
+          responses: {
+            200: {},
+            400: {},
+            401: {},
+            default: {}
+          },
+          serializer: this.serializer
+        });
+    } catch (err) {
+      return Promise.reject(err);
     }
-    let cb = callback as msRest.ServiceCallback<any>;
-    if (!callback) {
-      return this.updateBankAccountWithHttpOperationResponse(updateBankAccountModel, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as any);
-      }).catch((err: Error) => {
-        return Promise.reject(err);
-      });
-    } else {
-      msRest.promiseToCallback(this.updateBankAccountWithHttpOperationResponse(updateBankAccountModel, options))((err: Error, data: msRest.HttpOperationResponse) => {
-        if (err) {
-          return cb(err);
-        }
-        let result = data.bodyAsJson as any;
-        return cb(err, result, data.request, data.response);
-      });
-    }
-  }
-
-  /**
-   * @summary Posts a new bank account.
-   *
-   * @param {BankAccountRequestModel} bankAccountRequest The bank account.
-   *
-   * @param {RequestOptionsBase} [options] Optional Parameters.
-   *
-   * @param {ServiceCallback} callback - The callback.
-   *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
-   *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
-   *                      {Models.BankAccountResponseModel} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link Models.BankAccountResponseModel} for more
-   *                      information.
-   *
-   *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
-   */
-  createBankAccount(bankAccountRequest: Models.BankAccountRequestModel): Promise<Models.BankAccountResponseModel>;
-  createBankAccount(bankAccountRequest: Models.BankAccountRequestModel, options: msRest.RequestOptionsBase): Promise<Models.BankAccountResponseModel>;
-  createBankAccount(bankAccountRequest: Models.BankAccountRequestModel, callback: msRest.ServiceCallback<Models.BankAccountResponseModel>): void;
-  createBankAccount(bankAccountRequest: Models.BankAccountRequestModel, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<Models.BankAccountResponseModel>): void;
-  createBankAccount(bankAccountRequest: Models.BankAccountRequestModel, options?: msRest.RequestOptionsBase, callback?: msRest.ServiceCallback<Models.BankAccountResponseModel>): any {
-    if (!callback && typeof options === 'function') {
-      callback = options;
-      options = undefined;
-    }
-    let cb = callback as msRest.ServiceCallback<Models.BankAccountResponseModel>;
-    if (!callback) {
-      return this.createBankAccountWithHttpOperationResponse(bankAccountRequest, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as Models.BankAccountResponseModel);
-      }).catch((err: Error) => {
-        return Promise.reject(err);
-      });
-    } else {
-      msRest.promiseToCallback(this.createBankAccountWithHttpOperationResponse(bankAccountRequest, options))((err: Error, data: msRest.HttpOperationResponse) => {
-        if (err) {
-          return cb(err);
-        }
-        let result = data.bodyAsJson as Models.BankAccountResponseModel;
-        return cb(err, result, data.request, data.response);
-      });
-    }
+    return Promise.resolve(operationRes);
   }
 
   /**
@@ -3051,19 +2165,14 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @param {RequestOptionsBase} [options] Optional Parameters.
    *
-   * @param {ServiceCallback} callback - The callback.
+   * @param {ServiceCallback} callback The callback.
    *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
    *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
    *                      {Models.BankAccountModel} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link Models.BankAccountModel} for more
-   *                      information.
-   *
+   *                      See {@link Models.BankAccountModel} for more information.
    *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
    */
   getBankAccountByToken(token: string): Promise<Models.BankAccountModel>;
   getBankAccountByToken(token: string, options: msRest.RequestOptionsBase): Promise<Models.BankAccountModel>;
@@ -3077,7 +2186,7 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
     let cb = callback as msRest.ServiceCallback<Models.BankAccountModel>;
     if (!callback) {
       return this.getBankAccountByTokenWithHttpOperationResponse(token, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as Models.BankAccountModel);
+        return Promise.resolve(operationRes.parsedBody as Models.BankAccountModel);
       }).catch((err: Error) => {
         return Promise.reject(err);
       });
@@ -3086,8 +2195,137 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
         if (err) {
           return cb(err);
         }
-        let result = data.bodyAsJson as Models.BankAccountModel;
-        return cb(err, result, data.request, data.response);
+        let result = data.parsedBody as Models.BankAccountModel;
+        return cb(err, result, data.request, data);
+      });
+    }
+  }
+
+  /**
+   * @summary Gets all bank accounts associated with the specified reference identifier.
+   *
+   * @param {string} referenceId The reference identifier.
+   *
+   * @param {RequestOptionsBase} [options] Optional Parameters.
+   *
+   * @param {ServiceCallback} callback The callback.
+   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
+   *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+   *                      {Models.BankAccountModel[]} [result]   - The deserialized result object if an error did not occur.
+   *
+   *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
+   */
+  getBankAccountsByReferenceId(referenceId: string): Promise<Models.BankAccountModel[]>;
+  getBankAccountsByReferenceId(referenceId: string, options: msRest.RequestOptionsBase): Promise<Models.BankAccountModel[]>;
+  getBankAccountsByReferenceId(referenceId: string, callback: msRest.ServiceCallback<Models.BankAccountModel[]>): void;
+  getBankAccountsByReferenceId(referenceId: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<Models.BankAccountModel[]>): void;
+  getBankAccountsByReferenceId(referenceId: string, options?: msRest.RequestOptionsBase, callback?: msRest.ServiceCallback<Models.BankAccountModel[]>): any {
+    if (!callback && typeof options === 'function') {
+      callback = options;
+      options = undefined;
+    }
+    let cb = callback as msRest.ServiceCallback<Models.BankAccountModel[]>;
+    if (!callback) {
+      return this.getBankAccountsByReferenceIdWithHttpOperationResponse(referenceId, options).then((operationRes: msRest.HttpOperationResponse) => {
+        return Promise.resolve(operationRes.parsedBody as Models.BankAccountModel[]);
+      }).catch((err: Error) => {
+        return Promise.reject(err);
+      });
+    } else {
+      msRest.promiseToCallback(this.getBankAccountsByReferenceIdWithHttpOperationResponse(referenceId, options))((err: Error, data: msRest.HttpOperationResponse) => {
+        if (err) {
+          return cb(err);
+        }
+        let result = data.parsedBody as Models.BankAccountModel[];
+        return cb(err, result, data.request, data);
+      });
+    }
+  }
+
+  /**
+   * @summary Updates a bank account.
+   *
+   * @param {UpdateBankAccountModel} updateBankAccountModel The update bank account model.
+   *
+   * @param {RequestOptionsBase} [options] Optional Parameters.
+   *
+   * @param {ServiceCallback} callback The callback.
+   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
+   *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+   *                      {void} [result]   - The deserialized result object if an error did not occur.
+   *
+   *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
+   */
+  updateBankAccount(updateBankAccountModel: Models.UpdateBankAccountModel): Promise<void>;
+  updateBankAccount(updateBankAccountModel: Models.UpdateBankAccountModel, options: msRest.RequestOptionsBase): Promise<void>;
+  updateBankAccount(updateBankAccountModel: Models.UpdateBankAccountModel, callback: msRest.ServiceCallback<void>): void;
+  updateBankAccount(updateBankAccountModel: Models.UpdateBankAccountModel, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<void>): void;
+  updateBankAccount(updateBankAccountModel: Models.UpdateBankAccountModel, options?: msRest.RequestOptionsBase, callback?: msRest.ServiceCallback<void>): any {
+    if (!callback && typeof options === 'function') {
+      callback = options;
+      options = undefined;
+    }
+    let cb = callback as msRest.ServiceCallback<void>;
+    if (!callback) {
+      return this.updateBankAccountWithHttpOperationResponse(updateBankAccountModel, options).then((operationRes: msRest.HttpOperationResponse) => {
+        return Promise.resolve(operationRes.parsedBody as void);
+      }).catch((err: Error) => {
+        return Promise.reject(err);
+      });
+    } else {
+      msRest.promiseToCallback(this.updateBankAccountWithHttpOperationResponse(updateBankAccountModel, options))((err: Error, data: msRest.HttpOperationResponse) => {
+        if (err) {
+          return cb(err);
+        }
+        let result = data.parsedBody as void;
+        return cb(err, result, data.request, data);
+      });
+    }
+  }
+
+  /**
+   * @summary Posts a new bank account.
+   *
+   * @param {BankAccountRequestModel} bankAccountRequest The bank account.
+   *
+   * @param {RequestOptionsBase} [options] Optional Parameters.
+   *
+   * @param {ServiceCallback} callback The callback.
+   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
+   *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+   *                      {Models.BankAccountResponseModel} [result]   - The deserialized result object if an error did not occur.
+   *                      See {@link Models.BankAccountResponseModel} for more information.
+   *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
+   */
+  createBankAccount(bankAccountRequest: Models.BankAccountRequestModel): Promise<Models.BankAccountResponseModel>;
+  createBankAccount(bankAccountRequest: Models.BankAccountRequestModel, options: msRest.RequestOptionsBase): Promise<Models.BankAccountResponseModel>;
+  createBankAccount(bankAccountRequest: Models.BankAccountRequestModel, callback: msRest.ServiceCallback<Models.BankAccountResponseModel>): void;
+  createBankAccount(bankAccountRequest: Models.BankAccountRequestModel, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<Models.BankAccountResponseModel>): void;
+  createBankAccount(bankAccountRequest: Models.BankAccountRequestModel, options?: msRest.RequestOptionsBase, callback?: msRest.ServiceCallback<Models.BankAccountResponseModel>): any {
+    if (!callback && typeof options === 'function') {
+      callback = options;
+      options = undefined;
+    }
+    let cb = callback as msRest.ServiceCallback<Models.BankAccountResponseModel>;
+    if (!callback) {
+      return this.createBankAccountWithHttpOperationResponse(bankAccountRequest, options).then((operationRes: msRest.HttpOperationResponse) => {
+        return Promise.resolve(operationRes.parsedBody as Models.BankAccountResponseModel);
+      }).catch((err: Error) => {
+        return Promise.reject(err);
+      });
+    } else {
+      msRest.promiseToCallback(this.createBankAccountWithHttpOperationResponse(bankAccountRequest, options))((err: Error, data: msRest.HttpOperationResponse) => {
+        if (err) {
+          return cb(err);
+        }
+        let result = data.parsedBody as Models.BankAccountResponseModel;
+        return cb(err, result, data.request, data);
       });
     }
   }
@@ -3095,46 +2333,42 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
   /**
    * @summary Gets the bin information for a specified credit card number.
    *
-   * @param {string} cardNumber The card number.
+   * @param {BinRequestModel} binRequest The bin request.
    *
    * @param {RequestOptionsBase} [options] Optional Parameters.
    *
-   * @param {ServiceCallback} callback - The callback.
+   * @param {ServiceCallback} callback The callback.
    *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
    *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
    *                      {Models.Bin} [result]   - The deserialized result object if an error did not occur.
    *                      See {@link Models.Bin} for more information.
-   *
    *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
    */
-  getBin(cardNumber: string): Promise<Models.Bin>;
-  getBin(cardNumber: string, options: msRest.RequestOptionsBase): Promise<Models.Bin>;
-  getBin(cardNumber: string, callback: msRest.ServiceCallback<Models.Bin>): void;
-  getBin(cardNumber: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<Models.Bin>): void;
-  getBin(cardNumber: string, options?: msRest.RequestOptionsBase, callback?: msRest.ServiceCallback<Models.Bin>): any {
+  getBin(binRequest: Models.BinRequestModel): Promise<Models.Bin>;
+  getBin(binRequest: Models.BinRequestModel, options: msRest.RequestOptionsBase): Promise<Models.Bin>;
+  getBin(binRequest: Models.BinRequestModel, callback: msRest.ServiceCallback<Models.Bin>): void;
+  getBin(binRequest: Models.BinRequestModel, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<Models.Bin>): void;
+  getBin(binRequest: Models.BinRequestModel, options?: msRest.RequestOptionsBase, callback?: msRest.ServiceCallback<Models.Bin>): any {
     if (!callback && typeof options === 'function') {
       callback = options;
       options = undefined;
     }
     let cb = callback as msRest.ServiceCallback<Models.Bin>;
     if (!callback) {
-      return this.getBinWithHttpOperationResponse(cardNumber, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as Models.Bin);
+      return this.getBinWithHttpOperationResponse(binRequest, options).then((operationRes: msRest.HttpOperationResponse) => {
+        return Promise.resolve(operationRes.parsedBody as Models.Bin);
       }).catch((err: Error) => {
         return Promise.reject(err);
       });
     } else {
-      msRest.promiseToCallback(this.getBinWithHttpOperationResponse(cardNumber, options))((err: Error, data: msRest.HttpOperationResponse) => {
+      msRest.promiseToCallback(this.getBinWithHttpOperationResponse(binRequest, options))((err: Error, data: msRest.HttpOperationResponse) => {
         if (err) {
           return cb(err);
         }
-        let result = data.bodyAsJson as Models.Bin;
-        return cb(err, result, data.request, data.response);
+        let result = data.parsedBody as Models.Bin;
+        return cb(err, result, data.request, data);
       });
     }
   }
@@ -3146,19 +2380,14 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @param {RequestOptionsBase} [options] Optional Parameters.
    *
-   * @param {ServiceCallback} callback - The callback.
+   * @param {ServiceCallback} callback The callback.
    *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
    *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
    *                      {Models.CheckoutResponseModel} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link Models.CheckoutResponseModel} for more
-   *                      information.
-   *
+   *                      See {@link Models.CheckoutResponseModel} for more information.
    *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
    */
   getCheckout(checkoutId: number): Promise<Models.CheckoutResponseModel>;
   getCheckout(checkoutId: number, options: msRest.RequestOptionsBase): Promise<Models.CheckoutResponseModel>;
@@ -3172,7 +2401,7 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
     let cb = callback as msRest.ServiceCallback<Models.CheckoutResponseModel>;
     if (!callback) {
       return this.getCheckoutWithHttpOperationResponse(checkoutId, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as Models.CheckoutResponseModel);
+        return Promise.resolve(operationRes.parsedBody as Models.CheckoutResponseModel);
       }).catch((err: Error) => {
         return Promise.reject(err);
       });
@@ -3181,8 +2410,8 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
         if (err) {
           return cb(err);
         }
-        let result = data.bodyAsJson as Models.CheckoutResponseModel;
-        return cb(err, result, data.request, data.response);
+        let result = data.parsedBody as Models.CheckoutResponseModel;
+        return cb(err, result, data.request, data);
       });
     }
   }
@@ -3194,19 +2423,14 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @param {RequestOptionsBase} [options] Optional Parameters.
    *
-   * @param {ServiceCallback} callback - The callback.
+   * @param {ServiceCallback} callback The callback.
    *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
    *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
    *                      {Models.CheckoutResponseModel} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link Models.CheckoutResponseModel} for more
-   *                      information.
-   *
+   *                      See {@link Models.CheckoutResponseModel} for more information.
    *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
    */
   createCheckout(model: Models.CheckoutRequestModel): Promise<Models.CheckoutResponseModel>;
   createCheckout(model: Models.CheckoutRequestModel, options: msRest.RequestOptionsBase): Promise<Models.CheckoutResponseModel>;
@@ -3220,7 +2444,7 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
     let cb = callback as msRest.ServiceCallback<Models.CheckoutResponseModel>;
     if (!callback) {
       return this.createCheckoutWithHttpOperationResponse(model, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as Models.CheckoutResponseModel);
+        return Promise.resolve(operationRes.parsedBody as Models.CheckoutResponseModel);
       }).catch((err: Error) => {
         return Promise.reject(err);
       });
@@ -3229,31 +2453,27 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
         if (err) {
           return cb(err);
         }
-        let result = data.bodyAsJson as Models.CheckoutResponseModel;
-        return cb(err, result, data.request, data.response);
+        let result = data.parsedBody as Models.CheckoutResponseModel;
+        return cb(err, result, data.request, data);
       });
     }
   }
 
   /**
-   * @summary Gets all credit cards associated with the specified reference
-   * identifier.
+   * @summary Gets all credit cards associated with the specified reference identifier.
    *
    * @param {string} referenceId The reference identifier.
    *
    * @param {RequestOptionsBase} [options] Optional Parameters.
    *
-   * @param {ServiceCallback} callback - The callback.
+   * @param {ServiceCallback} callback The callback.
    *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
    *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
    *                      {Models.CreditCardModel[]} [result]   - The deserialized result object if an error did not occur.
    *
    *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
    */
   getCreditCardsByReferenceId(referenceId: string): Promise<Models.CreditCardModel[]>;
   getCreditCardsByReferenceId(referenceId: string, options: msRest.RequestOptionsBase): Promise<Models.CreditCardModel[]>;
@@ -3267,7 +2487,7 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
     let cb = callback as msRest.ServiceCallback<Models.CreditCardModel[]>;
     if (!callback) {
       return this.getCreditCardsByReferenceIdWithHttpOperationResponse(referenceId, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as Models.CreditCardModel[]);
+        return Promise.resolve(operationRes.parsedBody as Models.CreditCardModel[]);
       }).catch((err: Error) => {
         return Promise.reject(err);
       });
@@ -3276,8 +2496,8 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
         if (err) {
           return cb(err);
         }
-        let result = data.bodyAsJson as Models.CreditCardModel[];
-        return cb(err, result, data.request, data.response);
+        let result = data.parsedBody as Models.CreditCardModel[];
+        return cb(err, result, data.request, data);
       });
     }
   }
@@ -3285,36 +2505,32 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
   /**
    * @summary Updates a credit card.
    *
-   * @param {UpdateCreditCardModel} updateCreditCardModel The update credit card
-   * model.
+   * @param {UpdateCreditCardModel} updateCreditCardModel The update credit card model.
    *
    * @param {RequestOptionsBase} [options] Optional Parameters.
    *
-   * @param {ServiceCallback} callback - The callback.
+   * @param {ServiceCallback} callback The callback.
    *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
    *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
-   *                      {any} [result]   - The deserialized result object if an error did not occur.
+   *                      {void} [result]   - The deserialized result object if an error did not occur.
    *
    *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
    */
-  updateCreditCard(updateCreditCardModel: Models.UpdateCreditCardModel): Promise<any>;
-  updateCreditCard(updateCreditCardModel: Models.UpdateCreditCardModel, options: msRest.RequestOptionsBase): Promise<any>;
-  updateCreditCard(updateCreditCardModel: Models.UpdateCreditCardModel, callback: msRest.ServiceCallback<any>): void;
-  updateCreditCard(updateCreditCardModel: Models.UpdateCreditCardModel, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
-  updateCreditCard(updateCreditCardModel: Models.UpdateCreditCardModel, options?: msRest.RequestOptionsBase, callback?: msRest.ServiceCallback<any>): any {
+  updateCreditCard(updateCreditCardModel: Models.UpdateCreditCardModel): Promise<void>;
+  updateCreditCard(updateCreditCardModel: Models.UpdateCreditCardModel, options: msRest.RequestOptionsBase): Promise<void>;
+  updateCreditCard(updateCreditCardModel: Models.UpdateCreditCardModel, callback: msRest.ServiceCallback<void>): void;
+  updateCreditCard(updateCreditCardModel: Models.UpdateCreditCardModel, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<void>): void;
+  updateCreditCard(updateCreditCardModel: Models.UpdateCreditCardModel, options?: msRest.RequestOptionsBase, callback?: msRest.ServiceCallback<void>): any {
     if (!callback && typeof options === 'function') {
       callback = options;
       options = undefined;
     }
-    let cb = callback as msRest.ServiceCallback<any>;
+    let cb = callback as msRest.ServiceCallback<void>;
     if (!callback) {
       return this.updateCreditCardWithHttpOperationResponse(updateCreditCardModel, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as any);
+        return Promise.resolve(operationRes.parsedBody as void);
       }).catch((err: Error) => {
         return Promise.reject(err);
       });
@@ -3323,8 +2539,8 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
         if (err) {
           return cb(err);
         }
-        let result = data.bodyAsJson as any;
-        return cb(err, result, data.request, data.response);
+        let result = data.parsedBody as void;
+        return cb(err, result, data.request, data);
       });
     }
   }
@@ -3336,19 +2552,14 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @param {RequestOptionsBase} [options] Optional Parameters.
    *
-   * @param {ServiceCallback} callback - The callback.
+   * @param {ServiceCallback} callback The callback.
    *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
    *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
    *                      {Models.CreditCardResponseModel} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link Models.CreditCardResponseModel} for more
-   *                      information.
-   *
+   *                      See {@link Models.CreditCardResponseModel} for more information.
    *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
    */
   createCreditCard(creditCardRequest: Models.CreditCardRequestModel): Promise<Models.CreditCardResponseModel>;
   createCreditCard(creditCardRequest: Models.CreditCardRequestModel, options: msRest.RequestOptionsBase): Promise<Models.CreditCardResponseModel>;
@@ -3362,7 +2573,7 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
     let cb = callback as msRest.ServiceCallback<Models.CreditCardResponseModel>;
     if (!callback) {
       return this.createCreditCardWithHttpOperationResponse(creditCardRequest, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as Models.CreditCardResponseModel);
+        return Promise.resolve(operationRes.parsedBody as Models.CreditCardResponseModel);
       }).catch((err: Error) => {
         return Promise.reject(err);
       });
@@ -3371,8 +2582,8 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
         if (err) {
           return cb(err);
         }
-        let result = data.bodyAsJson as Models.CreditCardResponseModel;
-        return cb(err, result, data.request, data.response);
+        let result = data.parsedBody as Models.CreditCardResponseModel;
+        return cb(err, result, data.request, data);
       });
     }
   }
@@ -3384,18 +2595,14 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @param {RequestOptionsBase} [options] Optional Parameters.
    *
-   * @param {ServiceCallback} callback - The callback.
+   * @param {ServiceCallback} callback The callback.
    *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
    *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
    *                      {Models.PaymentModel} [result]   - The deserialized result object if an error did not occur.
    *                      See {@link Models.PaymentModel} for more information.
-   *
    *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
    */
   getPayment(id: number): Promise<Models.PaymentModel>;
   getPayment(id: number, options: msRest.RequestOptionsBase): Promise<Models.PaymentModel>;
@@ -3409,7 +2616,7 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
     let cb = callback as msRest.ServiceCallback<Models.PaymentModel>;
     if (!callback) {
       return this.getPaymentWithHttpOperationResponse(id, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as Models.PaymentModel);
+        return Promise.resolve(operationRes.parsedBody as Models.PaymentModel);
       }).catch((err: Error) => {
         return Promise.reject(err);
       });
@@ -3418,8 +2625,8 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
         if (err) {
           return cb(err);
         }
-        let result = data.bodyAsJson as Models.PaymentModel;
-        return cb(err, result, data.request, data.response);
+        let result = data.parsedBody as Models.PaymentModel;
+        return cb(err, result, data.request, data);
       });
     }
   }
@@ -3427,47 +2634,40 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
   /**
    * @summary Gets payments associated with the specified reference identifier.
    *
-   * @param {string} referenceId The client application provided reference ID for
-   * the payment.
+   * @param {SoftheonWalletAPIGetPaymentsByReferenceIdOptionalParams} [options] Optional Parameters.
    *
-   * @param {SoftheonWalletAPIGetPaymentsByReferenceIdOptionalParams} [options]
-   * Optional Parameters.
+   * @param {ServiceCallback} callback The callback.
    *
-   * @param {ServiceCallback} callback - The callback.
-   *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
    *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
    *                      {Models.PaymentModel[]} [result]   - The deserialized result object if an error did not occur.
    *
    *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
    */
-  getPaymentsByReferenceId(referenceId: string): Promise<Models.PaymentModel[]>;
-  getPaymentsByReferenceId(referenceId: string, options: Models.SoftheonWalletAPIGetPaymentsByReferenceIdOptionalParams): Promise<Models.PaymentModel[]>;
-  getPaymentsByReferenceId(referenceId: string, callback: msRest.ServiceCallback<Models.PaymentModel[]>): void;
-  getPaymentsByReferenceId(referenceId: string, options: Models.SoftheonWalletAPIGetPaymentsByReferenceIdOptionalParams, callback: msRest.ServiceCallback<Models.PaymentModel[]>): void;
-  getPaymentsByReferenceId(referenceId: string, options?: Models.SoftheonWalletAPIGetPaymentsByReferenceIdOptionalParams, callback?: msRest.ServiceCallback<Models.PaymentModel[]>): any {
+  getPaymentsByReferenceId(): Promise<Models.PaymentModel[]>;
+  getPaymentsByReferenceId(options: Models.SoftheonWalletAPIGetPaymentsByReferenceIdOptionalParams): Promise<Models.PaymentModel[]>;
+  getPaymentsByReferenceId(callback: msRest.ServiceCallback<Models.PaymentModel[]>): void;
+  getPaymentsByReferenceId(options: Models.SoftheonWalletAPIGetPaymentsByReferenceIdOptionalParams, callback: msRest.ServiceCallback<Models.PaymentModel[]>): void;
+  getPaymentsByReferenceId(options?: Models.SoftheonWalletAPIGetPaymentsByReferenceIdOptionalParams, callback?: msRest.ServiceCallback<Models.PaymentModel[]>): any {
     if (!callback && typeof options === 'function') {
       callback = options;
       options = undefined;
     }
     let cb = callback as msRest.ServiceCallback<Models.PaymentModel[]>;
     if (!callback) {
-      return this.getPaymentsByReferenceIdWithHttpOperationResponse(referenceId, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as Models.PaymentModel[]);
+      return this.getPaymentsByReferenceIdWithHttpOperationResponse(options).then((operationRes: msRest.HttpOperationResponse) => {
+        return Promise.resolve(operationRes.parsedBody as Models.PaymentModel[]);
       }).catch((err: Error) => {
         return Promise.reject(err);
       });
     } else {
-      msRest.promiseToCallback(this.getPaymentsByReferenceIdWithHttpOperationResponse(referenceId, options))((err: Error, data: msRest.HttpOperationResponse) => {
+      msRest.promiseToCallback(this.getPaymentsByReferenceIdWithHttpOperationResponse(options))((err: Error, data: msRest.HttpOperationResponse) => {
         if (err) {
           return cb(err);
         }
-        let result = data.bodyAsJson as Models.PaymentModel[];
-        return cb(err, result, data.request, data.response);
+        let result = data.parsedBody as Models.PaymentModel[];
+        return cb(err, result, data.request, data);
       });
     }
   }
@@ -3479,18 +2679,14 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @param {RequestOptionsBase} [options] Optional Parameters.
    *
-   * @param {ServiceCallback} callback - The callback.
+   * @param {ServiceCallback} callback The callback.
    *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
    *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
    *                      {Models.PaymentModel} [result]   - The deserialized result object if an error did not occur.
    *                      See {@link Models.PaymentModel} for more information.
-   *
    *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
    */
   createPayment(paymentRequest: Models.PaymentRequestModel): Promise<Models.PaymentModel>;
   createPayment(paymentRequest: Models.PaymentRequestModel, options: msRest.RequestOptionsBase): Promise<Models.PaymentModel>;
@@ -3504,7 +2700,7 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
     let cb = callback as msRest.ServiceCallback<Models.PaymentModel>;
     if (!callback) {
       return this.createPaymentWithHttpOperationResponse(paymentRequest, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as Models.PaymentModel);
+        return Promise.resolve(operationRes.parsedBody as Models.PaymentModel);
       }).catch((err: Error) => {
         return Promise.reject(err);
       });
@@ -3513,8 +2709,8 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
         if (err) {
           return cb(err);
         }
-        let result = data.bodyAsJson as Models.PaymentModel;
-        return cb(err, result, data.request, data.response);
+        let result = data.parsedBody as Models.PaymentModel;
+        return cb(err, result, data.request, data);
       });
     }
   }
@@ -3526,17 +2722,14 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @param {RequestOptionsBase} [options] Optional Parameters.
    *
-   * @param {ServiceCallback} callback - The callback.
+   * @param {ServiceCallback} callback The callback.
    *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
    *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
    *                      {Models.RefundResultModel[]} [result]   - The deserialized result object if an error did not occur.
    *
    *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
    */
   getRefunds(id: number): Promise<Models.RefundResultModel[]>;
   getRefunds(id: number, options: msRest.RequestOptionsBase): Promise<Models.RefundResultModel[]>;
@@ -3550,7 +2743,7 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
     let cb = callback as msRest.ServiceCallback<Models.RefundResultModel[]>;
     if (!callback) {
       return this.getRefundsWithHttpOperationResponse(id, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as Models.RefundResultModel[]);
+        return Promise.resolve(operationRes.parsedBody as Models.RefundResultModel[]);
       }).catch((err: Error) => {
         return Promise.reject(err);
       });
@@ -3559,8 +2752,8 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
         if (err) {
           return cb(err);
         }
-        let result = data.bodyAsJson as Models.RefundResultModel[];
-        return cb(err, result, data.request, data.response);
+        let result = data.parsedBody as Models.RefundResultModel[];
+        return cb(err, result, data.request, data);
       });
     }
   }
@@ -3574,19 +2767,14 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @param {RequestOptionsBase} [options] Optional Parameters.
    *
-   * @param {ServiceCallback} callback - The callback.
+   * @param {ServiceCallback} callback The callback.
    *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
    *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
    *                      {Models.RefundResultModel} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link Models.RefundResultModel} for more
-   *                      information.
-   *
+   *                      See {@link Models.RefundResultModel} for more information.
    *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
    */
   createRefund(id: number, refundRequestModel: Models.RefundRequestModel): Promise<Models.RefundResultModel>;
   createRefund(id: number, refundRequestModel: Models.RefundRequestModel, options: msRest.RequestOptionsBase): Promise<Models.RefundResultModel>;
@@ -3600,7 +2788,7 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
     let cb = callback as msRest.ServiceCallback<Models.RefundResultModel>;
     if (!callback) {
       return this.createRefundWithHttpOperationResponse(id, refundRequestModel, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as Models.RefundResultModel);
+        return Promise.resolve(operationRes.parsedBody as Models.RefundResultModel);
       }).catch((err: Error) => {
         return Promise.reject(err);
       });
@@ -3609,176 +2797,27 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
         if (err) {
           return cb(err);
         }
-        let result = data.bodyAsJson as Models.RefundResultModel;
-        return cb(err, result, data.request, data.response);
+        let result = data.parsedBody as Models.RefundResultModel;
+        return cb(err, result, data.request, data);
       });
     }
   }
 
   /**
-   * @summary Gets all payment subscriptions associated with the specified
-   * reference id.
-   *
-   * @param {string} referenceId The reference identifier.
-   *
-   * @param {RequestOptionsBase} [options] Optional Parameters.
-   *
-   * @param {ServiceCallback} callback - The callback.
-   *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
-   *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
-   *                      {Models.SubscriptionModel[]} [result]   - The deserialized result object if an error did not occur.
-   *
-   *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
-   */
-  getSubscriptionsByReferenceId(referenceId: string): Promise<Models.SubscriptionModel[]>;
-  getSubscriptionsByReferenceId(referenceId: string, options: msRest.RequestOptionsBase): Promise<Models.SubscriptionModel[]>;
-  getSubscriptionsByReferenceId(referenceId: string, callback: msRest.ServiceCallback<Models.SubscriptionModel[]>): void;
-  getSubscriptionsByReferenceId(referenceId: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<Models.SubscriptionModel[]>): void;
-  getSubscriptionsByReferenceId(referenceId: string, options?: msRest.RequestOptionsBase, callback?: msRest.ServiceCallback<Models.SubscriptionModel[]>): any {
-    if (!callback && typeof options === 'function') {
-      callback = options;
-      options = undefined;
-    }
-    let cb = callback as msRest.ServiceCallback<Models.SubscriptionModel[]>;
-    if (!callback) {
-      return this.getSubscriptionsByReferenceIdWithHttpOperationResponse(referenceId, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as Models.SubscriptionModel[]);
-      }).catch((err: Error) => {
-        return Promise.reject(err);
-      });
-    } else {
-      msRest.promiseToCallback(this.getSubscriptionsByReferenceIdWithHttpOperationResponse(referenceId, options))((err: Error, data: msRest.HttpOperationResponse) => {
-        if (err) {
-          return cb(err);
-        }
-        let result = data.bodyAsJson as Models.SubscriptionModel[];
-        return cb(err, result, data.request, data.response);
-      });
-    }
-  }
-
-  /**
-   * @summary Updates a payment subscription.
-   *
-   * @param {UpdateSubscriptionModel} updateSubscriptionModel The update
-   * subscription model.
-   *
-   * @param {RequestOptionsBase} [options] Optional Parameters.
-   *
-   * @param {ServiceCallback} callback - The callback.
-   *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
-   *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
-   *                      {any} [result]   - The deserialized result object if an error did not occur.
-   *
-   *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
-   */
-  updateSubscription(updateSubscriptionModel: Models.UpdateSubscriptionModel): Promise<any>;
-  updateSubscription(updateSubscriptionModel: Models.UpdateSubscriptionModel, options: msRest.RequestOptionsBase): Promise<any>;
-  updateSubscription(updateSubscriptionModel: Models.UpdateSubscriptionModel, callback: msRest.ServiceCallback<any>): void;
-  updateSubscription(updateSubscriptionModel: Models.UpdateSubscriptionModel, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<any>): void;
-  updateSubscription(updateSubscriptionModel: Models.UpdateSubscriptionModel, options?: msRest.RequestOptionsBase, callback?: msRest.ServiceCallback<any>): any {
-    if (!callback && typeof options === 'function') {
-      callback = options;
-      options = undefined;
-    }
-    let cb = callback as msRest.ServiceCallback<any>;
-    if (!callback) {
-      return this.updateSubscriptionWithHttpOperationResponse(updateSubscriptionModel, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as any);
-      }).catch((err: Error) => {
-        return Promise.reject(err);
-      });
-    } else {
-      msRest.promiseToCallback(this.updateSubscriptionWithHttpOperationResponse(updateSubscriptionModel, options))((err: Error, data: msRest.HttpOperationResponse) => {
-        if (err) {
-          return cb(err);
-        }
-        let result = data.bodyAsJson as any;
-        return cb(err, result, data.request, data.response);
-      });
-    }
-  }
-
-  /**
-   * @summary Posts a new payment subscription.
-   *
-   * @param {SubscriptionRequestModel} subscriptionRequest The subscription
-   * request.
-   *
-   * @param {RequestOptionsBase} [options] Optional Parameters.
-   *
-   * @param {ServiceCallback} callback - The callback.
-   *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
-   *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
-   *                      {Models.SubscriptionResponceModel} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link Models.SubscriptionResponceModel} for more
-   *                      information.
-   *
-   *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
-   */
-  createSubscription(subscriptionRequest: Models.SubscriptionRequestModel): Promise<Models.SubscriptionResponceModel>;
-  createSubscription(subscriptionRequest: Models.SubscriptionRequestModel, options: msRest.RequestOptionsBase): Promise<Models.SubscriptionResponceModel>;
-  createSubscription(subscriptionRequest: Models.SubscriptionRequestModel, callback: msRest.ServiceCallback<Models.SubscriptionResponceModel>): void;
-  createSubscription(subscriptionRequest: Models.SubscriptionRequestModel, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<Models.SubscriptionResponceModel>): void;
-  createSubscription(subscriptionRequest: Models.SubscriptionRequestModel, options?: msRest.RequestOptionsBase, callback?: msRest.ServiceCallback<Models.SubscriptionResponceModel>): any {
-    if (!callback && typeof options === 'function') {
-      callback = options;
-      options = undefined;
-    }
-    let cb = callback as msRest.ServiceCallback<Models.SubscriptionResponceModel>;
-    if (!callback) {
-      return this.createSubscriptionWithHttpOperationResponse(subscriptionRequest, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as Models.SubscriptionResponceModel);
-      }).catch((err: Error) => {
-        return Promise.reject(err);
-      });
-    } else {
-      msRest.promiseToCallback(this.createSubscriptionWithHttpOperationResponse(subscriptionRequest, options))((err: Error, data: msRest.HttpOperationResponse) => {
-        if (err) {
-          return cb(err);
-        }
-        let result = data.bodyAsJson as Models.SubscriptionResponceModel;
-        return cb(err, result, data.request, data.response);
-      });
-    }
-  }
-
-  /**
-   * @summary Gets a single payment subscription with the specified subscription
-   * id.
+   * @summary Gets a single payment subscription with the specified subscription id.
    *
    * @param {string} id The subscription id.
    *
    * @param {RequestOptionsBase} [options] Optional Parameters.
    *
-   * @param {ServiceCallback} callback - The callback.
+   * @param {ServiceCallback} callback The callback.
    *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
    *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
    *                      {Models.SubscriptionModel} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link Models.SubscriptionModel} for more
-   *                      information.
-   *
+   *                      See {@link Models.SubscriptionModel} for more information.
    *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
    */
   getSubscription(id: string): Promise<Models.SubscriptionModel>;
   getSubscription(id: string, options: msRest.RequestOptionsBase): Promise<Models.SubscriptionModel>;
@@ -3792,7 +2831,7 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
     let cb = callback as msRest.ServiceCallback<Models.SubscriptionModel>;
     if (!callback) {
       return this.getSubscriptionWithHttpOperationResponse(id, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as Models.SubscriptionModel);
+        return Promise.resolve(operationRes.parsedBody as Models.SubscriptionModel);
       }).catch((err: Error) => {
         return Promise.reject(err);
       });
@@ -3801,8 +2840,137 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
         if (err) {
           return cb(err);
         }
-        let result = data.bodyAsJson as Models.SubscriptionModel;
-        return cb(err, result, data.request, data.response);
+        let result = data.parsedBody as Models.SubscriptionModel;
+        return cb(err, result, data.request, data);
+      });
+    }
+  }
+
+  /**
+   * @summary Gets all payment subscriptions associated with the specified reference id.
+   *
+   * @param {string} referenceId The reference identifier.
+   *
+   * @param {RequestOptionsBase} [options] Optional Parameters.
+   *
+   * @param {ServiceCallback} callback The callback.
+   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
+   *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+   *                      {Models.SubscriptionModel[]} [result]   - The deserialized result object if an error did not occur.
+   *
+   *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
+   */
+  getSubscriptionsByReferenceId(referenceId: string): Promise<Models.SubscriptionModel[]>;
+  getSubscriptionsByReferenceId(referenceId: string, options: msRest.RequestOptionsBase): Promise<Models.SubscriptionModel[]>;
+  getSubscriptionsByReferenceId(referenceId: string, callback: msRest.ServiceCallback<Models.SubscriptionModel[]>): void;
+  getSubscriptionsByReferenceId(referenceId: string, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<Models.SubscriptionModel[]>): void;
+  getSubscriptionsByReferenceId(referenceId: string, options?: msRest.RequestOptionsBase, callback?: msRest.ServiceCallback<Models.SubscriptionModel[]>): any {
+    if (!callback && typeof options === 'function') {
+      callback = options;
+      options = undefined;
+    }
+    let cb = callback as msRest.ServiceCallback<Models.SubscriptionModel[]>;
+    if (!callback) {
+      return this.getSubscriptionsByReferenceIdWithHttpOperationResponse(referenceId, options).then((operationRes: msRest.HttpOperationResponse) => {
+        return Promise.resolve(operationRes.parsedBody as Models.SubscriptionModel[]);
+      }).catch((err: Error) => {
+        return Promise.reject(err);
+      });
+    } else {
+      msRest.promiseToCallback(this.getSubscriptionsByReferenceIdWithHttpOperationResponse(referenceId, options))((err: Error, data: msRest.HttpOperationResponse) => {
+        if (err) {
+          return cb(err);
+        }
+        let result = data.parsedBody as Models.SubscriptionModel[];
+        return cb(err, result, data.request, data);
+      });
+    }
+  }
+
+  /**
+   * @summary Updates a payment subscription.
+   *
+   * @param {UpdateSubscriptionModel} updateSubscriptionModel The update subscription model.
+   *
+   * @param {RequestOptionsBase} [options] Optional Parameters.
+   *
+   * @param {ServiceCallback} callback The callback.
+   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
+   *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+   *                      {void} [result]   - The deserialized result object if an error did not occur.
+   *
+   *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
+   */
+  updateSubscription(updateSubscriptionModel: Models.UpdateSubscriptionModel): Promise<void>;
+  updateSubscription(updateSubscriptionModel: Models.UpdateSubscriptionModel, options: msRest.RequestOptionsBase): Promise<void>;
+  updateSubscription(updateSubscriptionModel: Models.UpdateSubscriptionModel, callback: msRest.ServiceCallback<void>): void;
+  updateSubscription(updateSubscriptionModel: Models.UpdateSubscriptionModel, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<void>): void;
+  updateSubscription(updateSubscriptionModel: Models.UpdateSubscriptionModel, options?: msRest.RequestOptionsBase, callback?: msRest.ServiceCallback<void>): any {
+    if (!callback && typeof options === 'function') {
+      callback = options;
+      options = undefined;
+    }
+    let cb = callback as msRest.ServiceCallback<void>;
+    if (!callback) {
+      return this.updateSubscriptionWithHttpOperationResponse(updateSubscriptionModel, options).then((operationRes: msRest.HttpOperationResponse) => {
+        return Promise.resolve(operationRes.parsedBody as void);
+      }).catch((err: Error) => {
+        return Promise.reject(err);
+      });
+    } else {
+      msRest.promiseToCallback(this.updateSubscriptionWithHttpOperationResponse(updateSubscriptionModel, options))((err: Error, data: msRest.HttpOperationResponse) => {
+        if (err) {
+          return cb(err);
+        }
+        let result = data.parsedBody as void;
+        return cb(err, result, data.request, data);
+      });
+    }
+  }
+
+  /**
+   * @summary Posts a new payment subscription.
+   *
+   * @param {SubscriptionRequestModel} subscriptionRequest The subscription request.
+   *
+   * @param {RequestOptionsBase} [options] Optional Parameters.
+   *
+   * @param {ServiceCallback} callback The callback.
+   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
+   *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+   *                      {Models.SubscriptionResponseModel} [result]   - The deserialized result object if an error did not occur.
+   *                      See {@link Models.SubscriptionResponseModel} for more information.
+   *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
+   */
+  createSubscription(subscriptionRequest: Models.SubscriptionRequestModel): Promise<Models.SubscriptionResponseModel>;
+  createSubscription(subscriptionRequest: Models.SubscriptionRequestModel, options: msRest.RequestOptionsBase): Promise<Models.SubscriptionResponseModel>;
+  createSubscription(subscriptionRequest: Models.SubscriptionRequestModel, callback: msRest.ServiceCallback<Models.SubscriptionResponseModel>): void;
+  createSubscription(subscriptionRequest: Models.SubscriptionRequestModel, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<Models.SubscriptionResponseModel>): void;
+  createSubscription(subscriptionRequest: Models.SubscriptionRequestModel, options?: msRest.RequestOptionsBase, callback?: msRest.ServiceCallback<Models.SubscriptionResponseModel>): any {
+    if (!callback && typeof options === 'function') {
+      callback = options;
+      options = undefined;
+    }
+    let cb = callback as msRest.ServiceCallback<Models.SubscriptionResponseModel>;
+    if (!callback) {
+      return this.createSubscriptionWithHttpOperationResponse(subscriptionRequest, options).then((operationRes: msRest.HttpOperationResponse) => {
+        return Promise.resolve(operationRes.parsedBody as Models.SubscriptionResponseModel);
+      }).catch((err: Error) => {
+        return Promise.reject(err);
+      });
+    } else {
+      msRest.promiseToCallback(this.createSubscriptionWithHttpOperationResponse(subscriptionRequest, options))((err: Error, data: msRest.HttpOperationResponse) => {
+        if (err) {
+          return cb(err);
+        }
+        let result = data.parsedBody as Models.SubscriptionResponseModel;
+        return cb(err, result, data.request, data);
       });
     }
   }
@@ -3814,18 +2982,14 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @param {RequestOptionsBase} [options] Optional Parameters.
    *
-   * @param {ServiceCallback} callback - The callback.
+   * @param {ServiceCallback} callback The callback.
    *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
    *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
    *                      {Models.WalletModel} [result]   - The deserialized result object if an error did not occur.
    *                      See {@link Models.WalletModel} for more information.
-   *
    *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
    */
   getWallet(walletId: number): Promise<Models.WalletModel>;
   getWallet(walletId: number, options: msRest.RequestOptionsBase): Promise<Models.WalletModel>;
@@ -3839,7 +3003,7 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
     let cb = callback as msRest.ServiceCallback<Models.WalletModel>;
     if (!callback) {
       return this.getWalletWithHttpOperationResponse(walletId, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as Models.WalletModel);
+        return Promise.resolve(operationRes.parsedBody as Models.WalletModel);
       }).catch((err: Error) => {
         return Promise.reject(err);
       });
@@ -3848,8 +3012,8 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
         if (err) {
           return cb(err);
         }
-        let result = data.bodyAsJson as Models.WalletModel;
-        return cb(err, result, data.request, data.response);
+        let result = data.parsedBody as Models.WalletModel;
+        return cb(err, result, data.request, data);
       });
     }
   }
@@ -3863,17 +3027,14 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @param {RequestOptionsBase} [options] Optional Parameters.
    *
-   * @param {ServiceCallback} callback - The callback.
+   * @param {ServiceCallback} callback The callback.
    *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
    *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
    *                      {void} [result]   - The deserialized result object if an error did not occur.
    *
    *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
    */
   updateWallet(walletId: number, defaultPaymentToken: string): Promise<void>;
   updateWallet(walletId: number, defaultPaymentToken: string, options: msRest.RequestOptionsBase): Promise<void>;
@@ -3887,7 +3048,7 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
     let cb = callback as msRest.ServiceCallback<void>;
     if (!callback) {
       return this.updateWalletWithHttpOperationResponse(walletId, defaultPaymentToken, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as void);
+        return Promise.resolve(operationRes.parsedBody as void);
       }).catch((err: Error) => {
         return Promise.reject(err);
       });
@@ -3896,8 +3057,8 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
         if (err) {
           return cb(err);
         }
-        let result = data.bodyAsJson as void;
-        return cb(err, result, data.request, data.response);
+        let result = data.parsedBody as void;
+        return cb(err, result, data.request, data);
       });
     }
   }
@@ -3909,18 +3070,14 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @param {RequestOptionsBase} [options] Optional Parameters.
    *
-   * @param {ServiceCallback} callback - The callback.
+   * @param {ServiceCallback} callback The callback.
    *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
    *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
    *                      {Models.WalletModel} [result]   - The deserialized result object if an error did not occur.
    *                      See {@link Models.WalletModel} for more information.
-   *
    *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
    */
   getWalletByReferenceId(referenceId: string): Promise<Models.WalletModel>;
   getWalletByReferenceId(referenceId: string, options: msRest.RequestOptionsBase): Promise<Models.WalletModel>;
@@ -3934,7 +3091,7 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
     let cb = callback as msRest.ServiceCallback<Models.WalletModel>;
     if (!callback) {
       return this.getWalletByReferenceIdWithHttpOperationResponse(referenceId, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as Models.WalletModel);
+        return Promise.resolve(operationRes.parsedBody as Models.WalletModel);
       }).catch((err: Error) => {
         return Promise.reject(err);
       });
@@ -3943,8 +3100,8 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
         if (err) {
           return cb(err);
         }
-        let result = data.bodyAsJson as Models.WalletModel;
-        return cb(err, result, data.request, data.response);
+        let result = data.parsedBody as Models.WalletModel;
+        return cb(err, result, data.request, data);
       });
     }
   }
@@ -3956,31 +3113,28 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @param {RequestOptionsBase} [options] Optional Parameters.
    *
-   * @param {ServiceCallback} callback - The callback.
+   * @param {ServiceCallback} callback The callback.
    *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
    *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
-   *                      {void} [result]   - The deserialized result object if an error did not occur.
+   *                      {number} [result]   - The deserialized result object if an error did not occur.
    *
    *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
    */
-  createWallet(model: Models.WalletRequestModel): Promise<void>;
-  createWallet(model: Models.WalletRequestModel, options: msRest.RequestOptionsBase): Promise<void>;
-  createWallet(model: Models.WalletRequestModel, callback: msRest.ServiceCallback<void>): void;
-  createWallet(model: Models.WalletRequestModel, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<void>): void;
-  createWallet(model: Models.WalletRequestModel, options?: msRest.RequestOptionsBase, callback?: msRest.ServiceCallback<void>): any {
+  createWallet(model: Models.WalletRequestModel): Promise<number>;
+  createWallet(model: Models.WalletRequestModel, options: msRest.RequestOptionsBase): Promise<number>;
+  createWallet(model: Models.WalletRequestModel, callback: msRest.ServiceCallback<number>): void;
+  createWallet(model: Models.WalletRequestModel, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<number>): void;
+  createWallet(model: Models.WalletRequestModel, options?: msRest.RequestOptionsBase, callback?: msRest.ServiceCallback<number>): any {
     if (!callback && typeof options === 'function') {
       callback = options;
       options = undefined;
     }
-    let cb = callback as msRest.ServiceCallback<void>;
+    let cb = callback as msRest.ServiceCallback<number>;
     if (!callback) {
       return this.createWalletWithHttpOperationResponse(model, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as void);
+        return Promise.resolve(operationRes.parsedBody as number);
       }).catch((err: Error) => {
         return Promise.reject(err);
       });
@@ -3989,8 +3143,8 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
         if (err) {
           return cb(err);
         }
-        let result = data.bodyAsJson as void;
-        return cb(err, result, data.request, data.response);
+        let result = data.parsedBody as number;
+        return cb(err, result, data.request, data);
       });
     }
   }
@@ -4004,18 +3158,14 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @param {RequestOptionsBase} [options] Optional Parameters.
    *
-   * @param {ServiceCallback} callback - The callback.
+   * @param {ServiceCallback} callback The callback.
    *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
    *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
    *                      {Models.WalletModel} [result]   - The deserialized result object if an error did not occur.
    *                      See {@link Models.WalletModel} for more information.
-   *
    *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
    */
   addWalletCreditCard(walletId: number, request: Models.WalletCreditCardRequestModel): Promise<Models.WalletModel>;
   addWalletCreditCard(walletId: number, request: Models.WalletCreditCardRequestModel, options: msRest.RequestOptionsBase): Promise<Models.WalletModel>;
@@ -4029,7 +3179,7 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
     let cb = callback as msRest.ServiceCallback<Models.WalletModel>;
     if (!callback) {
       return this.addWalletCreditCardWithHttpOperationResponse(walletId, request, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as Models.WalletModel);
+        return Promise.resolve(operationRes.parsedBody as Models.WalletModel);
       }).catch((err: Error) => {
         return Promise.reject(err);
       });
@@ -4038,8 +3188,8 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
         if (err) {
           return cb(err);
         }
-        let result = data.bodyAsJson as Models.WalletModel;
-        return cb(err, result, data.request, data.response);
+        let result = data.parsedBody as Models.WalletModel;
+        return cb(err, result, data.request, data);
       });
     }
   }
@@ -4053,18 +3203,14 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @param {RequestOptionsBase} [options] Optional Parameters.
    *
-   * @param {ServiceCallback} callback - The callback.
+   * @param {ServiceCallback} callback The callback.
    *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
    *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
    *                      {Models.WalletModel} [result]   - The deserialized result object if an error did not occur.
    *                      See {@link Models.WalletModel} for more information.
-   *
    *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
    */
   addWalletBankAccount(walletId: number, request: Models.WalletBankAccountRequestModel): Promise<Models.WalletModel>;
   addWalletBankAccount(walletId: number, request: Models.WalletBankAccountRequestModel, options: msRest.RequestOptionsBase): Promise<Models.WalletModel>;
@@ -4078,7 +3224,7 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
     let cb = callback as msRest.ServiceCallback<Models.WalletModel>;
     if (!callback) {
       return this.addWalletBankAccountWithHttpOperationResponse(walletId, request, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as Models.WalletModel);
+        return Promise.resolve(operationRes.parsedBody as Models.WalletModel);
       }).catch((err: Error) => {
         return Promise.reject(err);
       });
@@ -4087,56 +3233,8 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
         if (err) {
           return cb(err);
         }
-        let result = data.bodyAsJson as Models.WalletModel;
-        return cb(err, result, data.request, data.response);
-      });
-    }
-  }
-
-  /**
-   * @summary Deletes the wallet credit card.
-   *
-   * @param {number} walletId The wallet identifier.
-   *
-   * @param {number} walletCreditCardId The wallet credit card identifier.
-   *
-   * @param {RequestOptionsBase} [options] Optional Parameters.
-   *
-   * @param {ServiceCallback} callback - The callback.
-   *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
-   *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
-   *                      {void} [result]   - The deserialized result object if an error did not occur.
-   *
-   *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
-   */
-  removeWalletCreditCard(walletId: number, walletCreditCardId: number): Promise<void>;
-  removeWalletCreditCard(walletId: number, walletCreditCardId: number, options: msRest.RequestOptionsBase): Promise<void>;
-  removeWalletCreditCard(walletId: number, walletCreditCardId: number, callback: msRest.ServiceCallback<void>): void;
-  removeWalletCreditCard(walletId: number, walletCreditCardId: number, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<void>): void;
-  removeWalletCreditCard(walletId: number, walletCreditCardId: number, options?: msRest.RequestOptionsBase, callback?: msRest.ServiceCallback<void>): any {
-    if (!callback && typeof options === 'function') {
-      callback = options;
-      options = undefined;
-    }
-    let cb = callback as msRest.ServiceCallback<void>;
-    if (!callback) {
-      return this.removeWalletCreditCardWithHttpOperationResponse(walletId, walletCreditCardId, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as void);
-      }).catch((err: Error) => {
-        return Promise.reject(err);
-      });
-    } else {
-      msRest.promiseToCallback(this.removeWalletCreditCardWithHttpOperationResponse(walletId, walletCreditCardId, options))((err: Error, data: msRest.HttpOperationResponse) => {
-        if (err) {
-          return cb(err);
-        }
-        let result = data.bodyAsJson as void;
-        return cb(err, result, data.request, data.response);
+        let result = data.parsedBody as Models.WalletModel;
+        return cb(err, result, data.request, data);
       });
     }
   }
@@ -4150,17 +3248,14 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
    *
    * @param {RequestOptionsBase} [options] Optional Parameters.
    *
-   * @param {ServiceCallback} callback - The callback.
+   * @param {ServiceCallback} callback The callback.
    *
-   * @returns {ServiceCallback} callback(err, result, request, response)
-   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
    *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-   *
    *                      {void} [result]   - The deserialized result object if an error did not occur.
    *
    *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {Response} [response] - The HTTP Response stream if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
    */
   removeWalletBankAccount(walletId: number, walletBankAcctId: number): Promise<void>;
   removeWalletBankAccount(walletId: number, walletBankAcctId: number, options: msRest.RequestOptionsBase): Promise<void>;
@@ -4174,7 +3269,7 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
     let cb = callback as msRest.ServiceCallback<void>;
     if (!callback) {
       return this.removeWalletBankAccountWithHttpOperationResponse(walletId, walletBankAcctId, options).then((operationRes: msRest.HttpOperationResponse) => {
-        return Promise.resolve(operationRes.bodyAsJson as void);
+        return Promise.resolve(operationRes.parsedBody as void);
       }).catch((err: Error) => {
         return Promise.reject(err);
       });
@@ -4183,8 +3278,53 @@ class SoftheonWalletAPI extends msRest.ServiceClient {
         if (err) {
           return cb(err);
         }
-        let result = data.bodyAsJson as void;
-        return cb(err, result, data.request, data.response);
+        let result = data.parsedBody as void;
+        return cb(err, result, data.request, data);
+      });
+    }
+  }
+
+  /**
+   * @summary Deletes the wallet credit card.
+   *
+   * @param {number} walletId The wallet identifier.
+   *
+   * @param {number} walletCreditCardId The wallet credit card identifier.
+   *
+   * @param {RequestOptionsBase} [options] Optional Parameters.
+   *
+   * @param {ServiceCallback} callback The callback.
+   *
+   * @returns {ServiceCallback} callback(err, result, request, operationRes)
+   *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+   *                      {void} [result]   - The deserialized result object if an error did not occur.
+   *
+   *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+   *                      {HttpOperationResponse} [response] - The HTTP Response stream if an error did not occur.
+   */
+  removeWalletCreditCard(walletId: number, walletCreditCardId: number): Promise<void>;
+  removeWalletCreditCard(walletId: number, walletCreditCardId: number, options: msRest.RequestOptionsBase): Promise<void>;
+  removeWalletCreditCard(walletId: number, walletCreditCardId: number, callback: msRest.ServiceCallback<void>): void;
+  removeWalletCreditCard(walletId: number, walletCreditCardId: number, options: msRest.RequestOptionsBase, callback: msRest.ServiceCallback<void>): void;
+  removeWalletCreditCard(walletId: number, walletCreditCardId: number, options?: msRest.RequestOptionsBase, callback?: msRest.ServiceCallback<void>): any {
+    if (!callback && typeof options === 'function') {
+      callback = options;
+      options = undefined;
+    }
+    let cb = callback as msRest.ServiceCallback<void>;
+    if (!callback) {
+      return this.removeWalletCreditCardWithHttpOperationResponse(walletId, walletCreditCardId, options).then((operationRes: msRest.HttpOperationResponse) => {
+        return Promise.resolve(operationRes.parsedBody as void);
+      }).catch((err: Error) => {
+        return Promise.reject(err);
+      });
+    } else {
+      msRest.promiseToCallback(this.removeWalletCreditCardWithHttpOperationResponse(walletId, walletCreditCardId, options))((err: Error, data: msRest.HttpOperationResponse) => {
+        if (err) {
+          return cb(err);
+        }
+        let result = data.parsedBody as void;
+        return cb(err, result, data.request, data);
       });
     }
   }

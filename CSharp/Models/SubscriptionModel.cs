@@ -63,7 +63,7 @@ namespace Softheon.Wallet.Api.Client.Models
         /// card was created.</param>
         /// <param name="modifiedTime">The timestamp indicating the last time
         /// that the details of the credit card were modified.</param>
-        public SubscriptionModel(int? id = default(int?), string name = default(string), string description = default(string), IDictionary<string, string> properties = default(IDictionary<string, string>), int? runDay = default(int?), string state = default(string), string paymentType = default(string), string paymentToken = default(string), string amountType = default(string), double? amount = default(double?), string amountWebServiceURL = default(string), string callbackWebServiceURL = default(string), string referenceId = default(string), System.DateTime? lastProcessed = default(System.DateTime?), System.DateTime? endDate = default(System.DateTime?), System.DateTime? createdTime = default(System.DateTime?), System.DateTime? modifiedTime = default(System.DateTime?))
+        public SubscriptionModel(int? id = default(int?), string name = default(string), string description = default(string), IDictionary<string, string> properties = default(IDictionary<string, string>), int? runDay = default(int?), string state = default(string), string paymentType = default(string), string paymentToken = default(string), string amountType = default(string), double? amount = default(double?), string amountWebServiceURL = default(string), string callbackWebServiceURL = default(string), string referenceId = default(string), System.DateTimeOffset? lastProcessed = default(System.DateTimeOffset?), System.DateTimeOffset? endDate = default(System.DateTimeOffset?), System.DateTimeOffset? createdTime = default(System.DateTimeOffset?), System.DateTimeOffset? modifiedTime = default(System.DateTimeOffset?))
         {
             Id = id;
             Name = name;
@@ -180,28 +180,28 @@ namespace Softheon.Wallet.Api.Client.Models
         /// last processed.
         /// </summary>
         [JsonProperty(PropertyName = "lastProcessed")]
-        public System.DateTime? LastProcessed { get; set; }
+        public System.DateTimeOffset? LastProcessed { get; set; }
 
         /// <summary>
         /// Gets or sets the date indicating when the payment subscription
         /// should be stopped.
         /// </summary>
         [JsonProperty(PropertyName = "endDate")]
-        public System.DateTime? EndDate { get; set; }
+        public System.DateTimeOffset? EndDate { get; set; }
 
         /// <summary>
         /// Gets or sets the timestamp indicating when the credit card was
         /// created.
         /// </summary>
         [JsonProperty(PropertyName = "createdTime")]
-        public System.DateTime? CreatedTime { get; set; }
+        public System.DateTimeOffset? CreatedTime { get; set; }
 
         /// <summary>
         /// Gets or sets the timestamp indicating the last time that the
         /// details of the credit card were modified.
         /// </summary>
         [JsonProperty(PropertyName = "modifiedTime")]
-        public System.DateTime? ModifiedTime { get; set; }
+        public System.DateTimeOffset? ModifiedTime { get; set; }
 
     }
 }

@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client.models;
+package walletapiv2.models;
 
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -38,7 +38,7 @@ public class WalletModel {
     private List<BankAccountModel> bankAccounts;
 
     /**
-     * Get the id value.
+     * Get gets or sets the identifier.
      *
      * @return the id value
      */
@@ -47,7 +47,7 @@ public class WalletModel {
     }
 
     /**
-     * Set the id value.
+     * Set gets or sets the identifier.
      *
      * @param id the id value to set
      * @return the WalletModel object itself.
@@ -58,7 +58,7 @@ public class WalletModel {
     }
 
     /**
-     * Get the defaultToken value.
+     * Get gets or sets the default token.
      *
      * @return the defaultToken value
      */
@@ -67,7 +67,7 @@ public class WalletModel {
     }
 
     /**
-     * Set the defaultToken value.
+     * Set gets or sets the default token.
      *
      * @param defaultToken the defaultToken value to set
      * @return the WalletModel object itself.
@@ -78,7 +78,7 @@ public class WalletModel {
     }
 
     /**
-     * Get the creditCards value.
+     * Get gets or sets the credit cards.
      *
      * @return the creditCards value
      */
@@ -87,7 +87,7 @@ public class WalletModel {
     }
 
     /**
-     * Set the creditCards value.
+     * Set gets or sets the credit cards.
      *
      * @param creditCards the creditCards value to set
      * @return the WalletModel object itself.
@@ -98,7 +98,7 @@ public class WalletModel {
     }
 
     /**
-     * Get the bankAccounts value.
+     * Get gets or sets the bank accounts.
      *
      * @return the bankAccounts value
      */
@@ -107,7 +107,7 @@ public class WalletModel {
     }
 
     /**
-     * Set the bankAccounts value.
+     * Set gets or sets the bank accounts.
      *
      * @param bankAccounts the bankAccounts value to set
      * @return the WalletModel object itself.

@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client.models;
+package walletapiv2.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -25,7 +25,7 @@ public class WalletBankAccountRequestModel {
     private Boolean isDefault;
 
     /**
-     * Get the paymentToken value.
+     * Get gets or sets the payment token.
      *
      * @return the paymentToken value
      */
@@ -34,7 +34,7 @@ public class WalletBankAccountRequestModel {
     }
 
     /**
-     * Set the paymentToken value.
+     * Set gets or sets the payment token.
      *
      * @param paymentToken the paymentToken value to set
      * @return the WalletBankAccountRequestModel object itself.
@@ -45,7 +45,7 @@ public class WalletBankAccountRequestModel {
     }
 
     /**
-     * Get the isDefault value.
+     * Get gets or sets a value indicating whether this instance is default.
      *
      * @return the isDefault value
      */
@@ -54,7 +54,7 @@ public class WalletBankAccountRequestModel {
     }
 
     /**
-     * Set the isDefault value.
+     * Set gets or sets a value indicating whether this instance is default.
      *
      * @param isDefault the isDefault value to set
      * @return the WalletBankAccountRequestModel object itself.

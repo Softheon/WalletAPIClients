@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client.models;
+package walletapiv2.models;
 
 import org.joda.time.DateTime;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -97,7 +97,7 @@ public class CreditCardModel {
     private DateTime modifiedTime;
 
     /**
-     * Get the id value.
+     * Get gets or sets the identifier.
      *
      * @return the id value
      */
@@ -106,7 +106,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Set the id value.
+     * Set gets or sets the identifier.
      *
      * @param id the id value to set
      * @return the CreditCardModel object itself.
@@ -117,7 +117,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Get the token value.
+     * Get the payment token for the credit card.
      *
      * @return the token value
      */
@@ -126,7 +126,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Set the token value.
+     * Set the payment token for the credit card.
      *
      * @param token the token value to set
      * @return the CreditCardModel object itself.
@@ -137,7 +137,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Get the cardHolderName value.
+     * Get the name of the cardholder, as it appears on the front of the credit card.
      *
      * @return the cardHolderName value
      */
@@ -146,7 +146,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Set the cardHolderName value.
+     * Set the name of the cardholder, as it appears on the front of the credit card.
      *
      * @param cardHolderName the cardHolderName value to set
      * @return the CreditCardModel object itself.
@@ -157,7 +157,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Get the cardNumber value.
+     * Get the obfuscated credit card number for the credit card, such as xxxxxxxxxxxx1234.
      *
      * @return the cardNumber value
      */
@@ -166,7 +166,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Set the cardNumber value.
+     * Set the obfuscated credit card number for the credit card, such as xxxxxxxxxxxx1234.
      *
      * @param cardNumber the cardNumber value to set
      * @return the CreditCardModel object itself.
@@ -177,7 +177,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Get the expirationMonth value.
+     * Get the expiration month of the credit card.
      *
      * @return the expirationMonth value
      */
@@ -186,7 +186,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Set the expirationMonth value.
+     * Set the expiration month of the credit card.
      *
      * @param expirationMonth the expirationMonth value to set
      * @return the CreditCardModel object itself.
@@ -197,7 +197,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Get the expirationYear value.
+     * Get the expiration year of the credit card.
      *
      * @return the expirationYear value
      */
@@ -206,7 +206,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Set the expirationYear value.
+     * Set the expiration year of the credit card.
      *
      * @param expirationYear the expirationYear value to set
      * @return the CreditCardModel object itself.
@@ -217,7 +217,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Get the billingAddress value.
+     * Get the billing address for the credit card holder.
      *
      * @return the billingAddress value
      */
@@ -226,7 +226,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Set the billingAddress value.
+     * Set the billing address for the credit card holder.
      *
      * @param billingAddress the billingAddress value to set
      * @return the CreditCardModel object itself.
@@ -237,7 +237,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Get the email value.
+     * Get the email address for the credit card holder.
      *
      * @return the email value
      */
@@ -246,7 +246,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Set the email value.
+     * Set the email address for the credit card holder.
      *
      * @param email the email value to set
      * @return the CreditCardModel object itself.
@@ -257,7 +257,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Get the cardState value.
+     * Get the state that the credit card is in. Possible values include: 'Unknown', 'New', 'Authorized', 'Expired', 'Deleted', 'Invalid'.
      *
      * @return the cardState value
      */
@@ -266,7 +266,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Set the cardState value.
+     * Set the state that the credit card is in. Possible values include: 'Unknown', 'New', 'Authorized', 'Expired', 'Deleted', 'Invalid'.
      *
      * @param cardState the cardState value to set
      * @return the CreditCardModel object itself.
@@ -277,7 +277,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Get the cardType value.
+     * Get gets or sets the type of the card. Possible values include: 'Unknown', 'Visa', 'MasterCard', 'Amex', 'Discover'.
      *
      * @return the cardType value
      */
@@ -286,7 +286,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Set the cardType value.
+     * Set gets or sets the type of the card. Possible values include: 'Unknown', 'Visa', 'MasterCard', 'Amex', 'Discover'.
      *
      * @param cardType the cardType value to set
      * @return the CreditCardModel object itself.
@@ -297,7 +297,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Get the referenceId value.
+     * Get the client application provided reference ID for the credit card.
      *
      * @return the referenceId value
      */
@@ -306,7 +306,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Set the referenceId value.
+     * Set the client application provided reference ID for the credit card.
      *
      * @param referenceId the referenceId value to set
      * @return the CreditCardModel object itself.
@@ -317,7 +317,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Get the createdTime value.
+     * Get the timestamp indicating when the credit card was created.
      *
      * @return the createdTime value
      */
@@ -326,7 +326,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Set the createdTime value.
+     * Set the timestamp indicating when the credit card was created.
      *
      * @param createdTime the createdTime value to set
      * @return the CreditCardModel object itself.
@@ -337,7 +337,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Get the modifiedTime value.
+     * Get the timestamp indicating the last time that the details of the credit card were modified.
      *
      * @return the modifiedTime value
      */
@@ -346,7 +346,7 @@ public class CreditCardModel {
     }
 
     /**
-     * Set the modifiedTime value.
+     * Set the timestamp indicating the last time that the details of the credit card were modified.
      *
      * @param modifiedTime the modifiedTime value to set
      * @return the CreditCardModel object itself.
