@@ -52,7 +52,7 @@ namespace Softheon.Wallet.Api.Client.Models
         /// card was created.</param>
         /// <param name="modifiedTime">The timestamp indicating the last time
         /// that the details of the credit card were modified.</param>
-        public CreditCardModel(int? id = default(int?), string token = default(string), string cardHolderName = default(string), string cardNumber = default(string), int? expirationMonth = default(int?), int? expirationYear = default(int?), Address billingAddress = default(Address), string email = default(string), string cardState = default(string), string cardType = default(string), string referenceId = default(string), System.DateTime? createdTime = default(System.DateTime?), System.DateTime? modifiedTime = default(System.DateTime?))
+        public CreditCardModel(int? id = default(int?), string token = default(string), string cardHolderName = default(string), string cardNumber = default(string), int? expirationMonth = default(int?), int? expirationYear = default(int?), Address billingAddress = default(Address), string email = default(string), string cardState = default(string), string cardType = default(string), string referenceId = default(string), System.DateTimeOffset? createdTime = default(System.DateTimeOffset?), System.DateTimeOffset? modifiedTime = default(System.DateTimeOffset?))
         {
             Id = id;
             Token = token;
@@ -152,14 +152,14 @@ namespace Softheon.Wallet.Api.Client.Models
         /// created.
         /// </summary>
         [JsonProperty(PropertyName = "createdTime")]
-        public System.DateTime? CreatedTime { get; set; }
+        public System.DateTimeOffset? CreatedTime { get; set; }
 
         /// <summary>
         /// Gets or sets the timestamp indicating the last time that the
         /// details of the credit card were modified.
         /// </summary>
         [JsonProperty(PropertyName = "modifiedTime")]
-        public System.DateTime? ModifiedTime { get; set; }
+        public System.DateTimeOffset? ModifiedTime { get; set; }
 
         /// <summary>
         /// Validate the object.

@@ -18,6 +18,40 @@ namespace Softheon.Wallet.Api.Client
     public static partial class SoftheonWalletAPIExtensions
     {
             /// <summary>
+            /// Gets the bank account associated with the specified token.
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='token'>
+            /// The token.
+            /// </param>
+            public static BankAccountModel GetBankAccountByToken(this ISoftheonWalletAPI operations, string token)
+            {
+                return operations.GetBankAccountByTokenAsync(token).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Gets the bank account associated with the specified token.
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='token'>
+            /// The token.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<BankAccountModel> GetBankAccountByTokenAsync(this ISoftheonWalletAPI operations, string token, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetBankAccountByTokenWithHttpMessagesAsync(token, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
             /// Gets all bank accounts associated with the specified reference identifier.
             /// </summary>
             /// <param name='operations'>
@@ -60,9 +94,9 @@ namespace Softheon.Wallet.Api.Client
             /// <param name='updateBankAccountModel'>
             /// The update bank account model.
             /// </param>
-            public static object UpdateBankAccount(this ISoftheonWalletAPI operations, UpdateBankAccountModel updateBankAccountModel)
+            public static void UpdateBankAccount(this ISoftheonWalletAPI operations, UpdateBankAccountModel updateBankAccountModel)
             {
-                return operations.UpdateBankAccountAsync(updateBankAccountModel).GetAwaiter().GetResult();
+                operations.UpdateBankAccountAsync(updateBankAccountModel).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -77,12 +111,9 @@ namespace Softheon.Wallet.Api.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> UpdateBankAccountAsync(this ISoftheonWalletAPI operations, UpdateBankAccountModel updateBankAccountModel, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task UpdateBankAccountAsync(this ISoftheonWalletAPI operations, UpdateBankAccountModel updateBankAccountModel, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.UpdateBankAccountWithHttpMessagesAsync(updateBankAccountModel, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
+                (await operations.UpdateBankAccountWithHttpMessagesAsync(updateBankAccountModel, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>
@@ -120,37 +151,17 @@ namespace Softheon.Wallet.Api.Client
             }
 
             /// <summary>
-            /// Gets the bank account associated with the specified token.
+            /// Gets the bin information for a specified credit card number.
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='token'>
-            /// The token.
+            /// <param name='binRequest'>
+            /// The bin request.
             /// </param>
-            public static BankAccountModel GetBankAccountByToken(this ISoftheonWalletAPI operations, string token)
+            public static Bin GetBin(this ISoftheonWalletAPI operations, BinRequestModel binRequest)
             {
-                return operations.GetBankAccountByTokenAsync(token).GetAwaiter().GetResult();
-            }
-
-            /// <summary>
-            /// Gets the bank account associated with the specified token.
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='token'>
-            /// The token.
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<BankAccountModel> GetBankAccountByTokenAsync(this ISoftheonWalletAPI operations, string token, CancellationToken cancellationToken = default(CancellationToken))
-            {
-                using (var _result = await operations.GetBankAccountByTokenWithHttpMessagesAsync(token, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
+                return operations.GetBinAsync(binRequest).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -159,29 +170,15 @@ namespace Softheon.Wallet.Api.Client
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='cardNumber'>
-            /// The card number.
-            /// </param>
-            public static Bin GetBin(this ISoftheonWalletAPI operations, string cardNumber)
-            {
-                return operations.GetBinAsync(cardNumber).GetAwaiter().GetResult();
-            }
-
-            /// <summary>
-            /// Gets the bin information for a specified credit card number.
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='cardNumber'>
-            /// The card number.
+            /// <param name='binRequest'>
+            /// The bin request.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<Bin> GetBinAsync(this ISoftheonWalletAPI operations, string cardNumber, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<Bin> GetBinAsync(this ISoftheonWalletAPI operations, BinRequestModel binRequest, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetBinWithHttpMessagesAsync(cardNumber, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetBinWithHttpMessagesAsync(binRequest, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -298,9 +295,9 @@ namespace Softheon.Wallet.Api.Client
             /// <param name='updateCreditCardModel'>
             /// The update credit card model.
             /// </param>
-            public static object UpdateCreditCard(this ISoftheonWalletAPI operations, UpdateCreditCardModel updateCreditCardModel)
+            public static void UpdateCreditCard(this ISoftheonWalletAPI operations, UpdateCreditCardModel updateCreditCardModel)
             {
-                return operations.UpdateCreditCardAsync(updateCreditCardModel).GetAwaiter().GetResult();
+                operations.UpdateCreditCardAsync(updateCreditCardModel).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -315,12 +312,9 @@ namespace Softheon.Wallet.Api.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> UpdateCreditCardAsync(this ISoftheonWalletAPI operations, UpdateCreditCardModel updateCreditCardModel, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task UpdateCreditCardAsync(this ISoftheonWalletAPI operations, UpdateCreditCardModel updateCreditCardModel, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.UpdateCreditCardWithHttpMessagesAsync(updateCreditCardModel, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
+                (await operations.UpdateCreditCardWithHttpMessagesAsync(updateCreditCardModel, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>
@@ -398,15 +392,15 @@ namespace Softheon.Wallet.Api.Client
             /// The operations group for this extension method.
             /// </param>
             /// <param name='referenceId'>
-            /// The client application provided reference ID for the payment.
+            /// Gets or sets the reference identifier.
             /// </param>
             /// <param name='minDate'>
-            /// The optional lower bound of the range for payment date.
+            /// Gets or sets the minimum date.
             /// </param>
             /// <param name='maxDate'>
-            /// The optional upper bound of the range for payment date.
+            /// Gets or sets the maximum date.
             /// </param>
-            public static IList<PaymentModel> GetPaymentsByReferenceId(this ISoftheonWalletAPI operations, string referenceId, System.DateTime? minDate = default(System.DateTime?), System.DateTime? maxDate = default(System.DateTime?))
+            public static IList<PaymentModel> GetPaymentsByReferenceId(this ISoftheonWalletAPI operations, string referenceId = default(string), System.DateTimeOffset? minDate = default(System.DateTimeOffset?), System.DateTimeOffset? maxDate = default(System.DateTimeOffset?))
             {
                 return operations.GetPaymentsByReferenceIdAsync(referenceId, minDate, maxDate).GetAwaiter().GetResult();
             }
@@ -418,18 +412,18 @@ namespace Softheon.Wallet.Api.Client
             /// The operations group for this extension method.
             /// </param>
             /// <param name='referenceId'>
-            /// The client application provided reference ID for the payment.
+            /// Gets or sets the reference identifier.
             /// </param>
             /// <param name='minDate'>
-            /// The optional lower bound of the range for payment date.
+            /// Gets or sets the minimum date.
             /// </param>
             /// <param name='maxDate'>
-            /// The optional upper bound of the range for payment date.
+            /// Gets or sets the maximum date.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<PaymentModel>> GetPaymentsByReferenceIdAsync(this ISoftheonWalletAPI operations, string referenceId, System.DateTime? minDate = default(System.DateTime?), System.DateTime? maxDate = default(System.DateTime?), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<IList<PaymentModel>> GetPaymentsByReferenceIdAsync(this ISoftheonWalletAPI operations, string referenceId = default(string), System.DateTimeOffset? minDate = default(System.DateTimeOffset?), System.DateTimeOffset? maxDate = default(System.DateTimeOffset?), CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.GetPaymentsByReferenceIdWithHttpMessagesAsync(referenceId, minDate, maxDate, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -546,6 +540,40 @@ namespace Softheon.Wallet.Api.Client
             }
 
             /// <summary>
+            /// Gets a single payment subscription with the specified subscription id.
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='id'>
+            /// The subscription id.
+            /// </param>
+            public static SubscriptionModel GetSubscription(this ISoftheonWalletAPI operations, string id)
+            {
+                return operations.GetSubscriptionAsync(id).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Gets a single payment subscription with the specified subscription id.
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='id'>
+            /// The subscription id.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<SubscriptionModel> GetSubscriptionAsync(this ISoftheonWalletAPI operations, string id, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetSubscriptionWithHttpMessagesAsync(id, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
             /// Gets all payment subscriptions associated with the specified reference id.
             /// </summary>
             /// <param name='operations'>
@@ -588,9 +616,9 @@ namespace Softheon.Wallet.Api.Client
             /// <param name='updateSubscriptionModel'>
             /// The update subscription model.
             /// </param>
-            public static object UpdateSubscription(this ISoftheonWalletAPI operations, UpdateSubscriptionModel updateSubscriptionModel)
+            public static void UpdateSubscription(this ISoftheonWalletAPI operations, UpdateSubscriptionModel updateSubscriptionModel)
             {
-                return operations.UpdateSubscriptionAsync(updateSubscriptionModel).GetAwaiter().GetResult();
+                operations.UpdateSubscriptionAsync(updateSubscriptionModel).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -605,12 +633,9 @@ namespace Softheon.Wallet.Api.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> UpdateSubscriptionAsync(this ISoftheonWalletAPI operations, UpdateSubscriptionModel updateSubscriptionModel, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task UpdateSubscriptionAsync(this ISoftheonWalletAPI operations, UpdateSubscriptionModel updateSubscriptionModel, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.UpdateSubscriptionWithHttpMessagesAsync(updateSubscriptionModel, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
+                (await operations.UpdateSubscriptionWithHttpMessagesAsync(updateSubscriptionModel, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>
@@ -622,7 +647,7 @@ namespace Softheon.Wallet.Api.Client
             /// <param name='subscriptionRequest'>
             /// The subscription request.
             /// </param>
-            public static SubscriptionResponceModel CreateSubscription(this ISoftheonWalletAPI operations, SubscriptionRequestModel subscriptionRequest)
+            public static SubscriptionResponseModel CreateSubscription(this ISoftheonWalletAPI operations, SubscriptionRequestModel subscriptionRequest)
             {
                 return operations.CreateSubscriptionAsync(subscriptionRequest).GetAwaiter().GetResult();
             }
@@ -639,43 +664,9 @@ namespace Softheon.Wallet.Api.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<SubscriptionResponceModel> CreateSubscriptionAsync(this ISoftheonWalletAPI operations, SubscriptionRequestModel subscriptionRequest, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<SubscriptionResponseModel> CreateSubscriptionAsync(this ISoftheonWalletAPI operations, SubscriptionRequestModel subscriptionRequest, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.CreateSubscriptionWithHttpMessagesAsync(subscriptionRequest, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
-            }
-
-            /// <summary>
-            /// Gets a single payment subscription with the specified subscription id.
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='id'>
-            /// The subscription id.
-            /// </param>
-            public static SubscriptionModel GetSubscription(this ISoftheonWalletAPI operations, string id)
-            {
-                return operations.GetSubscriptionAsync(id).GetAwaiter().GetResult();
-            }
-
-            /// <summary>
-            /// Gets a single payment subscription with the specified subscription id.
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='id'>
-            /// The subscription id.
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<SubscriptionModel> GetSubscriptionAsync(this ISoftheonWalletAPI operations, string id, CancellationToken cancellationToken = default(CancellationToken))
-            {
-                using (var _result = await operations.GetSubscriptionWithHttpMessagesAsync(id, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -795,9 +786,9 @@ namespace Softheon.Wallet.Api.Client
             /// <param name='model'>
             /// The model.
             /// </param>
-            public static void CreateWallet(this ISoftheonWalletAPI operations, WalletRequestModel model)
+            public static int? CreateWallet(this ISoftheonWalletAPI operations, WalletRequestModel model)
             {
-                operations.CreateWalletAsync(model).GetAwaiter().GetResult();
+                return operations.CreateWalletAsync(model).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -812,9 +803,12 @@ namespace Softheon.Wallet.Api.Client
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task CreateWalletAsync(this ISoftheonWalletAPI operations, WalletRequestModel model, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<int?> CreateWalletAsync(this ISoftheonWalletAPI operations, WalletRequestModel model, CancellationToken cancellationToken = default(CancellationToken))
             {
-                (await operations.CreateWalletWithHttpMessagesAsync(model, null, cancellationToken).ConfigureAwait(false)).Dispose();
+                using (var _result = await operations.CreateWalletWithHttpMessagesAsync(model, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
             }
 
             /// <summary>
@@ -898,43 +892,6 @@ namespace Softheon.Wallet.Api.Client
             }
 
             /// <summary>
-            /// Deletes the wallet credit card.
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='walletId'>
-            /// The wallet identifier.
-            /// </param>
-            /// <param name='walletCreditCardId'>
-            /// The wallet credit card identifier.
-            /// </param>
-            public static void RemoveWalletCreditCard(this ISoftheonWalletAPI operations, int walletId, int walletCreditCardId)
-            {
-                operations.RemoveWalletCreditCardAsync(walletId, walletCreditCardId).GetAwaiter().GetResult();
-            }
-
-            /// <summary>
-            /// Deletes the wallet credit card.
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='walletId'>
-            /// The wallet identifier.
-            /// </param>
-            /// <param name='walletCreditCardId'>
-            /// The wallet credit card identifier.
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task RemoveWalletCreditCardAsync(this ISoftheonWalletAPI operations, int walletId, int walletCreditCardId, CancellationToken cancellationToken = default(CancellationToken))
-            {
-                (await operations.RemoveWalletCreditCardWithHttpMessagesAsync(walletId, walletCreditCardId, null, cancellationToken).ConfigureAwait(false)).Dispose();
-            }
-
-            /// <summary>
             /// Deletes the wallet bank account.
             /// </summary>
             /// <param name='operations'>
@@ -969,6 +926,43 @@ namespace Softheon.Wallet.Api.Client
             public static async Task RemoveWalletBankAccountAsync(this ISoftheonWalletAPI operations, int walletId, int walletBankAcctId, CancellationToken cancellationToken = default(CancellationToken))
             {
                 (await operations.RemoveWalletBankAccountWithHttpMessagesAsync(walletId, walletBankAcctId, null, cancellationToken).ConfigureAwait(false)).Dispose();
+            }
+
+            /// <summary>
+            /// Deletes the wallet credit card.
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='walletId'>
+            /// The wallet identifier.
+            /// </param>
+            /// <param name='walletCreditCardId'>
+            /// The wallet credit card identifier.
+            /// </param>
+            public static void RemoveWalletCreditCard(this ISoftheonWalletAPI operations, int walletId, int walletCreditCardId)
+            {
+                operations.RemoveWalletCreditCardAsync(walletId, walletCreditCardId).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Deletes the wallet credit card.
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='walletId'>
+            /// The wallet identifier.
+            /// </param>
+            /// <param name='walletCreditCardId'>
+            /// The wallet credit card identifier.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task RemoveWalletCreditCardAsync(this ISoftheonWalletAPI operations, int walletId, int walletCreditCardId, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                (await operations.RemoveWalletCreditCardWithHttpMessagesAsync(walletId, walletCreditCardId, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
     }

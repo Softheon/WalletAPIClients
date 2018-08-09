@@ -44,7 +44,7 @@ namespace Softheon.Wallet.Api.Client.Models
         /// <param name="reason">The reason for issuing the refund.</param>
         /// <param name="createdDate">The timestamp indicating when the refund
         /// was created.</param>
-        public RefundResultModel(string status = default(string), string code = default(string), string message = default(string), string merchantTransactionId = default(string), string providerAccountId = default(string), double? amount = default(double?), string reason = default(string), System.DateTime? createdDate = default(System.DateTime?))
+        public RefundResultModel(string status = default(string), string code = default(string), string message = default(string), string merchantTransactionId = default(string), string providerAccountId = default(string), double? amount = default(double?), string reason = default(string), System.DateTimeOffset? createdDate = default(System.DateTimeOffset?))
         {
             Status = status;
             Code = code;
@@ -117,7 +117,7 @@ namespace Softheon.Wallet.Api.Client.Models
         /// Gets or sets the timestamp indicating when the refund was created.
         /// </summary>
         [JsonProperty(PropertyName = "createdDate")]
-        public System.DateTime? CreatedDate { get; set; }
+        public System.DateTimeOffset? CreatedDate { get; set; }
 
     }
 }

@@ -44,7 +44,7 @@ namespace Softheon.Wallet.Api.Client.Models
         /// was created.</param>
         /// <param name="modifiedDate">The timestamp indicating the last time
         /// that the details of the payment were modified.</param>
-        public PaymentModel(long? id = default(long?), int? accountId = default(int?), double? paymentAmount = default(double?), string description = default(string), string referenceId = default(string), PaymentMethodModel paymentMethod = default(PaymentMethodModel), PaymentResultModel result = default(PaymentResultModel), IList<RefundResultModel> refunds = default(IList<RefundResultModel>), System.DateTime? createdDate = default(System.DateTime?), System.DateTime? modifiedDate = default(System.DateTime?))
+        public PaymentModel(long? id = default(long?), int? accountId = default(int?), double? paymentAmount = default(double?), string description = default(string), string referenceId = default(string), PaymentMethodModel paymentMethod = default(PaymentMethodModel), PaymentResultModel result = default(PaymentResultModel), IList<RefundResultModel> refunds = default(IList<RefundResultModel>), System.DateTimeOffset? createdDate = default(System.DateTimeOffset?), System.DateTimeOffset? modifiedDate = default(System.DateTimeOffset?))
         {
             Id = id;
             AccountId = accountId;
@@ -118,14 +118,14 @@ namespace Softheon.Wallet.Api.Client.Models
         /// Gets or sets the timestamp indicating when the payment was created.
         /// </summary>
         [JsonProperty(PropertyName = "createdDate")]
-        public System.DateTime? CreatedDate { get; set; }
+        public System.DateTimeOffset? CreatedDate { get; set; }
 
         /// <summary>
         /// Gets or sets the timestamp indicating the last time that the
         /// details of the payment were modified.
         /// </summary>
         [JsonProperty(PropertyName = "modifiedDate")]
-        public System.DateTime? ModifiedDate { get; set; }
+        public System.DateTimeOffset? ModifiedDate { get; set; }
 
         /// <summary>
         /// Validate the object.

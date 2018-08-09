@@ -10,26 +10,30 @@ namespace Softheon.Wallet.Api.Client.Models
     using System.Linq;
 
     /// <summary>
-    /// Wallet Request Model
+    /// A base collection of query parameters
     /// </summary>
-    public partial class WalletRequestModel
+    public partial class BaseQuery
     {
         /// <summary>
-        /// Initializes a new instance of the WalletRequestModel class.
+        /// Initializes a new instance of the BaseQuery class.
         /// </summary>
-        public WalletRequestModel()
+        public BaseQuery()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the WalletRequestModel class.
+        /// Initializes a new instance of the BaseQuery class.
         /// </summary>
         /// <param name="referenceId">Gets or sets the reference
         /// identifier.</param>
-        public WalletRequestModel(string referenceId = default(string))
+        /// <param name="minDate">Gets or sets the minimum date.</param>
+        /// <param name="maxDate">Gets or sets the maximum date.</param>
+        public BaseQuery(string referenceId = default(string), System.DateTimeOffset? minDate = default(System.DateTimeOffset?), System.DateTimeOffset? maxDate = default(System.DateTimeOffset?))
         {
             ReferenceId = referenceId;
+            MinDate = minDate;
+            MaxDate = maxDate;
             CustomInit();
         }
 
@@ -43,6 +47,18 @@ namespace Softheon.Wallet.Api.Client.Models
         /// </summary>
         [JsonProperty(PropertyName = "referenceId")]
         public string ReferenceId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the minimum date.
+        /// </summary>
+        [JsonProperty(PropertyName = "minDate")]
+        public System.DateTimeOffset? MinDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the maximum date.
+        /// </summary>
+        [JsonProperty(PropertyName = "maxDate")]
+        public System.DateTimeOffset? MaxDate { get; set; }
 
     }
 }

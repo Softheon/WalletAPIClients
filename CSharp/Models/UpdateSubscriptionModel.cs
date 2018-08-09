@@ -58,7 +58,7 @@ namespace Softheon.Wallet.Api.Client.Models
         /// subscription should be stopped.</param>
         /// <param name="referenceId">The client application provided reference
         /// ID for the credit card.</param>
-        public UpdateSubscriptionModel(int id, string name, int runDay, string state, string paymentType, string paymentToken, string amountType, string description = default(string), IDictionary<string, string> properties = default(IDictionary<string, string>), double? amount = default(double?), string amountWebServiceURL = default(string), string callbackWebServiceURL = default(string), System.DateTime? endDate = default(System.DateTime?), string referenceId = default(string))
+        public UpdateSubscriptionModel(int id, string name, int runDay, string state, string paymentType, string paymentToken, string amountType, string description = default(string), IDictionary<string, string> properties = default(IDictionary<string, string>), double? amount = default(double?), string amountWebServiceURL = default(string), string callbackWebServiceURL = default(string), System.DateTimeOffset? endDate = default(System.DateTimeOffset?), string referenceId = default(string))
         {
             Id = id;
             Name = name;
@@ -165,7 +165,7 @@ namespace Softheon.Wallet.Api.Client.Models
         /// should be stopped.
         /// </summary>
         [JsonProperty(PropertyName = "endDate")]
-        public System.DateTime? EndDate { get; set; }
+        public System.DateTimeOffset? EndDate { get; set; }
 
         /// <summary>
         /// Gets or sets the client application provided reference ID for the

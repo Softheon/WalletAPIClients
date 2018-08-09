@@ -45,7 +45,7 @@ namespace Softheon.Wallet.Api.Client.Models
         /// [require email].</param>
         /// <param name="enableSaveOption">Gets or sets a value indicating
         /// whether [enable save option].</param>
-        public CheckoutResponseModel(int? checkoutId = default(int?), string clientId = default(string), string redirectUrl = default(string), string referenceId = default(string), double? amount = default(double?), string nameOnAccount = default(string), System.DateTime? expirationDate = default(System.DateTime?), bool? enableBillingInformation = default(bool?), Address billingAddress = default(Address), string email = default(string), bool? requireEmail = default(bool?), bool? enableSaveOption = default(bool?))
+        public CheckoutResponseModel(int? checkoutId = default(int?), string clientId = default(string), string redirectUrl = default(string), string referenceId = default(string), double? amount = default(double?), string nameOnAccount = default(string), System.DateTimeOffset? expirationDate = default(System.DateTimeOffset?), bool? enableBillingInformation = default(bool?), Address billingAddress = default(Address), string email = default(string), bool? requireEmail = default(bool?), bool? enableSaveOption = default(bool?))
         {
             CheckoutId = checkoutId;
             ClientId = clientId;
@@ -107,7 +107,7 @@ namespace Softheon.Wallet.Api.Client.Models
         /// Gets or sets the expiration date.
         /// </summary>
         [JsonProperty(PropertyName = "expirationDate")]
-        public System.DateTime? ExpirationDate { get; set; }
+        public System.DateTimeOffset? ExpirationDate { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether [enable billing
