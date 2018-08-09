@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client.models;
+package walletapiv2.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -45,7 +45,8 @@ public class Address {
     private String zipCode;
 
     /**
-     * Get the address1 value.
+     * Get the first line of the street address.  Typcically contains
+     the number and street name.
      *
      * @return the address1 value
      */
@@ -54,7 +55,8 @@ public class Address {
     }
 
     /**
-     * Set the address1 value.
+     * Set the first line of the street address.  Typcically contains
+     the number and street name.
      *
      * @param address1 the address1 value to set
      * @return the Address object itself.
@@ -65,7 +67,8 @@ public class Address {
     }
 
     /**
-     * Get the address2 value.
+     * Get the second line of the street address.  Typically contains
+     an apartment number, suite number or department.
      *
      * @return the address2 value
      */
@@ -74,7 +77,8 @@ public class Address {
     }
 
     /**
-     * Set the address2 value.
+     * Set the second line of the street address.  Typically contains
+     an apartment number, suite number or department.
      *
      * @param address2 the address2 value to set
      * @return the Address object itself.
@@ -85,7 +89,7 @@ public class Address {
     }
 
     /**
-     * Get the city value.
+     * Get the city where the address is situated.
      *
      * @return the city value
      */
@@ -94,7 +98,7 @@ public class Address {
     }
 
     /**
-     * Set the city value.
+     * Set the city where the address is situated.
      *
      * @param city the city value to set
      * @return the Address object itself.
@@ -105,7 +109,7 @@ public class Address {
     }
 
     /**
-     * Get the state value.
+     * Get the state where the address is located.
      *
      * @return the state value
      */
@@ -114,7 +118,7 @@ public class Address {
     }
 
     /**
-     * Set the state value.
+     * Set the state where the address is located.
      *
      * @param state the state value to set
      * @return the Address object itself.
@@ -125,7 +129,7 @@ public class Address {
     }
 
     /**
-     * Get the zipCode value.
+     * Get the postal code for the address.
      *
      * @return the zipCode value
      */
@@ -134,7 +138,7 @@ public class Address {
     }
 
     /**
-     * Set the zipCode value.
+     * Set the postal code for the address.
      *
      * @param zipCode the zipCode value to set
      * @return the Address object itself.

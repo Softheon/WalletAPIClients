@@ -4,8 +4,32 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client;
+package walletapiv2;
 
+import .models.BankAccountModel;
+import .models.BankAccountRequestModel;
+import .models.BankAccountResponseModel;
+import .models.Bin;
+import .models.BinRequestModel;
+import .models.CheckoutRequestModel;
+import .models.CheckoutResponseModel;
+import .models.CreditCardModel;
+import .models.CreditCardRequestModel;
+import .models.CreditCardResponseModel;
+import .models.PaymentModel;
+import .models.PaymentRequestModel;
+import .models.RefundRequestModel;
+import .models.RefundResultModel;
+import .models.SubscriptionModel;
+import .models.SubscriptionRequestModel;
+import .models.SubscriptionResponseModel;
+import .models.UpdateBankAccountModel;
+import .models.UpdateCreditCardModel;
+import .models.UpdateSubscriptionModel;
+import .models.WalletBankAccountRequestModel;
+import .models.WalletCreditCardRequestModel;
+import .models.WalletModel;
+import .models.WalletRequestModel;
 import com.microsoft.rest.RestException;
 import com.microsoft.rest.ServiceCallback;
 import com.microsoft.rest.ServiceFuture;
@@ -14,29 +38,6 @@ import java.io.IOException;
 import java.util.List;
 import org.joda.time.DateTime;
 import rx.Observable;
-import softheon.wallet.api.client.models.BankAccountModel;
-import softheon.wallet.api.client.models.BankAccountRequestModel;
-import softheon.wallet.api.client.models.BankAccountResponseModel;
-import softheon.wallet.api.client.models.Bin;
-import softheon.wallet.api.client.models.CheckoutRequestModel;
-import softheon.wallet.api.client.models.CheckoutResponseModel;
-import softheon.wallet.api.client.models.CreditCardModel;
-import softheon.wallet.api.client.models.CreditCardRequestModel;
-import softheon.wallet.api.client.models.CreditCardResponseModel;
-import softheon.wallet.api.client.models.PaymentModel;
-import softheon.wallet.api.client.models.PaymentRequestModel;
-import softheon.wallet.api.client.models.RefundRequestModel;
-import softheon.wallet.api.client.models.RefundResultModel;
-import softheon.wallet.api.client.models.SubscriptionModel;
-import softheon.wallet.api.client.models.SubscriptionRequestModel;
-import softheon.wallet.api.client.models.SubscriptionResponceModel;
-import softheon.wallet.api.client.models.UpdateBankAccountModel;
-import softheon.wallet.api.client.models.UpdateCreditCardModel;
-import softheon.wallet.api.client.models.UpdateSubscriptionModel;
-import softheon.wallet.api.client.models.WalletBankAccountRequestModel;
-import softheon.wallet.api.client.models.WalletCreditCardRequestModel;
-import softheon.wallet.api.client.models.WalletModel;
-import softheon.wallet.api.client.models.WalletRequestModel;
 import com.microsoft.rest.RestClient;
 
 /**
@@ -53,7 +54,46 @@ public interface SoftheonWalletAPI {
     /**
      * The default base URL.
      */
-    String DEFAULT_BASE_URL = "https://hack.softheon.io/api/payments";
+    String DEFAULT_BASE_URL = "https://api-model.softheon.com/payments";
+
+    /**
+     * Gets the bank account associated with the specified token.
+     *
+     * @param token The token.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws RestException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @return the BankAccountModel object if successful.
+     */
+    BankAccountModel getBankAccountByToken(String token);
+
+    /**
+     * Gets the bank account associated with the specified token.
+     *
+     * @param token The token.
+     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the {@link ServiceFuture} object
+     */
+    ServiceFuture<BankAccountModel> getBankAccountByTokenAsync(String token, final ServiceCallback<BankAccountModel> serviceCallback);
+
+    /**
+     * Gets the bank account associated with the specified token.
+     *
+     * @param token The token.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the observable to the BankAccountModel object
+     */
+    Observable<BankAccountModel> getBankAccountByTokenAsync(String token);
+
+    /**
+     * Gets the bank account associated with the specified token.
+     *
+     * @param token The token.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the observable to the BankAccountModel object
+     */
+    Observable<ServiceResponse<BankAccountModel>> getBankAccountByTokenWithServiceResponseAsync(String token);
 
     /**
      * Gets all bank accounts associated with the specified reference identifier.
@@ -101,9 +141,8 @@ public interface SoftheonWalletAPI {
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @throws RestException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the Object object if successful.
      */
-    Object updateBankAccount(UpdateBankAccountModel updateBankAccountModel);
+    void updateBankAccount(UpdateBankAccountModel updateBankAccountModel);
 
     /**
      * Updates a bank account.
@@ -113,25 +152,25 @@ public interface SoftheonWalletAPI {
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
-    ServiceFuture<Object> updateBankAccountAsync(UpdateBankAccountModel updateBankAccountModel, final ServiceCallback<Object> serviceCallback);
+    ServiceFuture<Void> updateBankAccountAsync(UpdateBankAccountModel updateBankAccountModel, final ServiceCallback<Void> serviceCallback);
 
     /**
      * Updates a bank account.
      *
      * @param updateBankAccountModel The update bank account model.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the Object object
+     * @return the {@link ServiceResponse} object if successful.
      */
-    Observable<Object> updateBankAccountAsync(UpdateBankAccountModel updateBankAccountModel);
+    Observable<Void> updateBankAccountAsync(UpdateBankAccountModel updateBankAccountModel);
 
     /**
      * Updates a bank account.
      *
      * @param updateBankAccountModel The update bank account model.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the Object object
+     * @return the {@link ServiceResponse} object if successful.
      */
-    Observable<ServiceResponse<Object>> updateBankAccountWithServiceResponseAsync(UpdateBankAccountModel updateBankAccountModel);
+    Observable<ServiceResponse<Void>> updateBankAccountWithServiceResponseAsync(UpdateBankAccountModel updateBankAccountModel);
 
     /**
      * Posts a new bank account.
@@ -173,82 +212,43 @@ public interface SoftheonWalletAPI {
     Observable<ServiceResponse<BankAccountResponseModel>> createBankAccountWithServiceResponseAsync(BankAccountRequestModel bankAccountRequest);
 
     /**
-     * Gets the bank account associated with the specified token.
-     *
-     * @param token The token.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws RestException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the BankAccountModel object if successful.
-     */
-    BankAccountModel getBankAccountByToken(String token);
-
-    /**
-     * Gets the bank account associated with the specified token.
-     *
-     * @param token The token.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    ServiceFuture<BankAccountModel> getBankAccountByTokenAsync(String token, final ServiceCallback<BankAccountModel> serviceCallback);
-
-    /**
-     * Gets the bank account associated with the specified token.
-     *
-     * @param token The token.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the BankAccountModel object
-     */
-    Observable<BankAccountModel> getBankAccountByTokenAsync(String token);
-
-    /**
-     * Gets the bank account associated with the specified token.
-     *
-     * @param token The token.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the BankAccountModel object
-     */
-    Observable<ServiceResponse<BankAccountModel>> getBankAccountByTokenWithServiceResponseAsync(String token);
-
-    /**
      * Gets the bin information for a specified credit card number.
      *
-     * @param cardNumber The card number.
+     * @param binRequest The bin request.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @throws RestException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the Bin object if successful.
      */
-    Bin getBin(String cardNumber);
+    Bin getBin(BinRequestModel binRequest);
 
     /**
      * Gets the bin information for a specified credit card number.
      *
-     * @param cardNumber The card number.
+     * @param binRequest The bin request.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
-    ServiceFuture<Bin> getBinAsync(String cardNumber, final ServiceCallback<Bin> serviceCallback);
+    ServiceFuture<Bin> getBinAsync(BinRequestModel binRequest, final ServiceCallback<Bin> serviceCallback);
 
     /**
      * Gets the bin information for a specified credit card number.
      *
-     * @param cardNumber The card number.
+     * @param binRequest The bin request.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the Bin object
      */
-    Observable<Bin> getBinAsync(String cardNumber);
+    Observable<Bin> getBinAsync(BinRequestModel binRequest);
 
     /**
      * Gets the bin information for a specified credit card number.
      *
-     * @param cardNumber The card number.
+     * @param binRequest The bin request.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the Bin object
      */
-    Observable<ServiceResponse<Bin>> getBinWithServiceResponseAsync(String cardNumber);
+    Observable<ServiceResponse<Bin>> getBinWithServiceResponseAsync(BinRequestModel binRequest);
 
     /**
      * Gets the checkout.
@@ -374,9 +374,8 @@ public interface SoftheonWalletAPI {
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @throws RestException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the Object object if successful.
      */
-    Object updateCreditCard(UpdateCreditCardModel updateCreditCardModel);
+    void updateCreditCard(UpdateCreditCardModel updateCreditCardModel);
 
     /**
      * Updates a credit card.
@@ -386,25 +385,25 @@ public interface SoftheonWalletAPI {
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
-    ServiceFuture<Object> updateCreditCardAsync(UpdateCreditCardModel updateCreditCardModel, final ServiceCallback<Object> serviceCallback);
+    ServiceFuture<Void> updateCreditCardAsync(UpdateCreditCardModel updateCreditCardModel, final ServiceCallback<Void> serviceCallback);
 
     /**
      * Updates a credit card.
      *
      * @param updateCreditCardModel The update credit card model.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the Object object
+     * @return the {@link ServiceResponse} object if successful.
      */
-    Observable<Object> updateCreditCardAsync(UpdateCreditCardModel updateCreditCardModel);
+    Observable<Void> updateCreditCardAsync(UpdateCreditCardModel updateCreditCardModel);
 
     /**
      * Updates a credit card.
      *
      * @param updateCreditCardModel The update credit card model.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the Object object
+     * @return the {@link ServiceResponse} object if successful.
      */
-    Observable<ServiceResponse<Object>> updateCreditCardWithServiceResponseAsync(UpdateCreditCardModel updateCreditCardModel);
+    Observable<ServiceResponse<Void>> updateCreditCardWithServiceResponseAsync(UpdateCreditCardModel updateCreditCardModel);
 
     /**
      * Posts a new credit card.
@@ -487,47 +486,43 @@ public interface SoftheonWalletAPI {
     /**
      * Gets payments associated with the specified reference identifier.
      *
-     * @param referenceId The client application provided reference ID for the payment.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @throws RestException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the List&lt;PaymentModel&gt; object if successful.
      */
-    List<PaymentModel> getPaymentsByReferenceId(String referenceId);
+    List<PaymentModel> getPaymentsByReferenceId();
 
     /**
      * Gets payments associated with the specified reference identifier.
      *
-     * @param referenceId The client application provided reference ID for the payment.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
-    ServiceFuture<List<PaymentModel>> getPaymentsByReferenceIdAsync(String referenceId, final ServiceCallback<List<PaymentModel>> serviceCallback);
+    ServiceFuture<List<PaymentModel>> getPaymentsByReferenceIdAsync(final ServiceCallback<List<PaymentModel>> serviceCallback);
 
     /**
      * Gets payments associated with the specified reference identifier.
      *
-     * @param referenceId The client application provided reference ID for the payment.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the List&lt;PaymentModel&gt; object
      */
-    Observable<List<PaymentModel>> getPaymentsByReferenceIdAsync(String referenceId);
+    Observable<List<PaymentModel>> getPaymentsByReferenceIdAsync();
 
     /**
      * Gets payments associated with the specified reference identifier.
      *
-     * @param referenceId The client application provided reference ID for the payment.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the List&lt;PaymentModel&gt; object
      */
-    Observable<ServiceResponse<List<PaymentModel>>> getPaymentsByReferenceIdWithServiceResponseAsync(String referenceId);
+    Observable<ServiceResponse<List<PaymentModel>>> getPaymentsByReferenceIdWithServiceResponseAsync();
     /**
      * Gets payments associated with the specified reference identifier.
      *
-     * @param referenceId The client application provided reference ID for the payment.
-     * @param minDate The optional lower bound of the range for payment date.
-     * @param maxDate The optional upper bound of the range for payment date.
+     * @param referenceId Gets or sets the reference identifier.
+     * @param minDate Gets or sets the minimum date.
+     * @param maxDate Gets or sets the maximum date.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @throws RestException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
@@ -538,9 +533,9 @@ public interface SoftheonWalletAPI {
     /**
      * Gets payments associated with the specified reference identifier.
      *
-     * @param referenceId The client application provided reference ID for the payment.
-     * @param minDate The optional lower bound of the range for payment date.
-     * @param maxDate The optional upper bound of the range for payment date.
+     * @param referenceId Gets or sets the reference identifier.
+     * @param minDate Gets or sets the minimum date.
+     * @param maxDate Gets or sets the maximum date.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
@@ -550,9 +545,9 @@ public interface SoftheonWalletAPI {
     /**
      * Gets payments associated with the specified reference identifier.
      *
-     * @param referenceId The client application provided reference ID for the payment.
-     * @param minDate The optional lower bound of the range for payment date.
-     * @param maxDate The optional upper bound of the range for payment date.
+     * @param referenceId Gets or sets the reference identifier.
+     * @param minDate Gets or sets the minimum date.
+     * @param maxDate Gets or sets the maximum date.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the List&lt;PaymentModel&gt; object
      */
@@ -561,9 +556,9 @@ public interface SoftheonWalletAPI {
     /**
      * Gets payments associated with the specified reference identifier.
      *
-     * @param referenceId The client application provided reference ID for the payment.
-     * @param minDate The optional lower bound of the range for payment date.
-     * @param maxDate The optional upper bound of the range for payment date.
+     * @param referenceId Gets or sets the reference identifier.
+     * @param minDate Gets or sets the minimum date.
+     * @param maxDate Gets or sets the maximum date.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the List&lt;PaymentModel&gt; object
      */
@@ -691,6 +686,45 @@ public interface SoftheonWalletAPI {
     Observable<ServiceResponse<RefundResultModel>> createRefundWithServiceResponseAsync(int id, RefundRequestModel refundRequestModel);
 
     /**
+     * Gets a single payment subscription with the specified subscription id.
+     *
+     * @param id The subscription id.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws RestException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @return the SubscriptionModel object if successful.
+     */
+    SubscriptionModel getSubscription(String id);
+
+    /**
+     * Gets a single payment subscription with the specified subscription id.
+     *
+     * @param id The subscription id.
+     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the {@link ServiceFuture} object
+     */
+    ServiceFuture<SubscriptionModel> getSubscriptionAsync(String id, final ServiceCallback<SubscriptionModel> serviceCallback);
+
+    /**
+     * Gets a single payment subscription with the specified subscription id.
+     *
+     * @param id The subscription id.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the observable to the SubscriptionModel object
+     */
+    Observable<SubscriptionModel> getSubscriptionAsync(String id);
+
+    /**
+     * Gets a single payment subscription with the specified subscription id.
+     *
+     * @param id The subscription id.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the observable to the SubscriptionModel object
+     */
+    Observable<ServiceResponse<SubscriptionModel>> getSubscriptionWithServiceResponseAsync(String id);
+
+    /**
      * Gets all payment subscriptions associated with the specified reference id.
      *
      * @param referenceId The reference identifier.
@@ -736,9 +770,8 @@ public interface SoftheonWalletAPI {
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @throws RestException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the Object object if successful.
      */
-    Object updateSubscription(UpdateSubscriptionModel updateSubscriptionModel);
+    void updateSubscription(UpdateSubscriptionModel updateSubscriptionModel);
 
     /**
      * Updates a payment subscription.
@@ -748,25 +781,25 @@ public interface SoftheonWalletAPI {
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
-    ServiceFuture<Object> updateSubscriptionAsync(UpdateSubscriptionModel updateSubscriptionModel, final ServiceCallback<Object> serviceCallback);
+    ServiceFuture<Void> updateSubscriptionAsync(UpdateSubscriptionModel updateSubscriptionModel, final ServiceCallback<Void> serviceCallback);
 
     /**
      * Updates a payment subscription.
      *
      * @param updateSubscriptionModel The update subscription model.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the Object object
+     * @return the {@link ServiceResponse} object if successful.
      */
-    Observable<Object> updateSubscriptionAsync(UpdateSubscriptionModel updateSubscriptionModel);
+    Observable<Void> updateSubscriptionAsync(UpdateSubscriptionModel updateSubscriptionModel);
 
     /**
      * Updates a payment subscription.
      *
      * @param updateSubscriptionModel The update subscription model.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the Object object
+     * @return the {@link ServiceResponse} object if successful.
      */
-    Observable<ServiceResponse<Object>> updateSubscriptionWithServiceResponseAsync(UpdateSubscriptionModel updateSubscriptionModel);
+    Observable<ServiceResponse<Void>> updateSubscriptionWithServiceResponseAsync(UpdateSubscriptionModel updateSubscriptionModel);
 
     /**
      * Posts a new payment subscription.
@@ -775,9 +808,9 @@ public interface SoftheonWalletAPI {
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @throws RestException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the SubscriptionResponceModel object if successful.
+     * @return the SubscriptionResponseModel object if successful.
      */
-    SubscriptionResponceModel createSubscription(SubscriptionRequestModel subscriptionRequest);
+    SubscriptionResponseModel createSubscription(SubscriptionRequestModel subscriptionRequest);
 
     /**
      * Posts a new payment subscription.
@@ -787,64 +820,25 @@ public interface SoftheonWalletAPI {
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
-    ServiceFuture<SubscriptionResponceModel> createSubscriptionAsync(SubscriptionRequestModel subscriptionRequest, final ServiceCallback<SubscriptionResponceModel> serviceCallback);
+    ServiceFuture<SubscriptionResponseModel> createSubscriptionAsync(SubscriptionRequestModel subscriptionRequest, final ServiceCallback<SubscriptionResponseModel> serviceCallback);
 
     /**
      * Posts a new payment subscription.
      *
      * @param subscriptionRequest The subscription request.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the SubscriptionResponceModel object
+     * @return the observable to the SubscriptionResponseModel object
      */
-    Observable<SubscriptionResponceModel> createSubscriptionAsync(SubscriptionRequestModel subscriptionRequest);
+    Observable<SubscriptionResponseModel> createSubscriptionAsync(SubscriptionRequestModel subscriptionRequest);
 
     /**
      * Posts a new payment subscription.
      *
      * @param subscriptionRequest The subscription request.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the SubscriptionResponceModel object
+     * @return the observable to the SubscriptionResponseModel object
      */
-    Observable<ServiceResponse<SubscriptionResponceModel>> createSubscriptionWithServiceResponseAsync(SubscriptionRequestModel subscriptionRequest);
-
-    /**
-     * Gets a single payment subscription with the specified subscription id.
-     *
-     * @param id The subscription id.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws RestException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the SubscriptionModel object if successful.
-     */
-    SubscriptionModel getSubscription(String id);
-
-    /**
-     * Gets a single payment subscription with the specified subscription id.
-     *
-     * @param id The subscription id.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    ServiceFuture<SubscriptionModel> getSubscriptionAsync(String id, final ServiceCallback<SubscriptionModel> serviceCallback);
-
-    /**
-     * Gets a single payment subscription with the specified subscription id.
-     *
-     * @param id The subscription id.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the SubscriptionModel object
-     */
-    Observable<SubscriptionModel> getSubscriptionAsync(String id);
-
-    /**
-     * Gets a single payment subscription with the specified subscription id.
-     *
-     * @param id The subscription id.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the SubscriptionModel object
-     */
-    Observable<ServiceResponse<SubscriptionModel>> getSubscriptionWithServiceResponseAsync(String id);
+    Observable<ServiceResponse<SubscriptionResponseModel>> createSubscriptionWithServiceResponseAsync(SubscriptionRequestModel subscriptionRequest);
 
     /**
      * Gets the wallet by wallet ID.
@@ -973,8 +967,9 @@ public interface SoftheonWalletAPI {
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @throws RestException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @return the int object if successful.
      */
-    void createWallet(WalletRequestModel model);
+    int createWallet(WalletRequestModel model);
 
     /**
      * Creates a new empty wallet.
@@ -984,25 +979,25 @@ public interface SoftheonWalletAPI {
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
-    ServiceFuture<Void> createWalletAsync(WalletRequestModel model, final ServiceCallback<Void> serviceCallback);
+    ServiceFuture<Integer> createWalletAsync(WalletRequestModel model, final ServiceCallback<Integer> serviceCallback);
 
     /**
      * Creates a new empty wallet.
      *
      * @param model The model.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceResponse} object if successful.
+     * @return the observable to the int object
      */
-    Observable<Void> createWalletAsync(WalletRequestModel model);
+    Observable<Integer> createWalletAsync(WalletRequestModel model);
 
     /**
      * Creates a new empty wallet.
      *
      * @param model The model.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceResponse} object if successful.
+     * @return the observable to the int object
      */
-    Observable<ServiceResponse<Void>> createWalletWithServiceResponseAsync(WalletRequestModel model);
+    Observable<ServiceResponse<Integer>> createWalletWithServiceResponseAsync(WalletRequestModel model);
 
     /**
      * Adds a new credit card to the wallet.
@@ -1091,48 +1086,6 @@ public interface SoftheonWalletAPI {
     Observable<ServiceResponse<WalletModel>> addWalletBankAccountWithServiceResponseAsync(int walletId, WalletBankAccountRequestModel request);
 
     /**
-     * Deletes the wallet credit card.
-     *
-     * @param walletId The wallet identifier.
-     * @param walletCreditCardId The wallet credit card identifier.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws RestException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     */
-    void removeWalletCreditCard(int walletId, int walletCreditCardId);
-
-    /**
-     * Deletes the wallet credit card.
-     *
-     * @param walletId The wallet identifier.
-     * @param walletCreditCardId The wallet credit card identifier.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    ServiceFuture<Void> removeWalletCreditCardAsync(int walletId, int walletCreditCardId, final ServiceCallback<Void> serviceCallback);
-
-    /**
-     * Deletes the wallet credit card.
-     *
-     * @param walletId The wallet identifier.
-     * @param walletCreditCardId The wallet credit card identifier.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceResponse} object if successful.
-     */
-    Observable<Void> removeWalletCreditCardAsync(int walletId, int walletCreditCardId);
-
-    /**
-     * Deletes the wallet credit card.
-     *
-     * @param walletId The wallet identifier.
-     * @param walletCreditCardId The wallet credit card identifier.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceResponse} object if successful.
-     */
-    Observable<ServiceResponse<Void>> removeWalletCreditCardWithServiceResponseAsync(int walletId, int walletCreditCardId);
-
-    /**
      * Deletes the wallet bank account.
      *
      * @param walletId The wallet identifier.
@@ -1173,5 +1126,47 @@ public interface SoftheonWalletAPI {
      * @return the {@link ServiceResponse} object if successful.
      */
     Observable<ServiceResponse<Void>> removeWalletBankAccountWithServiceResponseAsync(int walletId, int walletBankAcctId);
+
+    /**
+     * Deletes the wallet credit card.
+     *
+     * @param walletId The wallet identifier.
+     * @param walletCreditCardId The wallet credit card identifier.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws RestException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     */
+    void removeWalletCreditCard(int walletId, int walletCreditCardId);
+
+    /**
+     * Deletes the wallet credit card.
+     *
+     * @param walletId The wallet identifier.
+     * @param walletCreditCardId The wallet credit card identifier.
+     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the {@link ServiceFuture} object
+     */
+    ServiceFuture<Void> removeWalletCreditCardAsync(int walletId, int walletCreditCardId, final ServiceCallback<Void> serviceCallback);
+
+    /**
+     * Deletes the wallet credit card.
+     *
+     * @param walletId The wallet identifier.
+     * @param walletCreditCardId The wallet credit card identifier.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<Void> removeWalletCreditCardAsync(int walletId, int walletCreditCardId);
+
+    /**
+     * Deletes the wallet credit card.
+     *
+     * @param walletId The wallet identifier.
+     * @param walletCreditCardId The wallet credit card identifier.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<ServiceResponse<Void>> removeWalletCreditCardWithServiceResponseAsync(int walletId, int walletCreditCardId);
 
 }

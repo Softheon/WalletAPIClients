@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client.models;
+package walletapiv2.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -46,7 +46,7 @@ public class UpdateBankAccountModel {
     private String email;
 
     /**
-     * Get the token value.
+     * Get the payment token for the bank account.
      *
      * @return the token value
      */
@@ -55,7 +55,7 @@ public class UpdateBankAccountModel {
     }
 
     /**
-     * Set the token value.
+     * Set the payment token for the bank account.
      *
      * @param token the token value to set
      * @return the UpdateBankAccountModel object itself.
@@ -66,7 +66,7 @@ public class UpdateBankAccountModel {
     }
 
     /**
-     * Get the nickname value.
+     * Get the aribtrary nickname of the account, used as a way to identify the account.
      *
      * @return the nickname value
      */
@@ -75,7 +75,7 @@ public class UpdateBankAccountModel {
     }
 
     /**
-     * Set the nickname value.
+     * Set the aribtrary nickname of the account, used as a way to identify the account.
      *
      * @param nickname the nickname value to set
      * @return the UpdateBankAccountModel object itself.
@@ -86,7 +86,7 @@ public class UpdateBankAccountModel {
     }
 
     /**
-     * Get the accountHolderName value.
+     * Get the name of the individual or entity that is autorized to make transactions for the bank account.
      *
      * @return the accountHolderName value
      */
@@ -95,7 +95,7 @@ public class UpdateBankAccountModel {
     }
 
     /**
-     * Set the accountHolderName value.
+     * Set the name of the individual or entity that is autorized to make transactions for the bank account.
      *
      * @param accountHolderName the accountHolderName value to set
      * @return the UpdateBankAccountModel object itself.
@@ -106,7 +106,7 @@ public class UpdateBankAccountModel {
     }
 
     /**
-     * Get the accountHolderAddress value.
+     * Get the mailing address for the account holder.
      *
      * @return the accountHolderAddress value
      */
@@ -115,7 +115,7 @@ public class UpdateBankAccountModel {
     }
 
     /**
-     * Set the accountHolderAddress value.
+     * Set the mailing address for the account holder.
      *
      * @param accountHolderAddress the accountHolderAddress value to set
      * @return the UpdateBankAccountModel object itself.
@@ -126,7 +126,7 @@ public class UpdateBankAccountModel {
     }
 
     /**
-     * Get the email value.
+     * Get the email address for the account holder.
      *
      * @return the email value
      */
@@ -135,7 +135,7 @@ public class UpdateBankAccountModel {
     }
 
     /**
-     * Set the email value.
+     * Set the email address for the account holder.
      *
      * @param email the email value to set
      * @return the UpdateBankAccountModel object itself.

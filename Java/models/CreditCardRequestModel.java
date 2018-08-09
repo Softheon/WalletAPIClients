@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client.models;
+package walletapiv2.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -70,7 +70,7 @@ public class CreditCardRequestModel {
     private String redirectUrl;
 
     /**
-     * Get the cardNumber value.
+     * Get the number on the credit card.
      *
      * @return the cardNumber value
      */
@@ -79,7 +79,7 @@ public class CreditCardRequestModel {
     }
 
     /**
-     * Set the cardNumber value.
+     * Set the number on the credit card.
      *
      * @param cardNumber the cardNumber value to set
      * @return the CreditCardRequestModel object itself.
@@ -90,7 +90,7 @@ public class CreditCardRequestModel {
     }
 
     /**
-     * Get the securityCode value.
+     * Get the security, or CVV code, on the card.
      *
      * @return the securityCode value
      */
@@ -99,7 +99,7 @@ public class CreditCardRequestModel {
     }
 
     /**
-     * Set the securityCode value.
+     * Set the security, or CVV code, on the card.
      *
      * @param securityCode the securityCode value to set
      * @return the CreditCardRequestModel object itself.
@@ -110,7 +110,7 @@ public class CreditCardRequestModel {
     }
 
     /**
-     * Get the expirationMonth value.
+     * Get the expiration month of the credit card.
      *
      * @return the expirationMonth value
      */
@@ -119,7 +119,7 @@ public class CreditCardRequestModel {
     }
 
     /**
-     * Set the expirationMonth value.
+     * Set the expiration month of the credit card.
      *
      * @param expirationMonth the expirationMonth value to set
      * @return the CreditCardRequestModel object itself.
@@ -130,7 +130,7 @@ public class CreditCardRequestModel {
     }
 
     /**
-     * Get the expirationYear value.
+     * Get the expiration year of the credit card.
      *
      * @return the expirationYear value
      */
@@ -139,7 +139,7 @@ public class CreditCardRequestModel {
     }
 
     /**
-     * Set the expirationYear value.
+     * Set the expiration year of the credit card.
      *
      * @param expirationYear the expirationYear value to set
      * @return the CreditCardRequestModel object itself.
@@ -150,7 +150,7 @@ public class CreditCardRequestModel {
     }
 
     /**
-     * Get the cardHolderName value.
+     * Get the name of the cardholder, as it appears on the front of the credit card.
      *
      * @return the cardHolderName value
      */
@@ -159,7 +159,7 @@ public class CreditCardRequestModel {
     }
 
     /**
-     * Set the cardHolderName value.
+     * Set the name of the cardholder, as it appears on the front of the credit card.
      *
      * @param cardHolderName the cardHolderName value to set
      * @return the CreditCardRequestModel object itself.
@@ -170,7 +170,7 @@ public class CreditCardRequestModel {
     }
 
     /**
-     * Get the billingAddress value.
+     * Get the billing address for the credit card holder..
      *
      * @return the billingAddress value
      */
@@ -179,7 +179,7 @@ public class CreditCardRequestModel {
     }
 
     /**
-     * Set the billingAddress value.
+     * Set the billing address for the credit card holder..
      *
      * @param billingAddress the billingAddress value to set
      * @return the CreditCardRequestModel object itself.
@@ -190,7 +190,7 @@ public class CreditCardRequestModel {
     }
 
     /**
-     * Get the email value.
+     * Get a valid email address for the card holder.
      *
      * @return the email value
      */
@@ -199,7 +199,7 @@ public class CreditCardRequestModel {
     }
 
     /**
-     * Set the email value.
+     * Set a valid email address for the card holder.
      *
      * @param email the email value to set
      * @return the CreditCardRequestModel object itself.
@@ -210,7 +210,7 @@ public class CreditCardRequestModel {
     }
 
     /**
-     * Get the referenceId value.
+     * Get the client application provided reference ID for the credit card.
      *
      * @return the referenceId value
      */
@@ -219,7 +219,7 @@ public class CreditCardRequestModel {
     }
 
     /**
-     * Set the referenceId value.
+     * Set the client application provided reference ID for the credit card.
      *
      * @param referenceId the referenceId value to set
      * @return the CreditCardRequestModel object itself.
@@ -230,7 +230,7 @@ public class CreditCardRequestModel {
     }
 
     /**
-     * Get the redirectUrl value.
+     * Get the url that the client will be redirected to after the credit card has been created.
      *
      * @return the redirectUrl value
      */
@@ -239,7 +239,7 @@ public class CreditCardRequestModel {
     }
 
     /**
-     * Set the redirectUrl value.
+     * Set the url that the client will be redirected to after the credit card has been created.
      *
      * @param redirectUrl the redirectUrl value to set
      * @return the CreditCardRequestModel object itself.

@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client.models;
+package walletapiv2.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -26,7 +26,7 @@ public class PaymentMethodModel {
     private String type;
 
     /**
-     * Get the paymentToken value.
+     * Get the credit card or bank account token that will be used for payment.
      *
      * @return the paymentToken value
      */
@@ -35,7 +35,7 @@ public class PaymentMethodModel {
     }
 
     /**
-     * Set the paymentToken value.
+     * Set the credit card or bank account token that will be used for payment.
      *
      * @param paymentToken the paymentToken value to set
      * @return the PaymentMethodModel object itself.
@@ -46,7 +46,7 @@ public class PaymentMethodModel {
     }
 
     /**
-     * Get the type value.
+     * Get the type of funding source that will be used for the payment. Possible values include: 'Unknown', 'Credit Card', 'ACH'.
      *
      * @return the type value
      */
@@ -55,7 +55,7 @@ public class PaymentMethodModel {
     }
 
     /**
-     * Set the type value.
+     * Set the type of funding source that will be used for the payment. Possible values include: 'Unknown', 'Credit Card', 'ACH'.
      *
      * @param type the type value to set
      * @return the PaymentMethodModel object itself.

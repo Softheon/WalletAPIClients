@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client.models;
+package walletapiv2.models;
 
 import org.joda.time.DateTime;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -70,7 +70,7 @@ public class RefundResultModel {
     private DateTime createdDate;
 
     /**
-     * Get the status value.
+     * Get the current status of the refund. Possible values include: 'Unknown', 'New', 'Authorized', 'Captured', 'Expired', 'Declined', 'Failed', 'Cancelled', 'Charge Back', 'Refunded', 'Partially Refunded'.
      *
      * @return the status value
      */
@@ -79,7 +79,7 @@ public class RefundResultModel {
     }
 
     /**
-     * Set the status value.
+     * Set the current status of the refund. Possible values include: 'Unknown', 'New', 'Authorized', 'Captured', 'Expired', 'Declined', 'Failed', 'Cancelled', 'Charge Back', 'Refunded', 'Partially Refunded'.
      *
      * @param status the status value to set
      * @return the RefundResultModel object itself.
@@ -90,7 +90,7 @@ public class RefundResultModel {
     }
 
     /**
-     * Get the code value.
+     * Get the refund result code.
      *
      * @return the code value
      */
@@ -99,7 +99,7 @@ public class RefundResultModel {
     }
 
     /**
-     * Set the code value.
+     * Set the refund result code.
      *
      * @param code the code value to set
      * @return the RefundResultModel object itself.
@@ -110,7 +110,7 @@ public class RefundResultModel {
     }
 
     /**
-     * Get the message value.
+     * Get the refund result message.
      *
      * @return the message value
      */
@@ -119,7 +119,7 @@ public class RefundResultModel {
     }
 
     /**
-     * Set the message value.
+     * Set the refund result message.
      *
      * @param message the message value to set
      * @return the RefundResultModel object itself.
@@ -130,7 +130,7 @@ public class RefundResultModel {
     }
 
     /**
-     * Get the merchantTransactionId value.
+     * Get the Merchant Transaction ID number for the payment that is being refunded.
      *
      * @return the merchantTransactionId value
      */
@@ -139,7 +139,7 @@ public class RefundResultModel {
     }
 
     /**
-     * Set the merchantTransactionId value.
+     * Set the Merchant Transaction ID number for the payment that is being refunded.
      *
      * @param merchantTransactionId the merchantTransactionId value to set
      * @return the RefundResultModel object itself.
@@ -150,7 +150,7 @@ public class RefundResultModel {
     }
 
     /**
-     * Get the providerAccountId value.
+     * Get the unique ID of the provider account that was used to make this refund.
      *
      * @return the providerAccountId value
      */
@@ -159,7 +159,7 @@ public class RefundResultModel {
     }
 
     /**
-     * Set the providerAccountId value.
+     * Set the unique ID of the provider account that was used to make this refund.
      *
      * @param providerAccountId the providerAccountId value to set
      * @return the RefundResultModel object itself.
@@ -170,7 +170,9 @@ public class RefundResultModel {
     }
 
     /**
-     * Get the amount value.
+     * Get the amount to be refunded.  If an amount less than the original payment amount is
+     specified, a partial refund will be processed.  If no amount is specified, a full refund
+     will be processed.
      *
      * @return the amount value
      */
@@ -179,7 +181,9 @@ public class RefundResultModel {
     }
 
     /**
-     * Set the amount value.
+     * Set the amount to be refunded.  If an amount less than the original payment amount is
+     specified, a partial refund will be processed.  If no amount is specified, a full refund
+     will be processed.
      *
      * @param amount the amount value to set
      * @return the RefundResultModel object itself.
@@ -190,7 +194,7 @@ public class RefundResultModel {
     }
 
     /**
-     * Get the reason value.
+     * Get the reason for issuing the refund.
      *
      * @return the reason value
      */
@@ -199,7 +203,7 @@ public class RefundResultModel {
     }
 
     /**
-     * Set the reason value.
+     * Set the reason for issuing the refund.
      *
      * @param reason the reason value to set
      * @return the RefundResultModel object itself.
@@ -210,7 +214,7 @@ public class RefundResultModel {
     }
 
     /**
-     * Get the createdDate value.
+     * Get the timestamp indicating when the refund was created.
      *
      * @return the createdDate value
      */
@@ -219,7 +223,7 @@ public class RefundResultModel {
     }
 
     /**
-     * Set the createdDate value.
+     * Set the timestamp indicating when the refund was created.
      *
      * @param createdDate the createdDate value to set
      * @return the RefundResultModel object itself.

@@ -5,4 +5,4 @@
 /**
  * This package contains the models classes for SoftheonWalletAPI.
  */
-package softheon.wallet.api.client.models;
+package walletapiv2.models;

@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client.models;
+package walletapiv2.models;
 
 import org.joda.time.DateTime;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -86,7 +86,7 @@ public class CheckoutResponseModel {
     private Boolean enableSaveOption;
 
     /**
-     * Get the checkoutId value.
+     * Get gets or sets the checkout identifier.
      *
      * @return the checkoutId value
      */
@@ -95,7 +95,7 @@ public class CheckoutResponseModel {
     }
 
     /**
-     * Set the checkoutId value.
+     * Set gets or sets the checkout identifier.
      *
      * @param checkoutId the checkoutId value to set
      * @return the CheckoutResponseModel object itself.
@@ -106,7 +106,7 @@ public class CheckoutResponseModel {
     }
 
     /**
-     * Get the clientId value.
+     * Get gets or sets the client identifier.
      *
      * @return the clientId value
      */
@@ -115,7 +115,7 @@ public class CheckoutResponseModel {
     }
 
     /**
-     * Set the clientId value.
+     * Set gets or sets the client identifier.
      *
      * @param clientId the clientId value to set
      * @return the CheckoutResponseModel object itself.
@@ -126,7 +126,7 @@ public class CheckoutResponseModel {
     }
 
     /**
-     * Get the redirectUrl value.
+     * Get gets or sets the redirect URL.
      *
      * @return the redirectUrl value
      */
@@ -135,7 +135,7 @@ public class CheckoutResponseModel {
     }
 
     /**
-     * Set the redirectUrl value.
+     * Set gets or sets the redirect URL.
      *
      * @param redirectUrl the redirectUrl value to set
      * @return the CheckoutResponseModel object itself.
@@ -146,7 +146,7 @@ public class CheckoutResponseModel {
     }
 
     /**
-     * Get the referenceId value.
+     * Get gets or sets the reference identifier.
      *
      * @return the referenceId value
      */
@@ -155,7 +155,7 @@ public class CheckoutResponseModel {
     }
 
     /**
-     * Set the referenceId value.
+     * Set gets or sets the reference identifier.
      *
      * @param referenceId the referenceId value to set
      * @return the CheckoutResponseModel object itself.
@@ -166,7 +166,7 @@ public class CheckoutResponseModel {
     }
 
     /**
-     * Get the amount value.
+     * Get gets or sets the amount.
      *
      * @return the amount value
      */
@@ -175,7 +175,7 @@ public class CheckoutResponseModel {
     }
 
     /**
-     * Set the amount value.
+     * Set gets or sets the amount.
      *
      * @param amount the amount value to set
      * @return the CheckoutResponseModel object itself.
@@ -186,7 +186,7 @@ public class CheckoutResponseModel {
     }
 
     /**
-     * Get the nameOnAccount value.
+     * Get gets or sets the name on account.
      *
      * @return the nameOnAccount value
      */
@@ -195,7 +195,7 @@ public class CheckoutResponseModel {
     }
 
     /**
-     * Set the nameOnAccount value.
+     * Set gets or sets the name on account.
      *
      * @param nameOnAccount the nameOnAccount value to set
      * @return the CheckoutResponseModel object itself.
@@ -206,7 +206,7 @@ public class CheckoutResponseModel {
     }
 
     /**
-     * Get the expirationDate value.
+     * Get gets or sets the expiration date.
      *
      * @return the expirationDate value
      */
@@ -215,7 +215,7 @@ public class CheckoutResponseModel {
     }
 
     /**
-     * Set the expirationDate value.
+     * Set gets or sets the expiration date.
      *
      * @param expirationDate the expirationDate value to set
      * @return the CheckoutResponseModel object itself.
@@ -226,7 +226,7 @@ public class CheckoutResponseModel {
     }
 
     /**
-     * Get the enableBillingInformation value.
+     * Get gets or sets a value indicating whether [enable billing information].
      *
      * @return the enableBillingInformation value
      */
@@ -235,7 +235,7 @@ public class CheckoutResponseModel {
     }
 
     /**
-     * Set the enableBillingInformation value.
+     * Set gets or sets a value indicating whether [enable billing information].
      *
      * @param enableBillingInformation the enableBillingInformation value to set
      * @return the CheckoutResponseModel object itself.
@@ -246,7 +246,7 @@ public class CheckoutResponseModel {
     }
 
     /**
-     * Get the billingAddress value.
+     * Get gets or sets the billing address.
      *
      * @return the billingAddress value
      */
@@ -255,7 +255,7 @@ public class CheckoutResponseModel {
     }
 
     /**
-     * Set the billingAddress value.
+     * Set gets or sets the billing address.
      *
      * @param billingAddress the billingAddress value to set
      * @return the CheckoutResponseModel object itself.
@@ -266,7 +266,7 @@ public class CheckoutResponseModel {
     }
 
     /**
-     * Get the email value.
+     * Get gets or sets the email.
      *
      * @return the email value
      */
@@ -275,7 +275,7 @@ public class CheckoutResponseModel {
     }
 
     /**
-     * Set the email value.
+     * Set gets or sets the email.
      *
      * @param email the email value to set
      * @return the CheckoutResponseModel object itself.
@@ -286,7 +286,7 @@ public class CheckoutResponseModel {
     }
 
     /**
-     * Get the requireEmail value.
+     * Get gets or sets a value indicating whether [require email].
      *
      * @return the requireEmail value
      */
@@ -295,7 +295,7 @@ public class CheckoutResponseModel {
     }
 
     /**
-     * Set the requireEmail value.
+     * Set gets or sets a value indicating whether [require email].
      *
      * @param requireEmail the requireEmail value to set
      * @return the CheckoutResponseModel object itself.
@@ -306,7 +306,7 @@ public class CheckoutResponseModel {
     }
 
     /**
-     * Get the enableSaveOption value.
+     * Get gets or sets a value indicating whether [enable save option].
      *
      * @return the enableSaveOption value
      */
@@ -315,7 +315,7 @@ public class CheckoutResponseModel {
     }
 
     /**
-     * Set the enableSaveOption value.
+     * Set gets or sets a value indicating whether [enable save option].
      *
      * @param enableSaveOption the enableSaveOption value to set
      * @return the CheckoutResponseModel object itself.

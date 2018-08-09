@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client.models;
+package walletapiv2.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -51,7 +51,7 @@ public class UpdateCreditCardModel {
     private String email;
 
     /**
-     * Get the token value.
+     * Get the payment token for the credit card.
      *
      * @return the token value
      */
@@ -60,7 +60,7 @@ public class UpdateCreditCardModel {
     }
 
     /**
-     * Set the token value.
+     * Set the payment token for the credit card.
      *
      * @param token the token value to set
      * @return the UpdateCreditCardModel object itself.
@@ -71,7 +71,7 @@ public class UpdateCreditCardModel {
     }
 
     /**
-     * Get the expirationMonth value.
+     * Get the expiration month of the credit card.
      *
      * @return the expirationMonth value
      */
@@ -80,7 +80,7 @@ public class UpdateCreditCardModel {
     }
 
     /**
-     * Set the expirationMonth value.
+     * Set the expiration month of the credit card.
      *
      * @param expirationMonth the expirationMonth value to set
      * @return the UpdateCreditCardModel object itself.
@@ -91,7 +91,7 @@ public class UpdateCreditCardModel {
     }
 
     /**
-     * Get the expirationYear value.
+     * Get the expiration year of the credit card.
      *
      * @return the expirationYear value
      */
@@ -100,7 +100,7 @@ public class UpdateCreditCardModel {
     }
 
     /**
-     * Set the expirationYear value.
+     * Set the expiration year of the credit card.
      *
      * @param expirationYear the expirationYear value to set
      * @return the UpdateCreditCardModel object itself.
@@ -111,7 +111,7 @@ public class UpdateCreditCardModel {
     }
 
     /**
-     * Get the cardHolderName value.
+     * Get the name of the cardholder, as it appears on the front of the credit card.
      *
      * @return the cardHolderName value
      */
@@ -120,7 +120,7 @@ public class UpdateCreditCardModel {
     }
 
     /**
-     * Set the cardHolderName value.
+     * Set the name of the cardholder, as it appears on the front of the credit card.
      *
      * @param cardHolderName the cardHolderName value to set
      * @return the UpdateCreditCardModel object itself.
@@ -131,7 +131,7 @@ public class UpdateCreditCardModel {
     }
 
     /**
-     * Get the billingAddress value.
+     * Get the billing address for the credit card holder..
      *
      * @return the billingAddress value
      */
@@ -140,7 +140,7 @@ public class UpdateCreditCardModel {
     }
 
     /**
-     * Set the billingAddress value.
+     * Set the billing address for the credit card holder..
      *
      * @param billingAddress the billingAddress value to set
      * @return the UpdateCreditCardModel object itself.
@@ -151,7 +151,7 @@ public class UpdateCreditCardModel {
     }
 
     /**
-     * Get the email value.
+     * Get a valid email address for the card holder.
      *
      * @return the email value
      */
@@ -160,7 +160,7 @@ public class UpdateCreditCardModel {
     }
 
     /**
-     * Set the email value.
+     * Set a valid email address for the card holder.
      *
      * @param email the email value to set
      * @return the UpdateCreditCardModel object itself.

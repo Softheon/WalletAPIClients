@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client.models;
+package walletapiv2.models;
 
 import java.util.List;
 import org.joda.time.DateTime;
@@ -78,7 +78,7 @@ public class PaymentModel {
     private DateTime modifiedDate;
 
     /**
-     * Get the id value.
+     * Get the unique ID of the payment.
      *
      * @return the id value
      */
@@ -87,7 +87,7 @@ public class PaymentModel {
     }
 
     /**
-     * Set the id value.
+     * Set the unique ID of the payment.
      *
      * @param id the id value to set
      * @return the PaymentModel object itself.
@@ -98,7 +98,7 @@ public class PaymentModel {
     }
 
     /**
-     * Get the accountId value.
+     * Get the unique ID of the account that the payment was made for.
      *
      * @return the accountId value
      */
@@ -107,7 +107,7 @@ public class PaymentModel {
     }
 
     /**
-     * Set the accountId value.
+     * Set the unique ID of the account that the payment was made for.
      *
      * @param accountId the accountId value to set
      * @return the PaymentModel object itself.
@@ -118,7 +118,7 @@ public class PaymentModel {
     }
 
     /**
-     * Get the paymentAmount value.
+     * Get the payment amount.
      *
      * @return the paymentAmount value
      */
@@ -127,7 +127,7 @@ public class PaymentModel {
     }
 
     /**
-     * Set the paymentAmount value.
+     * Set the payment amount.
      *
      * @param paymentAmount the paymentAmount value to set
      * @return the PaymentModel object itself.
@@ -138,7 +138,7 @@ public class PaymentModel {
     }
 
     /**
-     * Get the description value.
+     * Get the description of what was paid for.
      *
      * @return the description value
      */
@@ -147,7 +147,7 @@ public class PaymentModel {
     }
 
     /**
-     * Set the description value.
+     * Set the description of what was paid for.
      *
      * @param description the description value to set
      * @return the PaymentModel object itself.
@@ -158,7 +158,7 @@ public class PaymentModel {
     }
 
     /**
-     * Get the referenceId value.
+     * Get the client application provided reference ID for the payment.
      *
      * @return the referenceId value
      */
@@ -167,7 +167,7 @@ public class PaymentModel {
     }
 
     /**
-     * Set the referenceId value.
+     * Set the client application provided reference ID for the payment.
      *
      * @param referenceId the referenceId value to set
      * @return the PaymentModel object itself.
@@ -178,7 +178,7 @@ public class PaymentModel {
     }
 
     /**
-     * Get the paymentMethod value.
+     * Get the method of payment.
      *
      * @return the paymentMethod value
      */
@@ -187,7 +187,7 @@ public class PaymentModel {
     }
 
     /**
-     * Set the paymentMethod value.
+     * Set the method of payment.
      *
      * @param paymentMethod the paymentMethod value to set
      * @return the PaymentModel object itself.
@@ -198,7 +198,7 @@ public class PaymentModel {
     }
 
     /**
-     * Get the result value.
+     * Get the result of the payment request.
      *
      * @return the result value
      */
@@ -207,7 +207,7 @@ public class PaymentModel {
     }
 
     /**
-     * Set the result value.
+     * Set the result of the payment request.
      *
      * @param result the result value to set
      * @return the PaymentModel object itself.
@@ -218,7 +218,7 @@ public class PaymentModel {
     }
 
     /**
-     * Get the refunds value.
+     * Get gets or sets the refund result.
      *
      * @return the refunds value
      */
@@ -227,7 +227,7 @@ public class PaymentModel {
     }
 
     /**
-     * Set the refunds value.
+     * Set gets or sets the refund result.
      *
      * @param refunds the refunds value to set
      * @return the PaymentModel object itself.
@@ -238,7 +238,7 @@ public class PaymentModel {
     }
 
     /**
-     * Get the createdDate value.
+     * Get the timestamp indicating when the payment was created.
      *
      * @return the createdDate value
      */
@@ -247,7 +247,7 @@ public class PaymentModel {
     }
 
     /**
-     * Set the createdDate value.
+     * Set the timestamp indicating when the payment was created.
      *
      * @param createdDate the createdDate value to set
      * @return the PaymentModel object itself.
@@ -258,7 +258,7 @@ public class PaymentModel {
     }
 
     /**
-     * Get the modifiedDate value.
+     * Get the timestamp indicating the last time that the details of the payment were modified.
      *
      * @return the modifiedDate value
      */
@@ -267,7 +267,7 @@ public class PaymentModel {
     }
 
     /**
-     * Set the modifiedDate value.
+     * Set the timestamp indicating the last time that the details of the payment were modified.
      *
      * @param modifiedDate the modifiedDate value to set
      * @return the PaymentModel object itself.

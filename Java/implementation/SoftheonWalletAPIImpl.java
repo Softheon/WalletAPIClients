@@ -4,13 +4,37 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client.implementation;
+package walletapiv2.implementation;
 
-import softheon.wallet.api.client.SoftheonWalletAPI;
+import .SoftheonWalletAPI;
 import com.microsoft.rest.ServiceClient;
 import com.microsoft.rest.RestClient;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
+import .models.BankAccountModel;
+import .models.BankAccountRequestModel;
+import .models.BankAccountResponseModel;
+import .models.Bin;
+import .models.BinRequestModel;
+import .models.CheckoutRequestModel;
+import .models.CheckoutResponseModel;
+import .models.CreditCardModel;
+import .models.CreditCardRequestModel;
+import .models.CreditCardResponseModel;
+import .models.PaymentModel;
+import .models.PaymentRequestModel;
+import .models.RefundRequestModel;
+import .models.RefundResultModel;
+import .models.SubscriptionModel;
+import .models.SubscriptionRequestModel;
+import .models.SubscriptionResponseModel;
+import .models.UpdateBankAccountModel;
+import .models.UpdateCreditCardModel;
+import .models.UpdateSubscriptionModel;
+import .models.WalletBankAccountRequestModel;
+import .models.WalletCreditCardRequestModel;
+import .models.WalletModel;
+import .models.WalletRequestModel;
 import com.google.common.reflect.TypeToken;
 import com.microsoft.rest.RestException;
 import com.microsoft.rest.ServiceCallback;
@@ -32,29 +56,6 @@ import retrofit2.http.Query;
 import retrofit2.Response;
 import rx.functions.Func1;
 import rx.Observable;
-import softheon.wallet.api.client.models.BankAccountModel;
-import softheon.wallet.api.client.models.BankAccountRequestModel;
-import softheon.wallet.api.client.models.BankAccountResponseModel;
-import softheon.wallet.api.client.models.Bin;
-import softheon.wallet.api.client.models.CheckoutRequestModel;
-import softheon.wallet.api.client.models.CheckoutResponseModel;
-import softheon.wallet.api.client.models.CreditCardModel;
-import softheon.wallet.api.client.models.CreditCardRequestModel;
-import softheon.wallet.api.client.models.CreditCardResponseModel;
-import softheon.wallet.api.client.models.PaymentModel;
-import softheon.wallet.api.client.models.PaymentRequestModel;
-import softheon.wallet.api.client.models.RefundRequestModel;
-import softheon.wallet.api.client.models.RefundResultModel;
-import softheon.wallet.api.client.models.SubscriptionModel;
-import softheon.wallet.api.client.models.SubscriptionRequestModel;
-import softheon.wallet.api.client.models.SubscriptionResponceModel;
-import softheon.wallet.api.client.models.UpdateBankAccountModel;
-import softheon.wallet.api.client.models.UpdateCreditCardModel;
-import softheon.wallet.api.client.models.UpdateSubscriptionModel;
-import softheon.wallet.api.client.models.WalletBankAccountRequestModel;
-import softheon.wallet.api.client.models.WalletCreditCardRequestModel;
-import softheon.wallet.api.client.models.WalletModel;
-import softheon.wallet.api.client.models.WalletRequestModel;
 
 /**
  * Initializes a new instance of the SoftheonWalletAPI class.
@@ -69,7 +70,7 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
      * Initializes an instance of SoftheonWalletAPI client.
      */
     public SoftheonWalletAPIImpl() {
-        this("https://hack.softheon.io/api/payments");
+        this("https://api-model.softheon.com/payments");
     }
 
     /**
@@ -89,7 +90,7 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
      * @param restBuilder the builder for building an Retrofit client, bundled with user configurations
      */
     public SoftheonWalletAPIImpl(OkHttpClient.Builder clientBuilder, Retrofit.Builder restBuilder) {
-        this("https://hack.softheon.io/api/payments", clientBuilder, restBuilder);
+        this("https://api-model.softheon.com/payments", clientBuilder, restBuilder);
         initialize();
     }
 
@@ -128,114 +129,189 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
      * used by Retrofit to perform actually REST calls.
      */
     interface SoftheonWalletAPIService {
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI getBankAccountsByReferenceId" })
-        @GET("v1/bankaccounts")
-        Observable<Response<ResponseBody>> getBankAccountsByReferenceId(@Query("referenceId") String referenceId);
-
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI updateBankAccount" })
-        @PUT("v1/bankaccounts")
-        Observable<Response<ResponseBody>> updateBankAccount(@Body UpdateBankAccountModel updateBankAccountModel);
-
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI createBankAccount" })
-        @POST("v1/bankaccounts")
-        Observable<Response<ResponseBody>> createBankAccount(@Body BankAccountRequestModel bankAccountRequest);
-
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI getBankAccountByToken" })
-        @GET("v1/bankaccounts/{token}")
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI getBankAccountByToken" })
+        @GET("v2/bankaccounts/{token}")
         Observable<Response<ResponseBody>> getBankAccountByToken(@Path("token") String token);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI getBin" })
-        @GET("v1/bins")
-        Observable<Response<ResponseBody>> getBin(@Query("cardNumber") String cardNumber);
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI getBankAccountsByReferenceId" })
+        @GET("v2/bankaccounts")
+        Observable<Response<ResponseBody>> getBankAccountsByReferenceId(@Query("referenceId") String referenceId);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI getCheckout" })
-        @GET("v1/checkouts")
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI updateBankAccount" })
+        @PUT("v2/bankaccounts")
+        Observable<Response<ResponseBody>> updateBankAccount(@Body UpdateBankAccountModel updateBankAccountModel);
+
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI createBankAccount" })
+        @POST("v2/bankaccounts")
+        Observable<Response<ResponseBody>> createBankAccount(@Body BankAccountRequestModel bankAccountRequest);
+
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI getBin" })
+        @POST("v2/bins")
+        Observable<Response<ResponseBody>> getBin(@Body BinRequestModel binRequest);
+
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI getCheckout" })
+        @GET("v2/checkouts")
         Observable<Response<ResponseBody>> getCheckout(@Query("checkoutId") int checkoutId);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI createCheckout" })
-        @POST("v1/checkouts")
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI createCheckout" })
+        @POST("v2/checkouts")
         Observable<Response<ResponseBody>> createCheckout(@Body CheckoutRequestModel model);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI getCreditCardsByReferenceId" })
-        @GET("v1/creditcards")
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI getCreditCardsByReferenceId" })
+        @GET("v2/creditcards")
         Observable<Response<ResponseBody>> getCreditCardsByReferenceId(@Query("referenceId") String referenceId);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI updateCreditCard" })
-        @PUT("v1/creditcards")
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI updateCreditCard" })
+        @PUT("v2/creditcards")
         Observable<Response<ResponseBody>> updateCreditCard(@Body UpdateCreditCardModel updateCreditCardModel);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI createCreditCard" })
-        @POST("v1/creditcards")
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI createCreditCard" })
+        @POST("v2/creditcards")
         Observable<Response<ResponseBody>> createCreditCard(@Body CreditCardRequestModel creditCardRequest);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI getPayment" })
-        @GET("v1/payments/{id}")
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI getPayment" })
+        @GET("v2/payments/{id}")
         Observable<Response<ResponseBody>> getPayment(@Path("id") int id);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI getPaymentsByReferenceId" })
-        @GET("v1/payments")
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI getPaymentsByReferenceId" })
+        @GET("v2/payments")
         Observable<Response<ResponseBody>> getPaymentsByReferenceId(@Query("referenceId") String referenceId, @Query("minDate") DateTime minDate, @Query("maxDate") DateTime maxDate);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI createPayment" })
-        @POST("v1/payments")
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI createPayment" })
+        @POST("v2/payments")
         Observable<Response<ResponseBody>> createPayment(@Body PaymentRequestModel paymentRequest);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI getRefunds" })
-        @GET("v1/payments/{id}/refunds")
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI getRefunds" })
+        @GET("v2/payments/{id}/refunds")
         Observable<Response<ResponseBody>> getRefunds(@Path("id") int id);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI createRefund" })
-        @POST("v1/payments/{id}/refunds")
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI createRefund" })
+        @POST("v2/payments/{id}/refunds")
         Observable<Response<ResponseBody>> createRefund(@Path("id") int id, @Body RefundRequestModel refundRequestModel);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI getSubscriptionsByReferenceId" })
-        @GET("v1/subscriptions")
-        Observable<Response<ResponseBody>> getSubscriptionsByReferenceId(@Query("referenceId") String referenceId);
-
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI updateSubscription" })
-        @PUT("v1/subscriptions")
-        Observable<Response<ResponseBody>> updateSubscription(@Body UpdateSubscriptionModel updateSubscriptionModel);
-
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI createSubscription" })
-        @POST("v1/subscriptions")
-        Observable<Response<ResponseBody>> createSubscription(@Body SubscriptionRequestModel subscriptionRequest);
-
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI getSubscription" })
-        @GET("v1/subscriptions/{id}")
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI getSubscription" })
+        @GET("v2/subscriptions/{id}")
         Observable<Response<ResponseBody>> getSubscription(@Path("id") String id);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI getWallet" })
-        @GET("v1/wallet/{walletId}")
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI getSubscriptionsByReferenceId" })
+        @GET("v2/subscriptions")
+        Observable<Response<ResponseBody>> getSubscriptionsByReferenceId(@Query("referenceId") String referenceId);
+
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI updateSubscription" })
+        @PUT("v2/subscriptions")
+        Observable<Response<ResponseBody>> updateSubscription(@Body UpdateSubscriptionModel updateSubscriptionModel);
+
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI createSubscription" })
+        @POST("v2/subscriptions")
+        Observable<Response<ResponseBody>> createSubscription(@Body SubscriptionRequestModel subscriptionRequest);
+
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI getWallet" })
+        @GET("v2/wallet/{walletId}")
         Observable<Response<ResponseBody>> getWallet(@Path("walletId") int walletId);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI updateWallet" })
-        @PUT("v1/wallet/{walletId}")
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI updateWallet" })
+        @PUT("v2/wallet/{walletId}")
         Observable<Response<ResponseBody>> updateWallet(@Path("walletId") int walletId, @Body String defaultPaymentToken);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI getWalletByReferenceId" })
-        @GET("v1/wallet")
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI getWalletByReferenceId" })
+        @GET("v2/wallet")
         Observable<Response<ResponseBody>> getWalletByReferenceId(@Query("referenceId") String referenceId);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI createWallet" })
-        @POST("v1/wallet")
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI createWallet" })
+        @POST("v2/wallet")
         Observable<Response<ResponseBody>> createWallet(@Body WalletRequestModel model);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI addWalletCreditCard" })
-        @POST("v1/wallet/{walletId}/CreditCard")
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI addWalletCreditCard" })
+        @POST("v2/wallet/{walletId}/CreditCard")
         Observable<Response<ResponseBody>> addWalletCreditCard(@Path("walletId") int walletId, @Body WalletCreditCardRequestModel request);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI addWalletBankAccount" })
-        @POST("v1/wallet/{walletId}/BankAccount")
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI addWalletBankAccount" })
+        @POST("v2/wallet/{walletId}/BankAccount")
         Observable<Response<ResponseBody>> addWalletBankAccount(@Path("walletId") int walletId, @Body WalletBankAccountRequestModel request);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI removeWalletCreditCard" })
-        @HTTP(path = "v1/wallet/{walletId}/CreditCard/{walletCreditCardId}", method = "DELETE", hasBody = true)
-        Observable<Response<ResponseBody>> removeWalletCreditCard(@Path("walletId") int walletId, @Path("walletCreditCardId") int walletCreditCardId);
-
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: softheon.wallet.api.client.SoftheonWalletAPI removeWalletBankAccount" })
-        @HTTP(path = "v1/wallet/{walletId}/BankAccount/{walletBankAcctId}", method = "DELETE", hasBody = true)
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI removeWalletBankAccount" })
+        @HTTP(path = "v2/wallet/{walletId}/BankAccount/{walletBankAcctId}", method = "DELETE", hasBody = true)
         Observable<Response<ResponseBody>> removeWalletBankAccount(@Path("walletId") int walletId, @Path("walletBankAcctId") int walletBankAcctId);
 
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: .SoftheonWalletAPI removeWalletCreditCard" })
+        @HTTP(path = "v2/wallet/{walletId}/CreditCard/{walletCreditCardId}", method = "DELETE", hasBody = true)
+        Observable<Response<ResponseBody>> removeWalletCreditCard(@Path("walletId") int walletId, @Path("walletCreditCardId") int walletCreditCardId);
+
+    }
+
+    /**
+     * Gets the bank account associated with the specified token.
+     *
+     * @param token The token.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws RestException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @return the BankAccountModel object if successful.
+     */
+    public BankAccountModel getBankAccountByToken(String token) {
+        return getBankAccountByTokenWithServiceResponseAsync(token).toBlocking().single().body();
+    }
+
+    /**
+     * Gets the bank account associated with the specified token.
+     *
+     * @param token The token.
+     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the {@link ServiceFuture} object
+     */
+    public ServiceFuture<BankAccountModel> getBankAccountByTokenAsync(String token, final ServiceCallback<BankAccountModel> serviceCallback) {
+        return ServiceFuture.fromResponse(getBankAccountByTokenWithServiceResponseAsync(token), serviceCallback);
+    }
+
+    /**
+     * Gets the bank account associated with the specified token.
+     *
+     * @param token The token.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the observable to the BankAccountModel object
+     */
+    public Observable<BankAccountModel> getBankAccountByTokenAsync(String token) {
+        return getBankAccountByTokenWithServiceResponseAsync(token).map(new Func1<ServiceResponse<BankAccountModel>, BankAccountModel>() {
+            @Override
+            public BankAccountModel call(ServiceResponse<BankAccountModel> response) {
+                return response.body();
+            }
+        });
+    }
+
+    /**
+     * Gets the bank account associated with the specified token.
+     *
+     * @param token The token.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the observable to the BankAccountModel object
+     */
+    public Observable<ServiceResponse<BankAccountModel>> getBankAccountByTokenWithServiceResponseAsync(String token) {
+        if (token == null) {
+            throw new IllegalArgumentException("Parameter token is required and cannot be null.");
+        }
+        return service.getBankAccountByToken(token)
+            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<BankAccountModel>>>() {
+                @Override
+                public Observable<ServiceResponse<BankAccountModel>> call(Response<ResponseBody> response) {
+                    try {
+                        ServiceResponse<BankAccountModel> clientResponse = getBankAccountByTokenDelegate(response);
+                        return Observable.just(clientResponse);
+                    } catch (Throwable t) {
+                        return Observable.error(t);
+                    }
+                }
+            });
+    }
+
+    private ServiceResponse<BankAccountModel> getBankAccountByTokenDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
+        return this.restClient().responseBuilderFactory().<BankAccountModel, RestException>newInstance(this.serializerAdapter())
+                .register(200, new TypeToken<BankAccountModel>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
+                .register(403, new TypeToken<Void>() { }.getType())
+                .register(404, new TypeToken<Void>() { }.getType())
+                .build(response);
     }
 
     /**
@@ -307,6 +383,7 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
     private ServiceResponse<List<BankAccountModel>> getBankAccountsByReferenceIdDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
         return this.restClient().responseBuilderFactory().<List<BankAccountModel>, RestException>newInstance(this.serializerAdapter())
                 .register(200, new TypeToken<List<BankAccountModel>>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
 
@@ -317,10 +394,9 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @throws RestException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the Object object if successful.
      */
-    public Object updateBankAccount(UpdateBankAccountModel updateBankAccountModel) {
-        return updateBankAccountWithServiceResponseAsync(updateBankAccountModel).toBlocking().single().body();
+    public void updateBankAccount(UpdateBankAccountModel updateBankAccountModel) {
+        updateBankAccountWithServiceResponseAsync(updateBankAccountModel).toBlocking().single().body();
     }
 
     /**
@@ -331,7 +407,7 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<Object> updateBankAccountAsync(UpdateBankAccountModel updateBankAccountModel, final ServiceCallback<Object> serviceCallback) {
+    public ServiceFuture<Void> updateBankAccountAsync(UpdateBankAccountModel updateBankAccountModel, final ServiceCallback<Void> serviceCallback) {
         return ServiceFuture.fromResponse(updateBankAccountWithServiceResponseAsync(updateBankAccountModel), serviceCallback);
     }
 
@@ -340,12 +416,12 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
      *
      * @param updateBankAccountModel The update bank account model.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the Object object
+     * @return the {@link ServiceResponse} object if successful.
      */
-    public Observable<Object> updateBankAccountAsync(UpdateBankAccountModel updateBankAccountModel) {
-        return updateBankAccountWithServiceResponseAsync(updateBankAccountModel).map(new Func1<ServiceResponse<Object>, Object>() {
+    public Observable<Void> updateBankAccountAsync(UpdateBankAccountModel updateBankAccountModel) {
+        return updateBankAccountWithServiceResponseAsync(updateBankAccountModel).map(new Func1<ServiceResponse<Void>, Void>() {
             @Override
-            public Object call(ServiceResponse<Object> response) {
+            public Void call(ServiceResponse<Void> response) {
                 return response.body();
             }
         });
@@ -356,19 +432,19 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
      *
      * @param updateBankAccountModel The update bank account model.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the Object object
+     * @return the {@link ServiceResponse} object if successful.
      */
-    public Observable<ServiceResponse<Object>> updateBankAccountWithServiceResponseAsync(UpdateBankAccountModel updateBankAccountModel) {
+    public Observable<ServiceResponse<Void>> updateBankAccountWithServiceResponseAsync(UpdateBankAccountModel updateBankAccountModel) {
         if (updateBankAccountModel == null) {
             throw new IllegalArgumentException("Parameter updateBankAccountModel is required and cannot be null.");
         }
         Validator.validate(updateBankAccountModel);
         return service.updateBankAccount(updateBankAccountModel)
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Object>>>() {
+            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Void>>>() {
                 @Override
-                public Observable<ServiceResponse<Object>> call(Response<ResponseBody> response) {
+                public Observable<ServiceResponse<Void>> call(Response<ResponseBody> response) {
                     try {
-                        ServiceResponse<Object> clientResponse = updateBankAccountDelegate(response);
+                        ServiceResponse<Void> clientResponse = updateBankAccountDelegate(response);
                         return Observable.just(clientResponse);
                     } catch (Throwable t) {
                         return Observable.error(t);
@@ -377,11 +453,11 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
             });
     }
 
-    private ServiceResponse<Object> updateBankAccountDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
-        return this.restClient().responseBuilderFactory().<Object, RestException>newInstance(this.serializerAdapter())
-                .register(200, new TypeToken<Object>() { }.getType())
+    private ServiceResponse<Void> updateBankAccountDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
+        return this.restClient().responseBuilderFactory().<Void, RestException>newInstance(this.serializerAdapter())
                 .register(204, new TypeToken<Void>() { }.getType())
                 .register(400, new TypeToken<Void>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
 
@@ -456,117 +532,44 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
         return this.restClient().responseBuilderFactory().<BankAccountResponseModel, RestException>newInstance(this.serializerAdapter())
                 .register(200, new TypeToken<BankAccountResponseModel>() { }.getType())
                 .register(400, new TypeToken<Void>() { }.getType())
-                .build(response);
-    }
-
-    /**
-     * Gets the bank account associated with the specified token.
-     *
-     * @param token The token.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws RestException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the BankAccountModel object if successful.
-     */
-    public BankAccountModel getBankAccountByToken(String token) {
-        return getBankAccountByTokenWithServiceResponseAsync(token).toBlocking().single().body();
-    }
-
-    /**
-     * Gets the bank account associated with the specified token.
-     *
-     * @param token The token.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<BankAccountModel> getBankAccountByTokenAsync(String token, final ServiceCallback<BankAccountModel> serviceCallback) {
-        return ServiceFuture.fromResponse(getBankAccountByTokenWithServiceResponseAsync(token), serviceCallback);
-    }
-
-    /**
-     * Gets the bank account associated with the specified token.
-     *
-     * @param token The token.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the BankAccountModel object
-     */
-    public Observable<BankAccountModel> getBankAccountByTokenAsync(String token) {
-        return getBankAccountByTokenWithServiceResponseAsync(token).map(new Func1<ServiceResponse<BankAccountModel>, BankAccountModel>() {
-            @Override
-            public BankAccountModel call(ServiceResponse<BankAccountModel> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Gets the bank account associated with the specified token.
-     *
-     * @param token The token.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the BankAccountModel object
-     */
-    public Observable<ServiceResponse<BankAccountModel>> getBankAccountByTokenWithServiceResponseAsync(String token) {
-        if (token == null) {
-            throw new IllegalArgumentException("Parameter token is required and cannot be null.");
-        }
-        return service.getBankAccountByToken(token)
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<BankAccountModel>>>() {
-                @Override
-                public Observable<ServiceResponse<BankAccountModel>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<BankAccountModel> clientResponse = getBankAccountByTokenDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<BankAccountModel> getBankAccountByTokenDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
-        return this.restClient().responseBuilderFactory().<BankAccountModel, RestException>newInstance(this.serializerAdapter())
-                .register(200, new TypeToken<BankAccountModel>() { }.getType())
-                .register(403, new TypeToken<Void>() { }.getType())
-                .register(404, new TypeToken<Void>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
 
     /**
      * Gets the bin information for a specified credit card number.
      *
-     * @param cardNumber The card number.
+     * @param binRequest The bin request.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @throws RestException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the Bin object if successful.
      */
-    public Bin getBin(String cardNumber) {
-        return getBinWithServiceResponseAsync(cardNumber).toBlocking().single().body();
+    public Bin getBin(BinRequestModel binRequest) {
+        return getBinWithServiceResponseAsync(binRequest).toBlocking().single().body();
     }
 
     /**
      * Gets the bin information for a specified credit card number.
      *
-     * @param cardNumber The card number.
+     * @param binRequest The bin request.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<Bin> getBinAsync(String cardNumber, final ServiceCallback<Bin> serviceCallback) {
-        return ServiceFuture.fromResponse(getBinWithServiceResponseAsync(cardNumber), serviceCallback);
+    public ServiceFuture<Bin> getBinAsync(BinRequestModel binRequest, final ServiceCallback<Bin> serviceCallback) {
+        return ServiceFuture.fromResponse(getBinWithServiceResponseAsync(binRequest), serviceCallback);
     }
 
     /**
      * Gets the bin information for a specified credit card number.
      *
-     * @param cardNumber The card number.
+     * @param binRequest The bin request.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the Bin object
      */
-    public Observable<Bin> getBinAsync(String cardNumber) {
-        return getBinWithServiceResponseAsync(cardNumber).map(new Func1<ServiceResponse<Bin>, Bin>() {
+    public Observable<Bin> getBinAsync(BinRequestModel binRequest) {
+        return getBinWithServiceResponseAsync(binRequest).map(new Func1<ServiceResponse<Bin>, Bin>() {
             @Override
             public Bin call(ServiceResponse<Bin> response) {
                 return response.body();
@@ -577,15 +580,16 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
     /**
      * Gets the bin information for a specified credit card number.
      *
-     * @param cardNumber The card number.
+     * @param binRequest The bin request.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the Bin object
      */
-    public Observable<ServiceResponse<Bin>> getBinWithServiceResponseAsync(String cardNumber) {
-        if (cardNumber == null) {
-            throw new IllegalArgumentException("Parameter cardNumber is required and cannot be null.");
+    public Observable<ServiceResponse<Bin>> getBinWithServiceResponseAsync(BinRequestModel binRequest) {
+        if (binRequest == null) {
+            throw new IllegalArgumentException("Parameter binRequest is required and cannot be null.");
         }
-        return service.getBin(cardNumber)
+        Validator.validate(binRequest);
+        return service.getBin(binRequest)
             .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Bin>>>() {
                 @Override
                 public Observable<ServiceResponse<Bin>> call(Response<ResponseBody> response) {
@@ -602,6 +606,7 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
     private ServiceResponse<Bin> getBinDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
         return this.restClient().responseBuilderFactory().<Bin, RestException>newInstance(this.serializerAdapter())
                 .register(200, new TypeToken<Bin>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .register(404, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
@@ -672,6 +677,7 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
     private ServiceResponse<CheckoutResponseModel> getCheckoutDelegate(Response<ResponseBody> response) throws RestException, IOException {
         return this.restClient().responseBuilderFactory().<CheckoutResponseModel, RestException>newInstance(this.serializerAdapter())
                 .register(200, new TypeToken<CheckoutResponseModel>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .register(404, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
@@ -745,9 +751,9 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
 
     private ServiceResponse<CheckoutResponseModel> createCheckoutDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
         return this.restClient().responseBuilderFactory().<CheckoutResponseModel, RestException>newInstance(this.serializerAdapter())
-                .register(200, new TypeToken<CheckoutResponseModel>() { }.getType())
                 .register(201, new TypeToken<CheckoutResponseModel>() { }.getType())
                 .register(400, new TypeToken<Void>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
 
@@ -820,6 +826,7 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
     private ServiceResponse<List<CreditCardModel>> getCreditCardsByReferenceIdDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
         return this.restClient().responseBuilderFactory().<List<CreditCardModel>, RestException>newInstance(this.serializerAdapter())
                 .register(200, new TypeToken<List<CreditCardModel>>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
 
@@ -830,10 +837,9 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @throws RestException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the Object object if successful.
      */
-    public Object updateCreditCard(UpdateCreditCardModel updateCreditCardModel) {
-        return updateCreditCardWithServiceResponseAsync(updateCreditCardModel).toBlocking().single().body();
+    public void updateCreditCard(UpdateCreditCardModel updateCreditCardModel) {
+        updateCreditCardWithServiceResponseAsync(updateCreditCardModel).toBlocking().single().body();
     }
 
     /**
@@ -844,7 +850,7 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<Object> updateCreditCardAsync(UpdateCreditCardModel updateCreditCardModel, final ServiceCallback<Object> serviceCallback) {
+    public ServiceFuture<Void> updateCreditCardAsync(UpdateCreditCardModel updateCreditCardModel, final ServiceCallback<Void> serviceCallback) {
         return ServiceFuture.fromResponse(updateCreditCardWithServiceResponseAsync(updateCreditCardModel), serviceCallback);
     }
 
@@ -853,12 +859,12 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
      *
      * @param updateCreditCardModel The update credit card model.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the Object object
+     * @return the {@link ServiceResponse} object if successful.
      */
-    public Observable<Object> updateCreditCardAsync(UpdateCreditCardModel updateCreditCardModel) {
-        return updateCreditCardWithServiceResponseAsync(updateCreditCardModel).map(new Func1<ServiceResponse<Object>, Object>() {
+    public Observable<Void> updateCreditCardAsync(UpdateCreditCardModel updateCreditCardModel) {
+        return updateCreditCardWithServiceResponseAsync(updateCreditCardModel).map(new Func1<ServiceResponse<Void>, Void>() {
             @Override
-            public Object call(ServiceResponse<Object> response) {
+            public Void call(ServiceResponse<Void> response) {
                 return response.body();
             }
         });
@@ -869,19 +875,19 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
      *
      * @param updateCreditCardModel The update credit card model.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the Object object
+     * @return the {@link ServiceResponse} object if successful.
      */
-    public Observable<ServiceResponse<Object>> updateCreditCardWithServiceResponseAsync(UpdateCreditCardModel updateCreditCardModel) {
+    public Observable<ServiceResponse<Void>> updateCreditCardWithServiceResponseAsync(UpdateCreditCardModel updateCreditCardModel) {
         if (updateCreditCardModel == null) {
             throw new IllegalArgumentException("Parameter updateCreditCardModel is required and cannot be null.");
         }
         Validator.validate(updateCreditCardModel);
         return service.updateCreditCard(updateCreditCardModel)
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Object>>>() {
+            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Void>>>() {
                 @Override
-                public Observable<ServiceResponse<Object>> call(Response<ResponseBody> response) {
+                public Observable<ServiceResponse<Void>> call(Response<ResponseBody> response) {
                     try {
-                        ServiceResponse<Object> clientResponse = updateCreditCardDelegate(response);
+                        ServiceResponse<Void> clientResponse = updateCreditCardDelegate(response);
                         return Observable.just(clientResponse);
                     } catch (Throwable t) {
                         return Observable.error(t);
@@ -890,11 +896,11 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
             });
     }
 
-    private ServiceResponse<Object> updateCreditCardDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
-        return this.restClient().responseBuilderFactory().<Object, RestException>newInstance(this.serializerAdapter())
-                .register(200, new TypeToken<Object>() { }.getType())
+    private ServiceResponse<Void> updateCreditCardDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
+        return this.restClient().responseBuilderFactory().<Void, RestException>newInstance(this.serializerAdapter())
                 .register(204, new TypeToken<Void>() { }.getType())
                 .register(400, new TypeToken<Void>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
 
@@ -969,6 +975,7 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
         return this.restClient().responseBuilderFactory().<CreditCardResponseModel, RestException>newInstance(this.serializerAdapter())
                 .register(200, new TypeToken<CreditCardResponseModel>() { }.getType())
                 .register(400, new TypeToken<Void>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
 
@@ -1038,6 +1045,7 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
     private ServiceResponse<PaymentModel> getPaymentDelegate(Response<ResponseBody> response) throws RestException, IOException {
         return this.restClient().responseBuilderFactory().<PaymentModel, RestException>newInstance(this.serializerAdapter())
                 .register(200, new TypeToken<PaymentModel>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .register(404, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
@@ -1045,37 +1053,34 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
     /**
      * Gets payments associated with the specified reference identifier.
      *
-     * @param referenceId The client application provided reference ID for the payment.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @throws RestException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the List&lt;PaymentModel&gt; object if successful.
      */
-    public List<PaymentModel> getPaymentsByReferenceId(String referenceId) {
-        return getPaymentsByReferenceIdWithServiceResponseAsync(referenceId).toBlocking().single().body();
+    public List<PaymentModel> getPaymentsByReferenceId() {
+        return getPaymentsByReferenceIdWithServiceResponseAsync().toBlocking().single().body();
     }
 
     /**
      * Gets payments associated with the specified reference identifier.
      *
-     * @param referenceId The client application provided reference ID for the payment.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<List<PaymentModel>> getPaymentsByReferenceIdAsync(String referenceId, final ServiceCallback<List<PaymentModel>> serviceCallback) {
-        return ServiceFuture.fromResponse(getPaymentsByReferenceIdWithServiceResponseAsync(referenceId), serviceCallback);
+    public ServiceFuture<List<PaymentModel>> getPaymentsByReferenceIdAsync(final ServiceCallback<List<PaymentModel>> serviceCallback) {
+        return ServiceFuture.fromResponse(getPaymentsByReferenceIdWithServiceResponseAsync(), serviceCallback);
     }
 
     /**
      * Gets payments associated with the specified reference identifier.
      *
-     * @param referenceId The client application provided reference ID for the payment.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the List&lt;PaymentModel&gt; object
      */
-    public Observable<List<PaymentModel>> getPaymentsByReferenceIdAsync(String referenceId) {
-        return getPaymentsByReferenceIdWithServiceResponseAsync(referenceId).map(new Func1<ServiceResponse<List<PaymentModel>>, List<PaymentModel>>() {
+    public Observable<List<PaymentModel>> getPaymentsByReferenceIdAsync() {
+        return getPaymentsByReferenceIdWithServiceResponseAsync().map(new Func1<ServiceResponse<List<PaymentModel>>, List<PaymentModel>>() {
             @Override
             public List<PaymentModel> call(ServiceResponse<List<PaymentModel>> response) {
                 return response.body();
@@ -1086,14 +1091,11 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
     /**
      * Gets payments associated with the specified reference identifier.
      *
-     * @param referenceId The client application provided reference ID for the payment.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the List&lt;PaymentModel&gt; object
      */
-    public Observable<ServiceResponse<List<PaymentModel>>> getPaymentsByReferenceIdWithServiceResponseAsync(String referenceId) {
-        if (referenceId == null) {
-            throw new IllegalArgumentException("Parameter referenceId is required and cannot be null.");
-        }
+    public Observable<ServiceResponse<List<PaymentModel>>> getPaymentsByReferenceIdWithServiceResponseAsync() {
+        final String referenceId = null;
         final DateTime minDate = null;
         final DateTime maxDate = null;
         return service.getPaymentsByReferenceId(referenceId, minDate, maxDate)
@@ -1113,9 +1115,9 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
     /**
      * Gets payments associated with the specified reference identifier.
      *
-     * @param referenceId The client application provided reference ID for the payment.
-     * @param minDate The optional lower bound of the range for payment date.
-     * @param maxDate The optional upper bound of the range for payment date.
+     * @param referenceId Gets or sets the reference identifier.
+     * @param minDate Gets or sets the minimum date.
+     * @param maxDate Gets or sets the maximum date.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @throws RestException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
@@ -1128,9 +1130,9 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
     /**
      * Gets payments associated with the specified reference identifier.
      *
-     * @param referenceId The client application provided reference ID for the payment.
-     * @param minDate The optional lower bound of the range for payment date.
-     * @param maxDate The optional upper bound of the range for payment date.
+     * @param referenceId Gets or sets the reference identifier.
+     * @param minDate Gets or sets the minimum date.
+     * @param maxDate Gets or sets the maximum date.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
@@ -1142,9 +1144,9 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
     /**
      * Gets payments associated with the specified reference identifier.
      *
-     * @param referenceId The client application provided reference ID for the payment.
-     * @param minDate The optional lower bound of the range for payment date.
-     * @param maxDate The optional upper bound of the range for payment date.
+     * @param referenceId Gets or sets the reference identifier.
+     * @param minDate Gets or sets the minimum date.
+     * @param maxDate Gets or sets the maximum date.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the List&lt;PaymentModel&gt; object
      */
@@ -1160,16 +1162,13 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
     /**
      * Gets payments associated with the specified reference identifier.
      *
-     * @param referenceId The client application provided reference ID for the payment.
-     * @param minDate The optional lower bound of the range for payment date.
-     * @param maxDate The optional upper bound of the range for payment date.
+     * @param referenceId Gets or sets the reference identifier.
+     * @param minDate Gets or sets the minimum date.
+     * @param maxDate Gets or sets the maximum date.
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the List&lt;PaymentModel&gt; object
      */
     public Observable<ServiceResponse<List<PaymentModel>>> getPaymentsByReferenceIdWithServiceResponseAsync(String referenceId, DateTime minDate, DateTime maxDate) {
-        if (referenceId == null) {
-            throw new IllegalArgumentException("Parameter referenceId is required and cannot be null.");
-        }
         return service.getPaymentsByReferenceId(referenceId, minDate, maxDate)
             .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<List<PaymentModel>>>>() {
                 @Override
@@ -1184,9 +1183,10 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
             });
     }
 
-    private ServiceResponse<List<PaymentModel>> getPaymentsByReferenceIdDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
+    private ServiceResponse<List<PaymentModel>> getPaymentsByReferenceIdDelegate(Response<ResponseBody> response) throws RestException, IOException {
         return this.restClient().responseBuilderFactory().<List<PaymentModel>, RestException>newInstance(this.serializerAdapter())
                 .register(200, new TypeToken<List<PaymentModel>>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
 
@@ -1259,9 +1259,9 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
 
     private ServiceResponse<PaymentModel> createPaymentDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
         return this.restClient().responseBuilderFactory().<PaymentModel, RestException>newInstance(this.serializerAdapter())
-                .register(200, new TypeToken<PaymentModel>() { }.getType())
                 .register(201, new TypeToken<PaymentModel>() { }.getType())
                 .register(400, new TypeToken<Void>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
 
@@ -1331,6 +1331,7 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
     private ServiceResponse<List<RefundResultModel>> getRefundsDelegate(Response<ResponseBody> response) throws RestException, IOException {
         return this.restClient().responseBuilderFactory().<List<RefundResultModel>, RestException>newInstance(this.serializerAdapter())
                 .register(200, new TypeToken<List<RefundResultModel>>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
 
@@ -1408,6 +1409,81 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
     private ServiceResponse<RefundResultModel> createRefundDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
         return this.restClient().responseBuilderFactory().<RefundResultModel, RestException>newInstance(this.serializerAdapter())
                 .register(200, new TypeToken<RefundResultModel>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
+                .register(404, new TypeToken<Void>() { }.getType())
+                .build(response);
+    }
+
+    /**
+     * Gets a single payment subscription with the specified subscription id.
+     *
+     * @param id The subscription id.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws RestException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @return the SubscriptionModel object if successful.
+     */
+    public SubscriptionModel getSubscription(String id) {
+        return getSubscriptionWithServiceResponseAsync(id).toBlocking().single().body();
+    }
+
+    /**
+     * Gets a single payment subscription with the specified subscription id.
+     *
+     * @param id The subscription id.
+     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the {@link ServiceFuture} object
+     */
+    public ServiceFuture<SubscriptionModel> getSubscriptionAsync(String id, final ServiceCallback<SubscriptionModel> serviceCallback) {
+        return ServiceFuture.fromResponse(getSubscriptionWithServiceResponseAsync(id), serviceCallback);
+    }
+
+    /**
+     * Gets a single payment subscription with the specified subscription id.
+     *
+     * @param id The subscription id.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the observable to the SubscriptionModel object
+     */
+    public Observable<SubscriptionModel> getSubscriptionAsync(String id) {
+        return getSubscriptionWithServiceResponseAsync(id).map(new Func1<ServiceResponse<SubscriptionModel>, SubscriptionModel>() {
+            @Override
+            public SubscriptionModel call(ServiceResponse<SubscriptionModel> response) {
+                return response.body();
+            }
+        });
+    }
+
+    /**
+     * Gets a single payment subscription with the specified subscription id.
+     *
+     * @param id The subscription id.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the observable to the SubscriptionModel object
+     */
+    public Observable<ServiceResponse<SubscriptionModel>> getSubscriptionWithServiceResponseAsync(String id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Parameter id is required and cannot be null.");
+        }
+        return service.getSubscription(id)
+            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<SubscriptionModel>>>() {
+                @Override
+                public Observable<ServiceResponse<SubscriptionModel>> call(Response<ResponseBody> response) {
+                    try {
+                        ServiceResponse<SubscriptionModel> clientResponse = getSubscriptionDelegate(response);
+                        return Observable.just(clientResponse);
+                    } catch (Throwable t) {
+                        return Observable.error(t);
+                    }
+                }
+            });
+    }
+
+    private ServiceResponse<SubscriptionModel> getSubscriptionDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
+        return this.restClient().responseBuilderFactory().<SubscriptionModel, RestException>newInstance(this.serializerAdapter())
+                .register(200, new TypeToken<SubscriptionModel>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .register(404, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
@@ -1481,6 +1557,7 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
     private ServiceResponse<List<SubscriptionModel>> getSubscriptionsByReferenceIdDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
         return this.restClient().responseBuilderFactory().<List<SubscriptionModel>, RestException>newInstance(this.serializerAdapter())
                 .register(200, new TypeToken<List<SubscriptionModel>>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
 
@@ -1491,10 +1568,9 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @throws RestException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the Object object if successful.
      */
-    public Object updateSubscription(UpdateSubscriptionModel updateSubscriptionModel) {
-        return updateSubscriptionWithServiceResponseAsync(updateSubscriptionModel).toBlocking().single().body();
+    public void updateSubscription(UpdateSubscriptionModel updateSubscriptionModel) {
+        updateSubscriptionWithServiceResponseAsync(updateSubscriptionModel).toBlocking().single().body();
     }
 
     /**
@@ -1505,7 +1581,7 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<Object> updateSubscriptionAsync(UpdateSubscriptionModel updateSubscriptionModel, final ServiceCallback<Object> serviceCallback) {
+    public ServiceFuture<Void> updateSubscriptionAsync(UpdateSubscriptionModel updateSubscriptionModel, final ServiceCallback<Void> serviceCallback) {
         return ServiceFuture.fromResponse(updateSubscriptionWithServiceResponseAsync(updateSubscriptionModel), serviceCallback);
     }
 
@@ -1514,12 +1590,12 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
      *
      * @param updateSubscriptionModel The update subscription model.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the Object object
+     * @return the {@link ServiceResponse} object if successful.
      */
-    public Observable<Object> updateSubscriptionAsync(UpdateSubscriptionModel updateSubscriptionModel) {
-        return updateSubscriptionWithServiceResponseAsync(updateSubscriptionModel).map(new Func1<ServiceResponse<Object>, Object>() {
+    public Observable<Void> updateSubscriptionAsync(UpdateSubscriptionModel updateSubscriptionModel) {
+        return updateSubscriptionWithServiceResponseAsync(updateSubscriptionModel).map(new Func1<ServiceResponse<Void>, Void>() {
             @Override
-            public Object call(ServiceResponse<Object> response) {
+            public Void call(ServiceResponse<Void> response) {
                 return response.body();
             }
         });
@@ -1530,19 +1606,19 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
      *
      * @param updateSubscriptionModel The update subscription model.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the Object object
+     * @return the {@link ServiceResponse} object if successful.
      */
-    public Observable<ServiceResponse<Object>> updateSubscriptionWithServiceResponseAsync(UpdateSubscriptionModel updateSubscriptionModel) {
+    public Observable<ServiceResponse<Void>> updateSubscriptionWithServiceResponseAsync(UpdateSubscriptionModel updateSubscriptionModel) {
         if (updateSubscriptionModel == null) {
             throw new IllegalArgumentException("Parameter updateSubscriptionModel is required and cannot be null.");
         }
         Validator.validate(updateSubscriptionModel);
         return service.updateSubscription(updateSubscriptionModel)
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Object>>>() {
+            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Void>>>() {
                 @Override
-                public Observable<ServiceResponse<Object>> call(Response<ResponseBody> response) {
+                public Observable<ServiceResponse<Void>> call(Response<ResponseBody> response) {
                     try {
-                        ServiceResponse<Object> clientResponse = updateSubscriptionDelegate(response);
+                        ServiceResponse<Void> clientResponse = updateSubscriptionDelegate(response);
                         return Observable.just(clientResponse);
                     } catch (Throwable t) {
                         return Observable.error(t);
@@ -1551,10 +1627,10 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
             });
     }
 
-    private ServiceResponse<Object> updateSubscriptionDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
-        return this.restClient().responseBuilderFactory().<Object, RestException>newInstance(this.serializerAdapter())
-                .register(200, new TypeToken<Object>() { }.getType())
+    private ServiceResponse<Void> updateSubscriptionDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
+        return this.restClient().responseBuilderFactory().<Void, RestException>newInstance(this.serializerAdapter())
                 .register(204, new TypeToken<Void>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
 
@@ -1565,9 +1641,9 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @throws RestException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the SubscriptionResponceModel object if successful.
+     * @return the SubscriptionResponseModel object if successful.
      */
-    public SubscriptionResponceModel createSubscription(SubscriptionRequestModel subscriptionRequest) {
+    public SubscriptionResponseModel createSubscription(SubscriptionRequestModel subscriptionRequest) {
         return createSubscriptionWithServiceResponseAsync(subscriptionRequest).toBlocking().single().body();
     }
 
@@ -1579,7 +1655,7 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<SubscriptionResponceModel> createSubscriptionAsync(SubscriptionRequestModel subscriptionRequest, final ServiceCallback<SubscriptionResponceModel> serviceCallback) {
+    public ServiceFuture<SubscriptionResponseModel> createSubscriptionAsync(SubscriptionRequestModel subscriptionRequest, final ServiceCallback<SubscriptionResponseModel> serviceCallback) {
         return ServiceFuture.fromResponse(createSubscriptionWithServiceResponseAsync(subscriptionRequest), serviceCallback);
     }
 
@@ -1588,12 +1664,12 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
      *
      * @param subscriptionRequest The subscription request.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the SubscriptionResponceModel object
+     * @return the observable to the SubscriptionResponseModel object
      */
-    public Observable<SubscriptionResponceModel> createSubscriptionAsync(SubscriptionRequestModel subscriptionRequest) {
-        return createSubscriptionWithServiceResponseAsync(subscriptionRequest).map(new Func1<ServiceResponse<SubscriptionResponceModel>, SubscriptionResponceModel>() {
+    public Observable<SubscriptionResponseModel> createSubscriptionAsync(SubscriptionRequestModel subscriptionRequest) {
+        return createSubscriptionWithServiceResponseAsync(subscriptionRequest).map(new Func1<ServiceResponse<SubscriptionResponseModel>, SubscriptionResponseModel>() {
             @Override
-            public SubscriptionResponceModel call(ServiceResponse<SubscriptionResponceModel> response) {
+            public SubscriptionResponseModel call(ServiceResponse<SubscriptionResponseModel> response) {
                 return response.body();
             }
         });
@@ -1604,19 +1680,19 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
      *
      * @param subscriptionRequest The subscription request.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the SubscriptionResponceModel object
+     * @return the observable to the SubscriptionResponseModel object
      */
-    public Observable<ServiceResponse<SubscriptionResponceModel>> createSubscriptionWithServiceResponseAsync(SubscriptionRequestModel subscriptionRequest) {
+    public Observable<ServiceResponse<SubscriptionResponseModel>> createSubscriptionWithServiceResponseAsync(SubscriptionRequestModel subscriptionRequest) {
         if (subscriptionRequest == null) {
             throw new IllegalArgumentException("Parameter subscriptionRequest is required and cannot be null.");
         }
         Validator.validate(subscriptionRequest);
         return service.createSubscription(subscriptionRequest)
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<SubscriptionResponceModel>>>() {
+            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<SubscriptionResponseModel>>>() {
                 @Override
-                public Observable<ServiceResponse<SubscriptionResponceModel>> call(Response<ResponseBody> response) {
+                public Observable<ServiceResponse<SubscriptionResponseModel>> call(Response<ResponseBody> response) {
                     try {
-                        ServiceResponse<SubscriptionResponceModel> clientResponse = createSubscriptionDelegate(response);
+                        ServiceResponse<SubscriptionResponseModel> clientResponse = createSubscriptionDelegate(response);
                         return Observable.just(clientResponse);
                     } catch (Throwable t) {
                         return Observable.error(t);
@@ -1625,84 +1701,12 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
             });
     }
 
-    private ServiceResponse<SubscriptionResponceModel> createSubscriptionDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
-        return this.restClient().responseBuilderFactory().<SubscriptionResponceModel, RestException>newInstance(this.serializerAdapter())
-                .register(200, new TypeToken<SubscriptionResponceModel>() { }.getType())
+    private ServiceResponse<SubscriptionResponseModel> createSubscriptionDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
+        return this.restClient().responseBuilderFactory().<SubscriptionResponseModel, RestException>newInstance(this.serializerAdapter())
+                .register(200, new TypeToken<SubscriptionResponseModel>() { }.getType())
                 .register(400, new TypeToken<Void>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .register(409, new TypeToken<Void>() { }.getType())
-                .build(response);
-    }
-
-    /**
-     * Gets a single payment subscription with the specified subscription id.
-     *
-     * @param id The subscription id.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws RestException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the SubscriptionModel object if successful.
-     */
-    public SubscriptionModel getSubscription(String id) {
-        return getSubscriptionWithServiceResponseAsync(id).toBlocking().single().body();
-    }
-
-    /**
-     * Gets a single payment subscription with the specified subscription id.
-     *
-     * @param id The subscription id.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<SubscriptionModel> getSubscriptionAsync(String id, final ServiceCallback<SubscriptionModel> serviceCallback) {
-        return ServiceFuture.fromResponse(getSubscriptionWithServiceResponseAsync(id), serviceCallback);
-    }
-
-    /**
-     * Gets a single payment subscription with the specified subscription id.
-     *
-     * @param id The subscription id.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the SubscriptionModel object
-     */
-    public Observable<SubscriptionModel> getSubscriptionAsync(String id) {
-        return getSubscriptionWithServiceResponseAsync(id).map(new Func1<ServiceResponse<SubscriptionModel>, SubscriptionModel>() {
-            @Override
-            public SubscriptionModel call(ServiceResponse<SubscriptionModel> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Gets a single payment subscription with the specified subscription id.
-     *
-     * @param id The subscription id.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the SubscriptionModel object
-     */
-    public Observable<ServiceResponse<SubscriptionModel>> getSubscriptionWithServiceResponseAsync(String id) {
-        if (id == null) {
-            throw new IllegalArgumentException("Parameter id is required and cannot be null.");
-        }
-        return service.getSubscription(id)
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<SubscriptionModel>>>() {
-                @Override
-                public Observable<ServiceResponse<SubscriptionModel>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<SubscriptionModel> clientResponse = getSubscriptionDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<SubscriptionModel> getSubscriptionDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
-        return this.restClient().responseBuilderFactory().<SubscriptionModel, RestException>newInstance(this.serializerAdapter())
-                .register(200, new TypeToken<SubscriptionModel>() { }.getType())
-                .register(404, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
 
@@ -1773,6 +1777,7 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
         return this.restClient().responseBuilderFactory().<WalletModel, RestException>newInstance(this.serializerAdapter())
                 .register(200, new TypeToken<WalletModel>() { }.getType())
                 .register(400, new TypeToken<Void>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .register(404, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
@@ -1850,6 +1855,7 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
         return this.restClient().responseBuilderFactory().<Void, RestException>newInstance(this.serializerAdapter())
                 .register(200, new TypeToken<Void>() { }.getType())
                 .register(400, new TypeToken<Void>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
 
@@ -1923,6 +1929,7 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
         return this.restClient().responseBuilderFactory().<WalletModel, RestException>newInstance(this.serializerAdapter())
                 .register(200, new TypeToken<WalletModel>() { }.getType())
                 .register(400, new TypeToken<Void>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
 
@@ -1933,9 +1940,10 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @throws RestException thrown if the request is rejected by server
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @return the int object if successful.
      */
-    public void createWallet(WalletRequestModel model) {
-        createWalletWithServiceResponseAsync(model).toBlocking().single().body();
+    public int createWallet(WalletRequestModel model) {
+        return createWalletWithServiceResponseAsync(model).toBlocking().single().body();
     }
 
     /**
@@ -1946,7 +1954,7 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<Void> createWalletAsync(WalletRequestModel model, final ServiceCallback<Void> serviceCallback) {
+    public ServiceFuture<Integer> createWalletAsync(WalletRequestModel model, final ServiceCallback<Integer> serviceCallback) {
         return ServiceFuture.fromResponse(createWalletWithServiceResponseAsync(model), serviceCallback);
     }
 
@@ -1955,12 +1963,12 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
      *
      * @param model The model.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceResponse} object if successful.
+     * @return the observable to the Integer object
      */
-    public Observable<Void> createWalletAsync(WalletRequestModel model) {
-        return createWalletWithServiceResponseAsync(model).map(new Func1<ServiceResponse<Void>, Void>() {
+    public Observable<Integer> createWalletAsync(WalletRequestModel model) {
+        return createWalletWithServiceResponseAsync(model).map(new Func1<ServiceResponse<Integer>, Integer>() {
             @Override
-            public Void call(ServiceResponse<Void> response) {
+            public Integer call(ServiceResponse<Integer> response) {
                 return response.body();
             }
         });
@@ -1971,19 +1979,19 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
      *
      * @param model The model.
      * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceResponse} object if successful.
+     * @return the observable to the Integer object
      */
-    public Observable<ServiceResponse<Void>> createWalletWithServiceResponseAsync(WalletRequestModel model) {
+    public Observable<ServiceResponse<Integer>> createWalletWithServiceResponseAsync(WalletRequestModel model) {
         if (model == null) {
             throw new IllegalArgumentException("Parameter model is required and cannot be null.");
         }
         Validator.validate(model);
         return service.createWallet(model)
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Void>>>() {
+            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Integer>>>() {
                 @Override
-                public Observable<ServiceResponse<Void>> call(Response<ResponseBody> response) {
+                public Observable<ServiceResponse<Integer>> call(Response<ResponseBody> response) {
                     try {
-                        ServiceResponse<Void> clientResponse = createWalletDelegate(response);
+                        ServiceResponse<Integer> clientResponse = createWalletDelegate(response);
                         return Observable.just(clientResponse);
                     } catch (Throwable t) {
                         return Observable.error(t);
@@ -1992,10 +2000,11 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
             });
     }
 
-    private ServiceResponse<Void> createWalletDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
-        return this.restClient().responseBuilderFactory().<Void, RestException>newInstance(this.serializerAdapter())
-                .register(200, new TypeToken<Void>() { }.getType())
+    private ServiceResponse<Integer> createWalletDelegate(Response<ResponseBody> response) throws RestException, IOException, IllegalArgumentException {
+        return this.restClient().responseBuilderFactory().<Integer, RestException>newInstance(this.serializerAdapter())
+                .register(200, new TypeToken<Integer>() { }.getType())
                 .register(400, new TypeToken<Void>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
 
@@ -2074,6 +2083,7 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
         return this.restClient().responseBuilderFactory().<WalletModel, RestException>newInstance(this.serializerAdapter())
                 .register(200, new TypeToken<WalletModel>() { }.getType())
                 .register(400, new TypeToken<Void>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
 
@@ -2152,79 +2162,7 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
         return this.restClient().responseBuilderFactory().<WalletModel, RestException>newInstance(this.serializerAdapter())
                 .register(200, new TypeToken<WalletModel>() { }.getType())
                 .register(400, new TypeToken<Void>() { }.getType())
-                .build(response);
-    }
-
-    /**
-     * Deletes the wallet credit card.
-     *
-     * @param walletId The wallet identifier.
-     * @param walletCreditCardId The wallet credit card identifier.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws RestException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     */
-    public void removeWalletCreditCard(int walletId, int walletCreditCardId) {
-        removeWalletCreditCardWithServiceResponseAsync(walletId, walletCreditCardId).toBlocking().single().body();
-    }
-
-    /**
-     * Deletes the wallet credit card.
-     *
-     * @param walletId The wallet identifier.
-     * @param walletCreditCardId The wallet credit card identifier.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<Void> removeWalletCreditCardAsync(int walletId, int walletCreditCardId, final ServiceCallback<Void> serviceCallback) {
-        return ServiceFuture.fromResponse(removeWalletCreditCardWithServiceResponseAsync(walletId, walletCreditCardId), serviceCallback);
-    }
-
-    /**
-     * Deletes the wallet credit card.
-     *
-     * @param walletId The wallet identifier.
-     * @param walletCreditCardId The wallet credit card identifier.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceResponse} object if successful.
-     */
-    public Observable<Void> removeWalletCreditCardAsync(int walletId, int walletCreditCardId) {
-        return removeWalletCreditCardWithServiceResponseAsync(walletId, walletCreditCardId).map(new Func1<ServiceResponse<Void>, Void>() {
-            @Override
-            public Void call(ServiceResponse<Void> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Deletes the wallet credit card.
-     *
-     * @param walletId The wallet identifier.
-     * @param walletCreditCardId The wallet credit card identifier.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceResponse} object if successful.
-     */
-    public Observable<ServiceResponse<Void>> removeWalletCreditCardWithServiceResponseAsync(int walletId, int walletCreditCardId) {
-        return service.removeWalletCreditCard(walletId, walletCreditCardId)
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Void>>>() {
-                @Override
-                public Observable<ServiceResponse<Void>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<Void> clientResponse = removeWalletCreditCardDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<Void> removeWalletCreditCardDelegate(Response<ResponseBody> response) throws RestException, IOException {
-        return this.restClient().responseBuilderFactory().<Void, RestException>newInstance(this.serializerAdapter())
-                .register(200, new TypeToken<Void>() { }.getType())
-                .register(400, new TypeToken<Void>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
 
@@ -2298,6 +2236,81 @@ public class SoftheonWalletAPIImpl extends ServiceClient implements SoftheonWall
         return this.restClient().responseBuilderFactory().<Void, RestException>newInstance(this.serializerAdapter())
                 .register(200, new TypeToken<Void>() { }.getType())
                 .register(400, new TypeToken<Void>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
+                .build(response);
+    }
+
+    /**
+     * Deletes the wallet credit card.
+     *
+     * @param walletId The wallet identifier.
+     * @param walletCreditCardId The wallet credit card identifier.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws RestException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     */
+    public void removeWalletCreditCard(int walletId, int walletCreditCardId) {
+        removeWalletCreditCardWithServiceResponseAsync(walletId, walletCreditCardId).toBlocking().single().body();
+    }
+
+    /**
+     * Deletes the wallet credit card.
+     *
+     * @param walletId The wallet identifier.
+     * @param walletCreditCardId The wallet credit card identifier.
+     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the {@link ServiceFuture} object
+     */
+    public ServiceFuture<Void> removeWalletCreditCardAsync(int walletId, int walletCreditCardId, final ServiceCallback<Void> serviceCallback) {
+        return ServiceFuture.fromResponse(removeWalletCreditCardWithServiceResponseAsync(walletId, walletCreditCardId), serviceCallback);
+    }
+
+    /**
+     * Deletes the wallet credit card.
+     *
+     * @param walletId The wallet identifier.
+     * @param walletCreditCardId The wallet credit card identifier.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    public Observable<Void> removeWalletCreditCardAsync(int walletId, int walletCreditCardId) {
+        return removeWalletCreditCardWithServiceResponseAsync(walletId, walletCreditCardId).map(new Func1<ServiceResponse<Void>, Void>() {
+            @Override
+            public Void call(ServiceResponse<Void> response) {
+                return response.body();
+            }
+        });
+    }
+
+    /**
+     * Deletes the wallet credit card.
+     *
+     * @param walletId The wallet identifier.
+     * @param walletCreditCardId The wallet credit card identifier.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    public Observable<ServiceResponse<Void>> removeWalletCreditCardWithServiceResponseAsync(int walletId, int walletCreditCardId) {
+        return service.removeWalletCreditCard(walletId, walletCreditCardId)
+            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Void>>>() {
+                @Override
+                public Observable<ServiceResponse<Void>> call(Response<ResponseBody> response) {
+                    try {
+                        ServiceResponse<Void> clientResponse = removeWalletCreditCardDelegate(response);
+                        return Observable.just(clientResponse);
+                    } catch (Throwable t) {
+                        return Observable.error(t);
+                    }
+                }
+            });
+    }
+
+    private ServiceResponse<Void> removeWalletCreditCardDelegate(Response<ResponseBody> response) throws RestException, IOException {
+        return this.restClient().responseBuilderFactory().<Void, RestException>newInstance(this.serializerAdapter())
+                .register(200, new TypeToken<Void>() { }.getType())
+                .register(400, new TypeToken<Void>() { }.getType())
+                .register(401, new TypeToken<Void>() { }.getType())
                 .build(response);
     }
 

@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client.models;
+package walletapiv2.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -53,7 +53,7 @@ public class PaymentResultModel {
     private Double merchantTransactionFee;
 
     /**
-     * Get the status value.
+     * Get the current status of the payment. Possible values include: 'Unknown', 'New', 'Authorized', 'Captured', 'Expired', 'Declined', 'Failed', 'Cancelled', 'Charge Back', 'Refunded', 'Partially Refunded'.
      *
      * @return the status value
      */
@@ -62,7 +62,7 @@ public class PaymentResultModel {
     }
 
     /**
-     * Set the status value.
+     * Set the current status of the payment. Possible values include: 'Unknown', 'New', 'Authorized', 'Captured', 'Expired', 'Declined', 'Failed', 'Cancelled', 'Charge Back', 'Refunded', 'Partially Refunded'.
      *
      * @param status the status value to set
      * @return the PaymentResultModel object itself.
@@ -73,7 +73,7 @@ public class PaymentResultModel {
     }
 
     /**
-     * Get the code value.
+     * Get the payment result code.
      *
      * @return the code value
      */
@@ -82,7 +82,7 @@ public class PaymentResultModel {
     }
 
     /**
-     * Set the code value.
+     * Set the payment result code.
      *
      * @param code the code value to set
      * @return the PaymentResultModel object itself.
@@ -93,7 +93,7 @@ public class PaymentResultModel {
     }
 
     /**
-     * Get the message value.
+     * Get the payment result message.
      *
      * @return the message value
      */
@@ -102,7 +102,7 @@ public class PaymentResultModel {
     }
 
     /**
-     * Set the message value.
+     * Set the payment result message.
      *
      * @param message the message value to set
      * @return the PaymentResultModel object itself.
@@ -113,7 +113,7 @@ public class PaymentResultModel {
     }
 
     /**
-     * Get the providerAccountId value.
+     * Get the unique ID of the provider account that was used to make this payment.
      *
      * @return the providerAccountId value
      */
@@ -122,7 +122,7 @@ public class PaymentResultModel {
     }
 
     /**
-     * Set the providerAccountId value.
+     * Set the unique ID of the provider account that was used to make this payment.
      *
      * @param providerAccountId the providerAccountId value to set
      * @return the PaymentResultModel object itself.
@@ -133,7 +133,7 @@ public class PaymentResultModel {
     }
 
     /**
-     * Get the merchantTransactionId value.
+     * Get tthe merchant transaction identifier.
      *
      * @return the merchantTransactionId value
      */
@@ -142,7 +142,7 @@ public class PaymentResultModel {
     }
 
     /**
-     * Set the merchantTransactionId value.
+     * Set tthe merchant transaction identifier.
      *
      * @param merchantTransactionId the merchantTransactionId value to set
      * @return the PaymentResultModel object itself.
@@ -153,7 +153,7 @@ public class PaymentResultModel {
     }
 
     /**
-     * Get the merchantTransactionFee value.
+     * Get the merchant transaction fee.
      *
      * @return the merchantTransactionFee value
      */
@@ -162,7 +162,7 @@ public class PaymentResultModel {
     }
 
     /**
-     * Set the merchantTransactionFee value.
+     * Set the merchant transaction fee.
      *
      * @param merchantTransactionFee the merchantTransactionFee value to set
      * @return the PaymentResultModel object itself.

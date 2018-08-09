@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client.models;
+package walletapiv2.models;
 
 import org.joda.time.DateTime;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -74,7 +74,7 @@ public class CheckoutRequestModel {
     private Boolean enableSaveOption;
 
     /**
-     * Get the redirectUrl value.
+     * Get gets or sets the redirect URL.
      *
      * @return the redirectUrl value
      */
@@ -83,7 +83,7 @@ public class CheckoutRequestModel {
     }
 
     /**
-     * Set the redirectUrl value.
+     * Set gets or sets the redirect URL.
      *
      * @param redirectUrl the redirectUrl value to set
      * @return the CheckoutRequestModel object itself.
@@ -94,7 +94,7 @@ public class CheckoutRequestModel {
     }
 
     /**
-     * Get the referenceId value.
+     * Get gets or sets the reference identifier.
      *
      * @return the referenceId value
      */
@@ -103,7 +103,7 @@ public class CheckoutRequestModel {
     }
 
     /**
-     * Set the referenceId value.
+     * Set gets or sets the reference identifier.
      *
      * @param referenceId the referenceId value to set
      * @return the CheckoutRequestModel object itself.
@@ -114,7 +114,7 @@ public class CheckoutRequestModel {
     }
 
     /**
-     * Get the amount value.
+     * Get gets or sets the amount.
      *
      * @return the amount value
      */
@@ -123,7 +123,7 @@ public class CheckoutRequestModel {
     }
 
     /**
-     * Set the amount value.
+     * Set gets or sets the amount.
      *
      * @param amount the amount value to set
      * @return the CheckoutRequestModel object itself.
@@ -134,7 +134,7 @@ public class CheckoutRequestModel {
     }
 
     /**
-     * Get the nameOnAccount value.
+     * Get gets or sets the name on account.
      *
      * @return the nameOnAccount value
      */
@@ -143,7 +143,7 @@ public class CheckoutRequestModel {
     }
 
     /**
-     * Set the nameOnAccount value.
+     * Set gets or sets the name on account.
      *
      * @param nameOnAccount the nameOnAccount value to set
      * @return the CheckoutRequestModel object itself.
@@ -154,7 +154,7 @@ public class CheckoutRequestModel {
     }
 
     /**
-     * Get the expirationDate value.
+     * Get gets or sets the expiration date.
      *
      * @return the expirationDate value
      */
@@ -163,7 +163,7 @@ public class CheckoutRequestModel {
     }
 
     /**
-     * Set the expirationDate value.
+     * Set gets or sets the expiration date.
      *
      * @param expirationDate the expirationDate value to set
      * @return the CheckoutRequestModel object itself.
@@ -174,7 +174,7 @@ public class CheckoutRequestModel {
     }
 
     /**
-     * Get the enableBillingInformation value.
+     * Get gets or sets a value indicating whether [enable billing information].
      *
      * @return the enableBillingInformation value
      */
@@ -183,7 +183,7 @@ public class CheckoutRequestModel {
     }
 
     /**
-     * Set the enableBillingInformation value.
+     * Set gets or sets a value indicating whether [enable billing information].
      *
      * @param enableBillingInformation the enableBillingInformation value to set
      * @return the CheckoutRequestModel object itself.
@@ -194,7 +194,7 @@ public class CheckoutRequestModel {
     }
 
     /**
-     * Get the billingAddress value.
+     * Get gets or sets the billing address.
      *
      * @return the billingAddress value
      */
@@ -203,7 +203,7 @@ public class CheckoutRequestModel {
     }
 
     /**
-     * Set the billingAddress value.
+     * Set gets or sets the billing address.
      *
      * @param billingAddress the billingAddress value to set
      * @return the CheckoutRequestModel object itself.
@@ -214,7 +214,7 @@ public class CheckoutRequestModel {
     }
 
     /**
-     * Get the email value.
+     * Get gets or sets the email.
      *
      * @return the email value
      */
@@ -223,7 +223,7 @@ public class CheckoutRequestModel {
     }
 
     /**
-     * Set the email value.
+     * Set gets or sets the email.
      *
      * @param email the email value to set
      * @return the CheckoutRequestModel object itself.
@@ -234,7 +234,7 @@ public class CheckoutRequestModel {
     }
 
     /**
-     * Get the requireEmail value.
+     * Get gets or sets a value indicating whether [require email].
      *
      * @return the requireEmail value
      */
@@ -243,7 +243,7 @@ public class CheckoutRequestModel {
     }
 
     /**
-     * Set the requireEmail value.
+     * Set gets or sets a value indicating whether [require email].
      *
      * @param requireEmail the requireEmail value to set
      * @return the CheckoutRequestModel object itself.
@@ -254,7 +254,7 @@ public class CheckoutRequestModel {
     }
 
     /**
-     * Get the enableSaveOption value.
+     * Get gets or sets a value indicating whether [enable save option].
      *
      * @return the enableSaveOption value
      */
@@ -263,7 +263,7 @@ public class CheckoutRequestModel {
     }
 
     /**
-     * Set the enableSaveOption value.
+     * Set gets or sets a value indicating whether [enable save option].
      *
      * @param enableSaveOption the enableSaveOption value to set
      * @return the CheckoutRequestModel object itself.

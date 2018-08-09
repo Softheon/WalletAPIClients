@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-package softheon.wallet.api.client.models;
+package walletapiv2.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -48,7 +48,7 @@ public class PaymentRequestModel {
     private String callbackUrl;
 
     /**
-     * Get the paymentAmount value.
+     * Get the payment amount.
      *
      * @return the paymentAmount value
      */
@@ -57,7 +57,7 @@ public class PaymentRequestModel {
     }
 
     /**
-     * Set the paymentAmount value.
+     * Set the payment amount.
      *
      * @param paymentAmount the paymentAmount value to set
      * @return the PaymentRequestModel object itself.
@@ -68,7 +68,7 @@ public class PaymentRequestModel {
     }
 
     /**
-     * Get the description value.
+     * Get the description of what will be paid for.
      *
      * @return the description value
      */
@@ -77,7 +77,7 @@ public class PaymentRequestModel {
     }
 
     /**
-     * Set the description value.
+     * Set the description of what will be paid for.
      *
      * @param description the description value to set
      * @return the PaymentRequestModel object itself.
@@ -88,7 +88,7 @@ public class PaymentRequestModel {
     }
 
     /**
-     * Get the referenceId value.
+     * Get the client application provided reference ID for the payment.
      *
      * @return the referenceId value
      */
@@ -97,7 +97,7 @@ public class PaymentRequestModel {
     }
 
     /**
-     * Set the referenceId value.
+     * Set the client application provided reference ID for the payment.
      *
      * @param referenceId the referenceId value to set
      * @return the PaymentRequestModel object itself.
@@ -108,7 +108,7 @@ public class PaymentRequestModel {
     }
 
     /**
-     * Get the paymentMethod value.
+     * Get the method of payment.
      *
      * @return the paymentMethod value
      */
@@ -117,7 +117,7 @@ public class PaymentRequestModel {
     }
 
     /**
-     * Set the paymentMethod value.
+     * Set the method of payment.
      *
      * @param paymentMethod the paymentMethod value to set
      * @return the PaymentRequestModel object itself.
@@ -128,7 +128,9 @@ public class PaymentRequestModel {
     }
 
     /**
-     * Get the callbackUrl value.
+     * Get the callback URL where payment notifications will be sent.  Payment notifications are sent when the
+     state of a payment changes.  Notifications will be sent as an HTTP POST to the URL provided and will
+     contain a PaymentId and optional ReferenceId, if one was provided when the payment was created.
      *
      * @return the callbackUrl value
      */
@@ -137,7 +139,9 @@ public class PaymentRequestModel {
     }
 
     /**
-     * Set the callbackUrl value.
+     * Set the callback URL where payment notifications will be sent.  Payment notifications are sent when the
+     state of a payment changes.  Notifications will be sent as an HTTP POST to the URL provided and will
+     contain a PaymentId and optional ReferenceId, if one was provided when the payment was created.
      *
      * @param callbackUrl the callbackUrl value to set
      * @return the PaymentRequestModel object itself.
